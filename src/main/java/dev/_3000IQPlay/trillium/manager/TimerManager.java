@@ -7,7 +7,7 @@ public class TimerManager
     private float timer = 1.0f;
 
     public void init() {
-		this.timer = 1.0f;
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
     public void unload() {
