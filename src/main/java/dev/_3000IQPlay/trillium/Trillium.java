@@ -56,7 +56,6 @@ public class Trillium {
     public static EventManager eventManager;
     public static EntityProvider entityProvider;
     public static PacketManager packetManager;
-    public static TimerManager timerManager;
     public static HoleManager holeManager;
     public static RotationManager rotationManager;
     public static SetDeadManager setDeadManager;
@@ -137,7 +136,6 @@ public class Trillium {
         fileManager = new FileManager();
         configManager = new ConfigManager();
         nobitches = new NoMotionUpdateService();
-		timerManager = new TimerManager();
 		
         moduleManager.init();
         configManager.init();
@@ -151,7 +149,6 @@ public class Trillium {
         setDeadManager.init();
         nobitches.init();
         entityProvider.init();
-		timerManager.init();
         moduleManager.onLoad();
     }
 
@@ -165,7 +162,6 @@ public class Trillium {
         Trillium.onUnload();
 
         holeManager = null;
-        timerManager = null;
         eventManager = null;
         friendManager = null;
         speedManager = null;
@@ -213,7 +209,6 @@ public class Trillium {
             moduleManager.onUnload();
             configManager.saveConfig(Trillium.configManager.config.replaceFirst("Trillium/", ""));
             moduleManager.onUnloadPost();
-			timerManager.unload();
             unloaded = true;
         }
     }

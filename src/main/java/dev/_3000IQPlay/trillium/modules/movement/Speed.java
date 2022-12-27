@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
-import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.MoveEvent;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.UpdateWalkingPlayerEvent;
@@ -77,14 +76,14 @@ public class Speed
                 if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
                     if (Speed.mc.player.onGround) {
                         EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
-						Trillium.timerManager.setTimer(this.groundTimer.getValue().floatValue());
+						Speed.mc.timer.tickLength = 50.0f / this.groundTimer.getValue().floatValue();
                         if (this.autoJump.getValue().booleanValue()) {
                             Speed.mc.player.motionY = this.jumpMotionY.getValue().floatValue();
 					    	break;
 						}
                     }
 					if (Speed.mc.player.motionY > 0) {
-						Trillium.timerManager.setTimer(this.upTimerValue.getValue());
+						Speed.mc.timer.tickLength = 50.0f / this.upTimerValue.getValue();
 						if (this.usMode.getValue() == UpSpeed.Custom) {
 						    EntityUtil.moveEntityStrafe(this.upAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
                             break;
@@ -94,7 +93,7 @@ public class Speed
 						}
 	                } else {
 						if (this.downMode.getValue() == DownMode.Timer) {
-		                    Trillium.timerManager.setTimer(this.downTimerValue.getValue().floatValue());
+		                    Speed.mc.timer.tickLength = 50.0f / this.downTimerValue.getValue().floatValue();
 					    } else if (this.downMode.getValue() == DownMode.Motion) {
 							Speed.mc.player.motionY =- this.downMotionValue.getValue().floatValue();
 					    }
@@ -117,9 +116,9 @@ public class Speed
                     return;
                 }
 				if (this.yPortTimerSpeed.getValue().booleanValue()) {
-					Trillium.timerManager.setTimer(this.yPortTimerSpeedVal.getValue().floatValue());
+					Speed.mc.timer.tickLength = 50.0f / this.yPortTimerSpeedVal.getValue().floatValue();
 				} else {
-					Trillium.timerManager.reset();
+					Speed.mc.timer.tickLength = 50.0f / 1.0f;
 				}
 				if (Speed.mc.player.onGround) {
                     Speed.mc.player.motionY = this.yPortJumpMotionY.getValue().floatValue();
@@ -133,11 +132,11 @@ public class Speed
 			    if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
                     if (Speed.mc.player.onGround) {
                         Speed.mc.player.jump();
-					    Trillium.timerManager.setTimer(this.ccTimer.getValue().floatValue());
+					    Speed.mc.timer.tickLength = 50.0f / this.ccTimer.getValue().floatValue();
 						EntityUtil.moveEntityStrafe(this.cpvpccSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
 						break;
                     } else {
-						Trillium.timerManager.reset();
+						Speed.mc.timer.tickLength = 50.0f / 1.0f;
 					}
                     EntityUtil.moveEntityStrafe(Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ), (Entity)Speed.mc.player);
 					break;
@@ -161,14 +160,14 @@ public class Speed
                 if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
                     if (Speed.mc.player.onGround) {
                         EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
-						Trillium.timerManager.setTimer(this.groundTimer.getValue().floatValue());
+						Speed.mc.timer.tickLength = 50.0f / this.groundTimer.getValue().floatValue();
                         if (this.autoJump.getValue().booleanValue()) {
                             Speed.mc.player.motionY = this.jumpMotionY.getValue().floatValue();
 					    	break;
 						}
                     }
 					if (Speed.mc.player.motionY > 0) {
-						Trillium.timerManager.setTimer(this.upTimerValue.getValue());
+						Speed.mc.timer.tickLength = 50.0f / this.upTimerValue.getValue();
 						if (this.usMode.getValue() == UpSpeed.Custom) {
 						    EntityUtil.moveEntityStrafe(this.upAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
                             break;
@@ -178,7 +177,7 @@ public class Speed
 						}
 	                } else {
 						if (this.downMode.getValue() == DownMode.Timer) {
-		                    Trillium.timerManager.setTimer(this.downTimerValue.getValue().floatValue());
+		                    Speed.mc.timer.tickLength = 50.0f / this.downTimerValue.getValue().floatValue();
 					    } else if (this.downMode.getValue() == DownMode.Motion) {
 							Speed.mc.player.motionY =- this.downMotionValue.getValue().floatValue();
 					    }
@@ -201,9 +200,9 @@ public class Speed
                     return;
                 }
 				if (this.yPortTimerSpeed.getValue().booleanValue()) {
-					Trillium.timerManager.setTimer(this.yPortTimerSpeedVal.getValue().floatValue());
+					Speed.mc.timer.tickLength = 50.0f / this.yPortTimerSpeedVal.getValue().floatValue();
 				} else {
-					Trillium.timerManager.reset();
+					Speed.mc.timer.tickLength = 50.0f / 1.0f;
 				}
 				if (Speed.mc.player.onGround) {
                     Speed.mc.player.motionY = this.yPortJumpMotionY.getValue().floatValue();
@@ -217,11 +216,11 @@ public class Speed
 			    if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
                     if (Speed.mc.player.onGround) {
                         Speed.mc.player.jump();
-					    Trillium.timerManager.setTimer(this.ccTimer.getValue().floatValue());
+					    Speed.mc.timer.tickLength = 50.0f / this.ccTimer.getValue().floatValue();
 						EntityUtil.moveEntityStrafe(this.cpvpccSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
 						break;
                     } else {
-						Trillium.timerManager.reset();
+						Speed.mc.timer.tickLength = 50.0f / 1.0f;
 					}
                     EntityUtil.moveEntityStrafe(Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ), (Entity)Speed.mc.player);
 					break;
@@ -259,7 +258,7 @@ public class Speed
 	
 	@Override
     public void onDisable() {
-        Trillium.timerManager.reset();
+        Speed.mc.timer.tickLength = 50.0f / 1.0f;
 		super.onDisable();
     }
 	
