@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.misc;
 
-import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
@@ -17,9 +16,9 @@ public class Timer extends Module {
     public static long lastUpdateTime;
     public static double value;
 
-    public Setting<Float> speed = register(new Setting("Speed", 2.0f, 0.1f, 10.0f));
+    public Setting<Float> speed = register(new Setting("TimerSpeed", 2.0f, 0.1f, 10.0f));
     public Setting<Boolean> smart = register(new Setting<>("Smart", true));
-    public Setting<Integer> maxTicks = register(new Setting("Bound", 0, 0, 15));
+    public Setting<Integer> maxTicks = register(new Setting("MaxTicks", 0, 0, 15));
 
 
 
@@ -37,14 +36,14 @@ public class Timer extends Module {
 
     @Override
     public void onDisable() {
-        Trillium.TICK_TIMER =1f;
+        Timer.mc.timer.tickLength = 50.0f / 1.0f;
     }
 
     public void update() {
-        if (!smart.getValue() || canEnableTimer(speed.getValue() + 0.2f)) {
-            Trillium.TICK_TIMER = Math.max(speed.getValue() + (mc.player.ticksExisted % 2 == 0 ? -0.2f : 0.2f), 0.1f);
+        if (!smart.getValue() || canEnableTimer(this.speed.getValue() + 0.2f)) {
+            Timer.mc.timer.tickLength = 50.0f / Math.max(this.speed.getValue() + (mc.player.ticksExisted % 2 == 0 ? -0.2f : 0.2f), 0.1f);
         } else {
-            Trillium.TICK_TIMER = 1;
+            Timer.mc.timer.tickLength = 50.0f / 1.0f;
         }
     }
 

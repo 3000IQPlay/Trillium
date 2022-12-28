@@ -76,7 +76,6 @@ public class Trillium {
     static {
         unloaded = false;
     }
-    public static float TICK_TIMER = 1;
     public static void load() {
         unloaded = false;
         if (reloadManager != null) {
