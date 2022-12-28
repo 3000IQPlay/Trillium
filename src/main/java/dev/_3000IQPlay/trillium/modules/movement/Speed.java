@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
-import dev._3000IQPlay.trillium.event.events.MoveEvent;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.UpdateWalkingPlayerEvent;
 import dev._3000IQPlay.trillium.modules.Module;

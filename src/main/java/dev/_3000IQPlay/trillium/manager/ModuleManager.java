@@ -53,7 +53,6 @@ public class ModuleManager
         this.modules.add(new NoSlowDown());
         this.modules.add(new KillauraAddon());
         this.modules.add(new BlockHighlight());
-        this.modules.add(new TickShift());
         this.modules.add(new StorageEsp());
         this.modules.add(new Ambience());
         this.modules.add(new Ghost());
@@ -83,7 +82,6 @@ public class ModuleManager
         this.modules.add(new PearlBypass());
         this.modules.add(new FreeCam());
         this.modules.add(new PacketFly());
-        this.modules.add(new Timer());
         this.modules.add(new AutoTrap());
         this.modules.add(new NoEntityTrace());
         this.modules.add(new PistonAura());

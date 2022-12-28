@@ -4,7 +4,6 @@ import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.modules.misc.Timer;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
@@ -30,7 +29,6 @@ public class Indicators extends Module {
     public static AstolfoAnimation astolfo = new AstolfoAnimation();
 
     public Setting<Boolean> Memoryy = register(new Setting<>("Memory", true));
-    public Setting<Boolean> Timerr = register(new Setting<>("Timer", true));
     public Setting<Boolean> TPS = register(new Setting<>("TPS", true));
 
     public Setting<Boolean> blur = register(new Setting<>("Blur", true));
@@ -54,23 +52,6 @@ public class Indicators extends Module {
 
 
     protected void once() {
-        indicators.add(new Indicator() {
-
-            @Override
-            boolean enabled() {
-                return Timerr.getValue();
-            }
-
-            @Override
-            String getName() {
-                return "Timer";
-            }
-
-            @Override
-            double getProgress() {
-                return (10 - Timer.value) / (Math.abs(Trillium.moduleManager.getModuleByClass(Timer.class).getMin()) + 10);
-            }
-        });
         indicators.add(new Indicator() {
 
             @Override

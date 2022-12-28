@@ -36,7 +36,7 @@ public class FastFall
     public FastFall() {
         super("FastFall", "Makes you fall faster", Module.Category.MOVEMENT, true, false, false);
     }
-
+	
     @Override
     public void onDisable() {
         Speed.mc.timer.tickLength = 50.0f / 1.0f;

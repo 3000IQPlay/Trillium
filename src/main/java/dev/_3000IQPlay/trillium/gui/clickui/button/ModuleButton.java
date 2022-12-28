@@ -201,10 +201,10 @@ public class ModuleButton {
 		if (binding) {
 			if (keyCode == Keyboard.KEY_ESCAPE || keyCode == Keyboard.KEY_SPACE || keyCode == Keyboard.KEY_DELETE) {
 				module.setBind(Keyboard.KEY_NONE);
-				Command.sendMessage("Удален бинд с модуля " + ChatFormatting.LIGHT_PURPLE + module.getName());
+				Command.sendMessage("Removed bind from " + ChatFormatting.LIGHT_PURPLE + module.getName());
 			} else {
 				module.setBind(keyCode);
-				Command.sendMessage(ChatFormatting.LIGHT_PURPLE + module.getName() + ChatFormatting.WHITE + " бинд изменен на " + ChatFormatting.GREEN + Keyboard.getKeyName(module.getBind().getKey()));
+				Command.sendMessage(ChatFormatting.LIGHT_PURPLE + module.getName() + ChatFormatting.WHITE + " bind changed to" + ChatFormatting.GREEN + Keyboard.getKeyName(module.getBind().getKey()));
 			}
 			binding = false;
 		}

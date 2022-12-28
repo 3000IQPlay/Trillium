@@ -2,7 +2,6 @@ package dev._3000IQPlay.trillium.mixin.mixins;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
-import dev._3000IQPlay.trillium.modules.misc.Timer;
 import dev._3000IQPlay.trillium.util.MovementUtil;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
@@ -26,9 +25,6 @@ public class MixinNetworkManager {
     private void onSendPacketPre(Packet<?> packet, CallbackInfo info) {
         PacketEvent.Send event = new PacketEvent.Send(0, packet);
         MinecraftForge.EVENT_BUS.post(event);
-        if(packet instanceof CPacketPlayer.PositionRotation && chto()) {
-            Trillium.moduleManager.getModuleByClass(Timer.class).m();
-        }
         if (event.isCanceled()) {
             info.cancel();
         }
@@ -89,10 +85,4 @@ public class MixinNetworkManager {
             info.cancel();
         }
     }
-
-
-    boolean chto(){
-        return Trillium.moduleManager.getModuleByClass(Timer.class).isDisabled() && !MovementUtil.isMoving();
-    }
 }
-

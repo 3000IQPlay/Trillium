@@ -147,7 +147,7 @@ public class Module
         if(mc.player == null){
             return;
         }
-        if((Objects.equals(this.getDisplayName(), "TrilliumGui") || (Objects.equals(this.getDisplayName(), "ClickGUI")))){
+        if((Objects.equals(this.getDisplayName(), "ClickGUI"))){
             mc.world.playSound(getPlayerPos(), SoundEvents.BLOCK_ENDERCHEST_CLOSE, SoundCategory.AMBIENT, 150.0f, 1.0F, true);
         } else {
             mc.world.playSound(getPlayerPos(), SoundEvents.BLOCK_NOTE_XYLOPHONE, SoundCategory.AMBIENT, 150.0f, 1.0F, true);
@@ -155,7 +155,7 @@ public class Module
         }
 
         this.enabled.setValue(false);
-        if((!Objects.equals(this.getDisplayName(), "ElytraSwap") && (!Objects.equals(this.getDisplayName(), "ACRender"))&& (!Objects.equals(this.getDisplayName(), "TrilliumGui")) && (!Objects.equals(this.getDisplayName(), "ClickGui"))  && (!Objects.equals(this.getDisplayName(), "Windows")))) {
+        if((!Objects.equals(this.getDisplayName(), "ClickGui"))) {
             NotificationManager.publicity(this.getDisplayName(), "was disabled!", 2, NotificationType.INFO);
         }
         if (Trillium.moduleManager.getModuleByClass(MainSettings.class).notifyToggles.getValue()) {
@@ -229,7 +229,7 @@ public class Module
     }
 
     public String getFullArrayString() {
-        return this.getDisplayName() + ChatFormatting.GRAY + (this.getDisplayInfo() != null ? " [" + ChatFormatting.WHITE + this.getDisplayInfo() + ChatFormatting.GRAY + "]" : "");
+        return this.getDisplayName() + ChatFormatting.BLUE + (this.getDisplayInfo() != null ? " [" + ChatFormatting.AQUA + this.getDisplayInfo() + ChatFormatting.BLUE + "]" : "");
     }
 
 
