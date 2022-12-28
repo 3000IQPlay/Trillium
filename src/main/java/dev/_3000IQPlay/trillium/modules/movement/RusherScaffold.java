@@ -24,13 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-
 import java.awt.*;
-
-
-
-
-
 
 public class RusherScaffold extends Module {
 
@@ -38,10 +32,8 @@ public class RusherScaffold extends Module {
         super("Scaffold", "лучший скафф", Module.Category.PLAYER, true, false, false);
         timer = new Timer();
     }
-
-
+	
     public Color color = new Color(Color.CYAN.getRed(), Color.CYAN.getGreen(), Color.CYAN.getBlue(), 50);
-
     public Setting<Boolean> rotate = this.register(new Setting<Boolean>("Rotate", true));
     public Setting<Boolean> autoswap = this.register(new Setting<Boolean>("AutoSwap", true));
     public Setting<Boolean> tower = this.register(new Setting<Boolean>("Tower", true));
@@ -51,10 +43,8 @@ public class RusherScaffold extends Module {
     private final Setting<Float> lineWidth = this.register(new Setting<Float>("LineWidth", 1.0f, 0.1f, 5.0f));
     public final Setting<ColorSetting> Color2 = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
 
-
     private Timer timer;
     private BlockPosWithFacing currentblock;
-
 
     private boolean isBlockValid(Block block) {
         return block.getDefaultState().getMaterial().isSolid();
@@ -80,10 +70,8 @@ public class RusherScaffold extends Module {
             if (isBlockValid(((ItemBlock) mc.player.getHeldItemMainhand().getItem()).getBlock()))
                 return mc.player.inventory.currentItem;
         }
-
         int n = 0;
         int n2 = 0;
-
         while (n2 < 9) {
             if (mc.player.inventory.getStackInSlot(n).getCount() != 0) {
                 if (mc.player.inventory.getStackInSlot(n).getItem() instanceof ItemBlock) {
@@ -95,63 +83,45 @@ public class RusherScaffold extends Module {
             }
             n2 = ++n;
         }
-
         return -1;
     }
 
     private BlockPosWithFacing checkNearBlocksExtended(BlockPos blockPos) {
         BlockPosWithFacing ret = null;
-
         ret = checkNearBlocks(blockPos);
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(-1, 0, 0));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(1, 0, 0));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(0, 0, 1));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(0, 0, -1));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(-2, 0, 0));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(2, 0, 0));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(0, 0, 2));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(0, 0, -2));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos.add(0, -1, 0));
         BlockPos blockPos2 = blockPos.add(0, -1, 0);
-
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos2.add(1, 0, 0));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos2.add(-1, 0, 0));
         if (ret != null) return ret;
-
         ret = checkNearBlocks(blockPos2.add(0, 0, 1));
         if (ret != null) return ret;
-
         return checkNearBlocks(blockPos2.add(0, 0, -1));
     }
 
     private int countValidBlocks() {
         int n = 36;
         int n2 = 0;
-
         while (n < 45) {
-
             if (mc.player.inventoryContainer.getSlot(n).getHasStack()) {
                 ItemStack itemStack = mc.player.inventoryContainer.getSlot(n).getStack();
                 if (itemStack.getItem() instanceof ItemBlock) {
@@ -159,10 +129,8 @@ public class RusherScaffold extends Module {
                         n2 += itemStack.getCount();
                 }
             }
-
             n++;
         }
-
         return n2;
     }
 
@@ -174,28 +142,22 @@ public class RusherScaffold extends Module {
     private float[] getRotations(BlockPos blockPos, EnumFacing enumFacing) {
         Vec3d vec3d = new Vec3d((double) blockPos.getX() + 0.5, mc.world.getBlockState(blockPos).getSelectedBoundingBox(mc.world, blockPos).maxY - 0.01, (double) blockPos.getZ() + 0.5);
         vec3d = vec3d.add(new Vec3d(enumFacing.getDirectionVec()).scale(0.5));
-
         Vec3d vec3d2 = getEyePosition();
-
         double d = vec3d.x - vec3d2.x;
         double d2 = vec3d.y - vec3d2.y;
         double d3 = vec3d.z - vec3d2.z;
         double d6 = Math.sqrt(d * d + d3 * d3);
-
         float f = (float) (Math.toDegrees(Math.atan2(d3, d)) - 90.0f);
         float f2 = (float) (-Math.toDegrees(Math.atan2(d2, d6)));
-
         float[] ret = new float[2];
         ret[0] = mc.player.rotationYaw + MathHelper.wrapDegrees((float) (f - mc.player.rotationYaw));
         ret[1] = mc.player.rotationPitch + MathHelper.wrapDegrees((float) (f2 - mc.player.rotationPitch));
-
         return ret;
     }
 
     public static class BlockPosWithFacing {
         public BlockPos blockPos;
         public EnumFacing enumFacing;
-
         public BlockPosWithFacing(BlockPos blockPos, EnumFacing enumFacing) {
             this.blockPos = blockPos;
             this.enumFacing = enumFacing;
@@ -206,7 +168,6 @@ public class RusherScaffold extends Module {
         double x = event.get_x();
         double y = event.get_y();
         double z = event.get_z();
-
         if (mc.player.onGround && !mc.player.noClip) {
             double increment;
             for (increment = 0.05D; x != 0.0D && isOffsetBBEmpty(x, 0.0D); ) {
@@ -253,7 +214,6 @@ public class RusherScaffold extends Module {
     @SubscribeEvent
     public void onMove(EventMove event) {
         if (fullNullCheck()) return;
-
         if (safewalk.getValue())
             doSafeWalk(event);
     }
@@ -261,13 +221,11 @@ public class RusherScaffold extends Module {
 
     @SubscribeEvent
     public void onRender3D(Render3DEvent event) {
-
         if (render.getValue() && currentblock != null) {
             GlStateManager.pushMatrix();
             RenderUtil.drawBlockOutline(currentblock.blockPos, Color2.getValue().getColorObject(), lineWidth.getValue(), false);
             GlStateManager.popMatrix();
         }
-
     }
 
     private boolean isOffsetBBEmpty(double x, double z) {
@@ -276,7 +234,6 @@ public class RusherScaffold extends Module {
 
     int n;
     BlockPos blockPos;
-
 
     @SubscribeEvent
     public void onPre(EventPreMotion event) {

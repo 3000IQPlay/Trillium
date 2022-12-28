@@ -8,8 +8,7 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
-public
-class RPC
+public class RPC
         extends Module {
     public static RPC INSTANCE;
     public Setting < Boolean > showIP = this.register ( new Setting <> ( "ShowIP" , true  ) );
@@ -42,16 +41,8 @@ class RPC
         position = "";
     }
 
-
-
-    public Setting<mode> Mode = register(new Setting("Picture", mode.MegaCute));
-    public String out = "";
-    public enum mode {
-        Konas, Custom, Thlogo, Unknown, minecraft,thbeta,cat,newver,pic,SlivSRC,Astolfo,MegaCute;
-    }
-
     public RPC( ) {
-        super ( "DiscordRPC" , "крутая рпс" , Category.CLIENT , true , false , false );
+        super ( "DiscordRPC" , "Cool RPC" , Category.CLIENT , true , false , false );
         INSTANCE = this;
     }
 

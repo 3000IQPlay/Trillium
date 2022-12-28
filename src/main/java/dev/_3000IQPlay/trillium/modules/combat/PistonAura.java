@@ -78,7 +78,7 @@ public class PistonAura extends Module {
 
 
     public PistonAura() {
-        super("PistonAura", "Поршни вталкивают кристал-в чела (Охуенная хуйня)", Category.COMBAT,true,false,false);
+        super("PistonAura", "Pushes crystals into players (Piston Faggot)", Category.COMBAT,true,false,false);
         this.setInstance();
     }
 

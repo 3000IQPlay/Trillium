@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
-import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.mixin.mixins.ICPacketPlayer;
 import dev._3000IQPlay.trillium.modules.Module;
@@ -60,8 +59,7 @@ public class GroundBoost extends Module {
             stage = 2;
             distance = 0;
             moveSpeed = getBaseMoveSpeed( );
-
-            Trillium.TICK_TIMER = 1.0f;
+            GroundBoost.mc.timer.tickLength = 50.0f / 1.0f;
             if ( autoSprint.getValue() && mc.player != null )
                 mc.player.setSprinting( false );
             startY = (float) mc.player.posY;

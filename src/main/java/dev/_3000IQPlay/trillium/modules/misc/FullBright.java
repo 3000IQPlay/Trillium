@@ -15,7 +15,7 @@ public class FullBright
     private float previousSetting = 1.0f;
 
     public FullBright() {
-        super("Fullbright", "делает поярче", Module.Category.RENDER, true, false, false);
+        super("Fullbright", "Makes you see everything brighter", Module.Category.RENDER, true, false, false);
     }
 
 

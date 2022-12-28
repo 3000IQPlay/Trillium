@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Particles extends Module{
     public Particles() {
-        super("Particles", "рисует партиклы в гуи", Module.Category.CLIENT, true, false, false);
+        super("Particles", "Draws particles in Guis", Module.Category.CLIENT, true, false, false);
         setInstance();
     }
 

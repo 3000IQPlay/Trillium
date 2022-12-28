@@ -1,8 +1,5 @@
 package dev._3000IQPlay.trillium.modules.combat;
 
-
-
-
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.EventPostMotion;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
@@ -24,13 +21,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 
-
 public class BowAim extends Module {
-
-
+	
     private Setting<Boolean> ignoreWalls = register(new Setting<>("IgnoreWalls", false));
     private Setting<Boolean> noVertical = register(new Setting<>("NoVertical", false));
-
     private  final Setting<Float> range = this.register( new Setting<>("Range", 60.0f, 0.0f, 200f));
     private  final Setting<Float> fov = this.register( new Setting<>("fov", 60.0f, 0.0f, 180f));
 

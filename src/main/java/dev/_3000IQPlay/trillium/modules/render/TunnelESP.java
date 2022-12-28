@@ -22,7 +22,7 @@ public class TunnelESP
     private final Setting<ColorSetting> Color2 = this.register(new Setting<>("Color2", new ColorSetting(0x8800FF00)));
 
     public TunnelESP() {
-        super("TunnelESP", "Подсвечивает туннели", Module.Category.RENDER, false, false, false);
+        super("TunnelESP", "Highlights tunels", Module.Category.RENDER, false, false, false);
     }
 
 

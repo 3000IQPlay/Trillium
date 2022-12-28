@@ -62,7 +62,7 @@ public class FakePlayer extends Module {
     }
 
     public FakePlayer() {
-        super("FakePlayer", "фейкплеер для тестов", Module.Category.PLAYER, true, false, false);
+        super("FakePlayer", "Summons client sided NPC :scream:", Module.Category.PLAYER, true, false, false);
     }
 
 

@@ -45,7 +45,7 @@ public class MotionBlur extends Module {
             }
 
             if (curValue != lastValue) {
-                Command.sendMessage("Motion Blur перезапущен!");
+                Command.sendMessage("Motion Blur Re-Enabled!");
                 domainResourceManagers.remove("motionblur");
                 domainResourceManagers.put("motionblur", new MotionBlurResourceManager());
                 mc.entityRenderer.loadShader(new ResourceLocation("motionblur", "motionblur"));

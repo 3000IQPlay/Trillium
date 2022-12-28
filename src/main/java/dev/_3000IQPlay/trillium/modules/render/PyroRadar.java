@@ -29,7 +29,7 @@ import java.util.Objects;
 public class PyroRadar extends Module {
 
     public PyroRadar() {
-    super("Radar", "радар из пайро", Category.HUD, true, false, false);
+    super("Radar", "Points on other players", Category.HUD, true, false, false);
 
     }
 

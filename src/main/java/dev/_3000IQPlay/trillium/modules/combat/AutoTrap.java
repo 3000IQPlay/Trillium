@@ -37,7 +37,7 @@ public class AutoTrap
 
 
     public AutoTrap() {
-        super("AutoTrap", "Трапит ньюфагов", Module.Category.COMBAT, true, false, false);
+        super("AutoTrap", "Traps players in a obsidian trap", Module.Category.COMBAT, true, false, false);
     }
     private  final Setting<Float> placeRange = this.register( new Setting<>("TargetRange", 4.5f, 1f, 16f));
     private  Setting<Integer> actionShift = this.register(new Setting<>("ActionShift", 3, 1, 8));

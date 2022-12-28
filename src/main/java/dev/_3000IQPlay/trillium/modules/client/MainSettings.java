@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MainSettings extends Module {
     public MainSettings() {
-        super("MainSettings", "Настройки клиента", Category.CLIENT, true, false, false);
+        super("MainSettings", "Client settings", Category.CLIENT, true, false, false);
     }
 
 

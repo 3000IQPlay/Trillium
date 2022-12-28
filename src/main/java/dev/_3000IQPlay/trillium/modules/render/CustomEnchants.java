@@ -4,7 +4,7 @@ import dev._3000IQPlay.trillium.modules.Module;
 
 public class CustomEnchants extends Module{
     public CustomEnchants() {
-        super("RainbowEnchants", "радужные зачары", Module.Category.RENDER, true, false, false);
+        super("RainbowEnchants", "Makes enchant glint more colorful", Module.Category.RENDER, true, false, false);
         this.setInstance();
     }
     public static CustomEnchants getInstance() {

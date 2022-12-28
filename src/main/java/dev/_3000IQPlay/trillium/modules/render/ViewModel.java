@@ -78,7 +78,7 @@ class ViewModel extends Module {
 
     public
     ViewModel ( ) {
-        super ( "ViewModel" , "Cool" , Category.RENDER , true , false , false );
+        super ( "ViewModel" , "Cool shit" , Category.RENDER , true , false , false );
         this.setInstance ( );
     }
 

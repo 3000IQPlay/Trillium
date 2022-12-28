@@ -14,9 +14,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class AutoTPaccept extends Module {
 
     public AutoTPaccept() {
-        super("AutoTPaccept", "Принимает тп автоматом", Category.PLAYER, true, false, false);
+        super("AutoTPaccept", "Accepts tp automatically", Category.PLAYER, true, false, false);
     }
-    public Setting<Boolean> onlyFriends = register(new Setting("onlyFriends", Boolean.TRUE));
+    public Setting<Boolean> onlyFriends = register(new Setting("OnlyFriends", Boolean.TRUE));
 
 
     @SubscribeEvent
@@ -25,7 +25,6 @@ public class AutoTPaccept extends Module {
             final SPacketChat packet = (SPacketChat)event.getPacket();
             if (packet.getType() != ChatType.GAME_INFO && this.tryProcessChat(packet.getChatComponent().getFormattedText(), packet.getChatComponent().getUnformattedText())) {
                // event.setCanceled(true);
-
             }
         }
     }
@@ -35,31 +34,19 @@ public class AutoTPaccept extends Module {
 
     private boolean tryProcessChat(String message, final String unformatted) {
         String out = message;
-
         out = message;
-
-
-
             if (Util.mc.player == null) {
                 return false;
             }
-
-            if(out.contains("телепортироваться")){
+            if(out.contains("teleport")){
                 if(onlyFriends.getValue()) {
                     if (Trillium.friendManager.isFriend(TrilliumUtils.solvename(out))) {
                         mc.player.sendChatMessage("/tpaccept");
                     }
                 } else {
-                        mc.player.sendChatMessage("/tpaccept");
+                    mc.player.sendChatMessage("/tpaccept");
                 }
-
             }
-
-            /*
-    [20:39:09] [Client thread/INFO]: [CHAT] MrZak34 просит телепортироваться к Вам.
-    [20:39:09] [Client thread/INFO]: [CHAT] Для принятия запроса, введите /tpaccept.
-    [20:39:10] [Client thread/INFO]: [CHAT] Для отказа от запроса введите /tpdeny.
-     */
         return true;
     }
 }

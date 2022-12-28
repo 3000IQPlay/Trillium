@@ -10,7 +10,7 @@ public class SolidBlock
 	public Setting<Boolean> vine = this.register(new Setting<Boolean>("Vine", false));
 	
     public SolidBlock() {
-        super("SolidBlock", "No more running into webs :)", Module.Category.MISC, true, false, false);
+        super("SolidBlock", "No more running into webs/vines :)", Module.Category.MISC, true, false, false);
 		this.setInstance();
     }
 	

@@ -20,7 +20,7 @@ import java.awt.*;
 public class AntiTittle extends Module {
 
     public AntiTittle() {
-        super("Adblock", "Адблок для ебучего-фанигейма", Category.MISC, true, false, false);
+        super("Adblock", "Real AdBlocker", Category.MISC, true, false, false);
     }
 
 

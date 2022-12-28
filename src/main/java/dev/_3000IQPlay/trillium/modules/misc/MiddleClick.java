@@ -39,7 +39,7 @@ import static net.minecraft.enchantment.EnchantmentHelper.getEnchantmentLevel;
 
 public class MiddleClick extends Module{
     public MiddleClick() {
-    super("MiddleClick", "меню на колесико-мыши", Category.MISC, true, false, false);
+    super("MiddleClick", "Mouse wheel menu bro", Category.MISC, true, false, false);
         this.setInstance();
         module = this;
     }
@@ -121,7 +121,7 @@ public class MiddleClick extends Module{
                 } else {
                     Trillium.friendManager.addFriend(entity.getName());
                     if (fm.getValue()) {
-                        mc.player.sendChatMessage("/w "+ entity.getName() + " i friended u at TrilliumPlus");
+                        mc.player.sendChatMessage("/w "+ entity.getName() + " I friended u on Trillium");
                     }
                     Command.sendMessage("Added §b" + entity.getName() + "§r as a friend!");
                 }

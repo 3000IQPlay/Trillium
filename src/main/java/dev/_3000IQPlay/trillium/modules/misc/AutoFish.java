@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AutoFish extends Module{
     public AutoFish() {
-        super("AutoFish", "признайся захотел", Category.MISC, true, false, false);
+        super("AutoFish", "Auto fishes for u ._.", Category.MISC, true, false, false);
     }
 
 

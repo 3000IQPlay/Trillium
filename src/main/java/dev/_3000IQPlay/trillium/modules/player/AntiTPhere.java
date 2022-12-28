@@ -31,10 +31,10 @@ public class AntiTPhere extends Module {
     public void onPacketReceive(PacketEvent.Receive event){
         if(event.getPacket() instanceof SPacketChat){
             SPacketChat packet = event.getPacket();
-            if(packet.getChatComponent().getFormattedText().contains("Телепортирование...") && check(packet.getChatComponent().getFormattedText())){
+            if(packet.getChatComponent().getFormattedText().contains("Teleportation...") && check(packet.getChatComponent().getFormattedText())){
 
-                StringBuilder log = new StringBuilder("Тебя телепортировали в X: " + (int)mc.player.posX + " Z: " + (int) mc.player.posZ +
-                        ". Ближайшие игроки : ");
+                StringBuilder log = new StringBuilder("You have been teleported to X: " + (int)mc.player.posX + " Z: " + (int) mc.player.posZ +
+                        ". Upcoming players : ");
 
                 for(Entity entity : mc.world.loadedEntityList){
                     if(entity instanceof EntityPlayer){

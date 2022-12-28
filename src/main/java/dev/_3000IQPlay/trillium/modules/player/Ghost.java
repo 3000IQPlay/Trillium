@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Ghost extends Module {
     public Ghost() {
-        super("Ghost", "Жить после смерти", Category.PLAYER, true, false, false);
+        super("Ghost", "You can fly anywhere when you die", Category.PLAYER, true, false, false);
     }
 
     private boolean bypass = false;

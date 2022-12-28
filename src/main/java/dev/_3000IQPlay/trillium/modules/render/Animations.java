@@ -11,7 +11,7 @@ class Animations extends Module {
 
 
     public Animations ( ) {
-        super ( "Animations" , "анимации удара" , Module.Category.RENDER , true , false , false );
+        super ( "Animations" , "Animation" , Module.Category.RENDER , true , false , false );
         this.setInstance();
     }
 

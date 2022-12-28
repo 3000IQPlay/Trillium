@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class AutoEZ extends Module {
     public AutoEZ() {
-        super("AutoEZ", "Пишет изи убил убил - после килла", Category.MISC, true, false, false);
+        super("AutoEZ", "Writes nice words when you kill smone C:", Category.MISC, true, false, false);
         loadEZ();
     }
 
@@ -57,7 +57,7 @@ public class AutoEZ extends Module {
             final SPacketChat packet = e.getPacket();
             if (packet.getType() != ChatType.GAME_INFO) {
                 a = packet.getChatComponent().getFormattedText();
-                if(a.contains("Вы убили игрока")){
+                if(a.contains("You killed a player")){
                     b = TrilliumUtils.solvename(a);
 
                     if(Mode.getValue() == ModeEn.Basic) {
@@ -66,7 +66,7 @@ public class AutoEZ extends Module {
                         c = EZ[n].replace("%player%", b);
                     } else {
                         if(EZWORDS.isEmpty()){
-                            Command.sendMessage("Файл с AutoEZ пустой!");
+                            Command.sendMessage("The file with AutoEZ is empty!");
                             return;
                         }
                         c = EZWORDS.get(new Random().nextInt(EZWORDS.size()));

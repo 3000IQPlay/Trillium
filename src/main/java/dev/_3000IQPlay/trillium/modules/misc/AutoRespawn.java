@@ -9,7 +9,7 @@ import dev._3000IQPlay.trillium.util.Timer;
 
 public class AutoRespawn extends Module {
     public AutoRespawn() {
-        super("AutoRespawn", "автореспавн с автокитом", Category.PLAYER, true, false, false);
+        super("AutoRespawn", "Automatically respawns when you die", Category.PLAYER, true, false, false);
         this.timer = new Timer();
     }
     public Setting<Boolean> deathcoords = this.register ( new Setting <> ( "deathcoords", true ) );

@@ -27,7 +27,7 @@ public class Velocity
     public Setting<Boolean> ice = this.register(new Setting<Boolean>("Ice", false));
 
     public Velocity() {
-        super("Velocity", "акэбэшка", Module.Category.MOVEMENT, true, false, false);
+        super("Velocity", "Allows you to control your velocity", Module.Category.MOVEMENT, true, false, false);
         this.setInstance();
     }
 

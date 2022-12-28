@@ -1,7 +1,5 @@
 package dev._3000IQPlay.trillium.modules.render;
 
-
-
 public class Rotation{
     public float yaw;
     public float pitch;

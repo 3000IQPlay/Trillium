@@ -37,7 +37,7 @@ import static dev._3000IQPlay.trillium.util.PlayerUtils.getPlayerPos;
 
 public class StashFinder extends Module {
 
-    public StashFinder() {super("StashFinder", "ищет стеши в зоне-прогрузки", Module.Category.MISC, true, false, false);}
+    public StashFinder() {super("StashFinder", "looking for stashes in the loading zone", Module.Category.MISC, true, false, false);}
 
     private Timer timer = new Timer();
     private HashMap<Chunk, ArrayList<TileEntity>> map = new HashMap<>();
@@ -100,10 +100,10 @@ public class StashFinder extends Module {
 
         //Send chat message
         if (chatMessage.getValue()) {
-            Command.sendMessage("Нашел чанк с " + list.size() + " на X: " + x + " Z: " + z);
+            Command.sendMessage("Found a chunk with " + list.size() + " on X: " + x + " Z: " + z);
         }
         if(notif.getValue()){
-            NotificationManager.publicity("StashFinder","Нашел чанк с " + list.size() + " на X: " + x + " Z: " + z,3, NotificationType.SUCCESS );
+            NotificationManager.publicity("StashFinder","Found a chunk with " + list.size() + " on X: " + x + " Z: " + z,3, NotificationType.SUCCESS );
         }
 
         //Play sound
@@ -113,7 +113,7 @@ public class StashFinder extends Module {
 
         //Send windows alert
         if (windowsAlert.getValue()) {
-            sendWindowsAlert("Нашел стеш!");
+            sendWindowsAlert("Found a stash!");
         }
 
         //Log it to the file

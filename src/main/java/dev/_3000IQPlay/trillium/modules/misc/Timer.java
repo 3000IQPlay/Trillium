@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Timer extends Module {
     public Timer() {
-        super("Timer", "Timer", Category.MOVEMENT, true, false, false);
+        super("Timer", "Speeds up time", Category.MOVEMENT, true, false, false);
     }
 
     private DynamicAnimation violation = new DynamicAnimation();

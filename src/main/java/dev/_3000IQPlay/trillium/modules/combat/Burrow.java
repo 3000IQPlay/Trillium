@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Burrow extends Module{
     public Burrow( ) {
-        super ( "Burrow" , "Ставит в тебя блок" , Category.COMBAT , true , false , false );
+        super ( "Burrow" , "Turns you into 8yo kid" , Category.COMBAT , true , false , false );
     }
     private volatile double last_x;
     private volatile double last_y;

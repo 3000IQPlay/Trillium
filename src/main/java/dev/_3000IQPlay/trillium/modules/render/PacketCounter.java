@@ -38,13 +38,7 @@ public class PacketCounter extends Module{
     public Setting<Integer> i1 = register(new Setting("green under", 20, 0, 100, v-> Mode.getValue() == mode.Custom));
     public Setting<Integer> i2 = register(new Setting("Orange under", 50, 0, 100, v-> Mode.getValue() == mode.Custom));
     public Setting<Integer> i3 = register(new Setting("Red", 50, 0, 100, v-> Mode.getValue() == mode.Custom));
-
-
     public Setting<Boolean> notif = this.register(new Setting<Boolean>("Notification", true));
-
-
-
-
 
     public int i = 0;
     @SubscribeEvent
@@ -62,19 +56,11 @@ public class PacketCounter extends Module{
 
     @SubscribeEvent
     public void onRender2D(Render2DEvent event){
-
-
         y1 = sr.getScaledHeight() / (1000f/ waterMarkZ1.getValue());
         x1 = sr.getScaledWidth() / (1000f/ waterMarkZ2.getValue());
-
-
-
         Color color = null;
-
         RenderUtil.drawSmoothRect(waterMarkZ2.getValue(), waterMarkZ1.getValue(), 93 + waterMarkZ2.getValue(), 20 + waterMarkZ1.getValue(), new Color(35, 35, 40, 230).getRGB());
         RenderUtil.drawSmoothRect(waterMarkZ2.getValue() + 3, waterMarkZ1.getValue() + 12 , 90 + waterMarkZ2.getValue(), 15 + waterMarkZ1.getValue(), new Color(51, 51, 58, 230).getRGB());
-
-
         if(Mode.getValue() == mode.FunnyGame) {
             if (i < 25) {
                 color = new Color(54, 250, 0, 255);
@@ -85,7 +71,7 @@ public class PacketCounter extends Module{
             if (i > 50) {
                 color = new Color(255, 0, 0, 255);
                 if(notif.getValue()) {
-                    NotificationManager.publicity("PacketCounter", "Вырубай, ща кикнет!!!", 2, NotificationType.WARNING);
+                    NotificationManager.publicity("PacketCounter", "Too many packets!!!", 2, NotificationType.WARNING);
                 }
             }
         }
@@ -98,7 +84,7 @@ public class PacketCounter extends Module{
             }
             if (i > 50) {
                 color = new Color(255, 0, 0, 255);
-                NotificationManager.publicity("PacketCounter", "Вырубай, ща кикнет!!!", 2, NotificationType.WARNING);
+                NotificationManager.publicity("PacketCounter", "Too many packets!!!", 2, NotificationType.WARNING);
             }
         }
         if(Mode.getValue() == mode.Custom) {
@@ -110,23 +96,12 @@ public class PacketCounter extends Module{
             }
             if (i > i3.getValue()) {
                 color = new Color(255, 0, 0, 255);
-                NotificationManager.publicity("PacketCounter", "Вырубай, ща кикнет!!!", 2, NotificationType.WARNING);
+                NotificationManager.publicity("PacketCounter", "Too many packets!!!", 2, NotificationType.WARNING);
             }
         }
-
-
-
         if(color != null) {
             RenderUtil.drawSmoothRect(waterMarkZ2.getValue() + 3, waterMarkZ1.getValue() + 12, (Math.min(i, 85)) + waterMarkZ2.getValue() + 5, 15 + waterMarkZ1.getValue(), color.getRGB());
         }
-
         Util.fr.drawStringWithShadow("PacketCounter",waterMarkZ2.getValue() + 3, waterMarkZ1.getValue() + 1, PaletteHelper.astolfo(false, (int) 1).getRGB());
-// лево верх право низ
-        // прямоугольник лево верх право низ
-
     }
-
-//fun gam max 60 500ms
-    //strict max is ?? ask хач for this shit
-
 }

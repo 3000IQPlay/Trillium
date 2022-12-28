@@ -44,7 +44,7 @@ public class BowSpam
     private int lastHotbarSlot = -1;
 
     public BowSpam() {
-        super("BowSpam", "Спамит стрелами", Module.Category.COMBAT, true, false, false);
+        super("BowSpam", "Spamming arrows", Module.Category.COMBAT, true, false, false);
     }
 
     @Override

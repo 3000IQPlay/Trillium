@@ -28,7 +28,7 @@ import java.util.List;
 public class OffHand extends Module {
 
     public OffHand() {
-        super("OffHand", "Автототем", Category.COMBAT, true, false, false);
+        super("OffHand", "Allows you to switch up your Offhand", Category.COMBAT, true, false, false);
     }
 
     public Setting<Boolean> totem = this.register(new Setting<>("Totem", true));

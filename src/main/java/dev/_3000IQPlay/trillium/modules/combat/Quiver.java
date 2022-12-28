@@ -21,7 +21,7 @@ public class Quiver extends Module
 
 
     public Quiver() {
-        super("Quiver",  "Накладывать эффекты-на себя с лука ",  Category.COMBAT,  true,  false,  false);
+        super("Quiver",  "Shoots your self with a good Arrow effects",  Category.COMBAT,  true,  false,  false);
     }
 
     public  final Setting<Boolean> speed = this.register(new Setting<>("Swiftness", false));

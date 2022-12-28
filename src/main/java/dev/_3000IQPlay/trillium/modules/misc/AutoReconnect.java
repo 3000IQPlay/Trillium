@@ -18,7 +18,7 @@ public class AutoReconnect extends Module
     private static AutoReconnect INSTANCE;
 
     public AutoReconnect() {
-        super("AutoReconnect",  "коннектит к серву-если кикнуло",  Category.MISC,  true,  false,  false);
+        super("AutoReconnect",  "Automatically reconnects you when you get kicked",  Category.MISC,  true,  false,  false);
         this.setInstance();
     }
     public Setting<Integer> delay = this.register ( new Setting <> ( "delay", 34, 0, 90 ) );

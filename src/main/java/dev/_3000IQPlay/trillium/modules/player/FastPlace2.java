@@ -27,7 +27,7 @@ import java.awt.*;
 public class FastPlace2
         extends Module {
     public FastPlace2() {
-        super("FastPlace", "пайро автоменд", Module.Category.PLAYER, true, false, false);
+        super("FastPlace", "Automend + FastPlace in 1", Module.Category.PLAYER, true, false, false);
     }
     public static BlockPos target;
 

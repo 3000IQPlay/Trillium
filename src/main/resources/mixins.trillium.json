@@ -14,7 +14,7 @@
     "IEntityRenderer",
     "IGuiScreen",
     "IItemTool",
-	"INetworkManager",
+   "INetworkManager",
     "IPlayerControllerMP",
     "IRenderGlobal",
     "ISPacketEntity",
@@ -48,7 +48,6 @@
     "MixinRenderPlayer",
     "MixinServerListEntryNormal",
     "MixinSPacketSpawnObject",
-    "MixinTimer",
     "MixinWorld"
   ],
   "client": [

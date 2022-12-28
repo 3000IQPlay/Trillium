@@ -22,17 +22,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SeedOverlay extends Module{
-    public SeedOverlay() {
-    super("SeedOverlay", "рендерит фейковый мир-для поиска несоответсвий", Module.Category.MISC, false, false, false);
-    }
-
-
+public class SeedOverlay
+        extends Module{
     public Setting <Integer> BlockLimit = this.register ( new Setting <> ( "Chance", 200, 0, 5000 ) );
     public Setting <Integer> Distance = this.register ( new Setting <> ( "Distance", 6, 0, 15 ) );
-
-
-
     public Setting<Boolean> GrassSpread = register(new Setting("GrassSpread", false));
     public Setting<Boolean> FalsePositive = register(new Setting("FalsePositive", false));
     public Setting<Boolean> LavaMix = register(new Setting("LavaMix", false));
@@ -40,27 +33,24 @@ public class SeedOverlay extends Module{
     public Setting<Boolean> Tree = register(new Setting("Tree", false));
     public Setting<Boolean> Liquid = register(new Setting("Liquid", false));
     public Setting<Boolean> Fallingblock = register(new Setting("Fallingblock", false));
-
     public Setting<String> sd = this.register(new Setting<String>("seed", "-4172144997902289642"));
-
-
-
     private static ExecutorService executor;
     private static ExecutorService executor2;
     public int currentdis = 0;
-
-
-
     private ArrayList<ChunkData> chunks = new ArrayList<>();
     private ArrayList<int[]> tobesearch = new ArrayList<>();
     private final Timer timer = new Timer();
+	
+	public SeedOverlay() {
+        super("SeedOverlay", "Renders a fake world to look for inconsistencies", Module.Category.MISC, false, false, false);
+    }
 
     @Override
     public void onUpdate() {
 
         if (timer.passedMs(500)) {
             if (mc.player.dimension != currentdis) {
-                Command.sendMessage("Перевключи модуль");
+                Command.sendMessage("Toggles the module");
                 this.toggle();
             }
             searchViewDistance();
@@ -83,16 +73,16 @@ public class SeedOverlay extends Module{
     public void onEnable() {
         WorldLoader.seed = Long.parseLong(sd.getValue());
         try {
-            NotificationManager.publicity("SeedOverlay", "настроен на " + WorldLoader.seed, 3, NotificationType.INFO);
+            NotificationManager.publicity("SeedOverlay", "Set to " + WorldLoader.seed, 3, NotificationType.INFO);
         } catch (Exception e){}
         //  executor = Executors.newSingleThreadExecutor();
        // executor2 = Executors.newSingleThreadExecutor();
         if (mc.isSingleplayer()) {
-            Command.sendMessage("только в мультиплеере дебил тупой конч безмамный");
+            Command.sendMessage("You need to be in multiplayer dumbo");
             this.toggle();
         }
         if (WorldLoader.seed == 44776655) {
-            Command.sendMessage("Нет сида дебил");
+            Command.sendMessage("I hope u are just jokin around");
             this.toggle();
             return;
         }

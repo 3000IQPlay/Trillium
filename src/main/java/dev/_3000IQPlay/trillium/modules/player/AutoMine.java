@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class AutoMine extends Module {
 
     public AutoMine() {
-        super("AutoMine", "AutoMine", Category.PLAYER, true, false, false);
+        super("AutoMine", "Mines your enemies surrounding", Category.PLAYER, true, false, false);
     }
 
 

@@ -65,7 +65,7 @@ public class ToolTips
     private int textRadarY;
 
     public ToolTips() {
-        super("ToolTips", "показывает содержимое-шалкера/карты/книги", Module.Category.MISC, true, false, false);
+        super("ToolTips", "shows content - shulker/card/book", Module.Category.MISC, true, false, false);
         this.setInstance();
     }
 

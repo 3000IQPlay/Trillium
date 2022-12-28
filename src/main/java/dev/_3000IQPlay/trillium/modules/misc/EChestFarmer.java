@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class EChestFarmer extends Module{
-    public EChestFarmer() {super("EChestFarmer", "афк фарм обсы", Module.Category.MISC, true, false, false);}
+    public EChestFarmer() {super("EChestFarmer", "AFK farm for obi", Module.Category.MISC, true, false, false);}
 
     private  final Setting<Integer> range = this.register(new Setting<>("Range", 2, 1, 3));
     private final Setting<Integer> bd = this.register(new Setting<Integer>("BreakDelay", 4000, 0, 5000));

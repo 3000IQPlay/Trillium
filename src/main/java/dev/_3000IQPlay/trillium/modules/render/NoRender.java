@@ -36,7 +36,7 @@ class NoRender
     public Setting < Boolean > fire = this.register ( new Setting <> ( "Fire" , false  ) );
     public Setting < Boolean > blin = this.register ( new Setting <> ( "Blind" , false  ) );
     public Setting < Boolean > arrows = this.register ( new Setting <> ( "Arrows" , false ) );
-
+    public Setting < Boolean > containerBackground = this.register ( new Setting <> ( "ContainerBG" , false ) );
     public Setting < Boolean > SkyLight = this.register ( new Setting <> ( "SkyLight" , false ) );
     public Setting < Boolean > portal = this.register ( new Setting <> ( "portal" , false  ) );
     public Setting < Boolean > totemPops = this.register ( new Setting <> ( "TotemPop" , false  ) );
@@ -60,7 +60,7 @@ class NoRender
 
     public
     NoRender ( ) {
-        super ( "NoRender" , "не рендерить лаганые-херни" , Module.Category.RENDER , true , false , false );
+        super ( "NoRender" , "Un-renders things fr" , Module.Category.RENDER , true , false , false );
         this.setInstance ( );
     }
 

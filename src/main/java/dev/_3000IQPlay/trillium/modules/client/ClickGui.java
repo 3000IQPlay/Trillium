@@ -20,12 +20,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.input.Mouse;
 
-
 import java.awt.*;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
-
 
 public class ClickGui
         extends Module {
@@ -34,9 +32,7 @@ public class ClickGui
     private long fadeinnn;
     private int n;
     public int i = 85;
-
     private final Timer timer = new Timer();
-
     private Setting<colorModeEn> colorMode = register(new Setting("ColorMode", colorModeEn.Analogous));
 	public Setting<Boolean> darkBackGround = this.register(new Setting<Boolean>("DarkBackGround", true));
 	public Setting<Boolean> showBinds = this.register(new Setting<Boolean>("ShowBinds", true));
@@ -57,7 +53,7 @@ public class ClickGui
 
     public String[] myString;
     public ClickGui() {
-        super("ClickGui", "старый кликгуи", Module.Category.CLIENT, true, false, false);
+        super("ClickGui", "Important module", Module.Category.CLIENT, true, false, false);
         this.setInstance();
     }
 
@@ -116,10 +112,6 @@ public class ClickGui
 		}
     }
 
-
-
-
-
     @Override
     public void onDisable() {
         timer.reset();
@@ -127,7 +119,6 @@ public class ClickGui
             ClickGui.mc.entityRenderer.getShaderGroup().deleteShaderGroup();
         }
     }
-
 
     @Override
     public void onLoad() {

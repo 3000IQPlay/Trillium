@@ -14,7 +14,7 @@ import static dev._3000IQPlay.trillium.util.PyroSpeed.isMovingClient;
 
 public class LiquidBoost extends Module {
     public LiquidBoost() {
-        super("LiquidBoost", "LiquidBoost", Category.MOVEMENT, true, false, false);
+        super("LiquidBoost", "Boosts your speed in Liquid", Category.MOVEMENT, true, false, false);
     }
 
 

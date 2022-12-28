@@ -25,7 +25,7 @@ import org.lwjgl.opengl.GL11;
 public class Interactions extends Module {
 
     public Interactions() {
-        super("BreakHighLight", "рендерит ломания-блоков", Category.RENDER, true, false, false);
+        super("BreakHighLight", "Renders blocks that are being broken", Category.RENDER, true, false, false);
     }
 
     private  Setting<BreakRenderMode> bRenderMode = this.register(new Setting<>("BRenderMove", BreakRenderMode.GROW));

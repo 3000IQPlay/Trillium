@@ -26,9 +26,8 @@ import java.util.Random;
 public class ElytraFlight extends Module {
     public static ElytraFlight INSTANCE = new ElytraFlight();
     public ElytraFlight() {
-        super("ElytraFlight", "бусты для 2б", Category.MOVEMENT,true,false,false);
+        super("ElytraFlight", "2b2t boost", Category.MOVEMENT,true,false,false);
     }
-
     private  Setting<Mode> mode =register( new Setting<>("Mode", Mode.BOOST));
 
     private  Setting<Boolean> groundSafety = register(new Setting<>("GroundSafety", false,v -> mode.getValue() == Mode.FIREWORK));
@@ -102,7 +101,7 @@ public class ElytraFlight extends Module {
             mc.player.capabilities.isFlying = false;
         }
        // KonasGlobals.INSTANCE.timerManager.resetTimer(this); //TODO
-        Trillium.TICK_TIMER = 1.0f;
+        ElytraFlight.mc.timer.tickLength = 50.0f / 1.0f;
         hasElytra = false;
     }
 
@@ -135,13 +134,13 @@ public class ElytraFlight extends Module {
 
             if (strictTimer.passedMs(1500) && !strictTimer.passedMs(2000)) {
                 //  KonasGlobals.INSTANCE.timerManager.resetTimer(this); //TODO
-                Trillium.TICK_TIMER = 1.0f;
+                ElytraFlight.mc.timer.tickLength = 50.0f / 1.0f;
             }
 
             if (!mc.player.isElytraFlying()) {
                 if (hasTouchedGround && boostTimer.getValue()  && !mc.player.onGround) {
                     //KonasGlobals.INSTANCE.timerManager.updateTimer(this, 25, 0.3F);//TODO
-                    Trillium.TICK_TIMER = 0.3f;
+                    ElytraFlight.mc.timer.tickLength = 50.0f / 0.3f;
                 }
                 if (!mc.player.onGround && instantFly.getValue() && mc.player.motionY < 0D) {
                     if (!instantFlyTimer.passedMs((long) (1000 * timeout.getValue()))) //кастанул к лонгу хз чо буит

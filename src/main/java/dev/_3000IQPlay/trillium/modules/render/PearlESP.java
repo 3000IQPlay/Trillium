@@ -23,16 +23,9 @@ public class PearlESP extends Module {
     public PearlESP() {
         super("PearlESP", "PearlESP", Category.RENDER, true, false, false);
     }
-
-
-
-
-
+	
     public static List<PredictionLine> lines;
     public static EntityEnderPearl entityPearl;
-
-
-
     private Setting<Boolean> pearlPrediction = this.register(new Setting<Boolean>("PearlPrediction", true));
     private Setting<Boolean> triangleESP = this.register(new Setting<Boolean>("TriangleESP", true));
 

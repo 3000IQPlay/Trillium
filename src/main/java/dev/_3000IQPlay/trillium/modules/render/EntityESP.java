@@ -37,7 +37,7 @@ import java.util.List;
 public class EntityESP extends Module {
 
     public EntityESP() {
-        super("EntityESP", "Ренднрит есп-сущностей", Category.RENDER, true, false, false);
+        super("EntityESP", "EntityESP", Category.RENDER, true, false, false);
     }
 
     private final int black = Color.BLACK.getRGB();
