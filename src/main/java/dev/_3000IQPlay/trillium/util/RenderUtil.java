@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -406,7 +408,23 @@ public class RenderUtil implements Util {
         GL11.glDepthMask(true);
         GL11.glDisable(3042);
     }
-
+	
+	public static void checkSetupFBO() {
+        Framebuffer fbo = RenderUtil.mc.framebuffer;
+        if (fbo != null && fbo.depthBuffer > -1) {
+            RenderUtil.setupFBO(fbo);
+            fbo.depthBuffer = -1;
+        }
+    }
+	
+	private static void setupFBO(Framebuffer fbo) {
+        EXTFramebufferObject.glDeleteRenderbuffersEXT(fbo.depthBuffer);
+        int stencilDepthBufferID = EXTFramebufferObject.glGenRenderbuffersEXT();
+        EXTFramebufferObject.glBindRenderbufferEXT(36161, stencilDepthBufferID);
+        EXTFramebufferObject.glRenderbufferStorageEXT(36161, 34041, RenderUtil.mc.displayWidth, RenderUtil.mc.displayHeight);
+        EXTFramebufferObject.glFramebufferRenderbufferEXT(36160, 36128, 36161, stencilDepthBufferID);
+        EXTFramebufferObject.glFramebufferRenderbufferEXT(36160, 36096, 36161, stencilDepthBufferID);
+    }
 
     public static void rectangleBordered(double x, double y, double x1, double y1, double width, int internalColor, int borderColor) {
         drawRect((float) (x + width), (float) (y + width), (float) (x1 - width), (float) (y1 - width), internalColor);
@@ -1049,6 +1067,59 @@ public class RenderUtil implements Util {
         return dev._3000IQPlay.trillium.util.RenderUtil.mc.world.getBlockState(blockPos).getBoundingBox(dev._3000IQPlay.trillium.util.RenderUtil.mc.world, blockPos).offset(blockPos);
     }
 
+    public static void renderOne(float lineWidth) {
+        RenderUtil.checkSetupFBO();
+        GL11.glPushAttrib(1048575);
+        GL11.glDisable(3008);
+        GL11.glDisable(3553);
+        GL11.glDisable(2896);
+        GL11.glEnable(3042);
+        GL11.glBlendFunc(770, 771);
+        GL11.glLineWidth(lineWidth);
+        GL11.glEnable(2848);
+        GL11.glEnable(2960);
+        GL11.glClear(1024);
+        GL11.glClearStencil(15);
+        GL11.glStencilFunc(512, 1, 15);
+        GL11.glStencilOp(7681, 7681, 7681);
+        GL11.glPolygonMode(1032, 6913);
+    }
+
+    public static void renderTwo() {
+        GL11.glStencilFunc(512, 0, 15);
+        GL11.glStencilOp(7681, 7681, 7681);
+        GL11.glPolygonMode(1032, 6914);
+    }
+
+    public static void renderThree() {
+        GL11.glStencilFunc(514, 1, 15);
+        GL11.glStencilOp(7680, 7680, 7680);
+        GL11.glPolygonMode(1032, 6913);
+    }
+
+    public static void renderFour(Color color) {
+        RenderUtil.setColor(color);
+        GL11.glDepthMask(false);
+        GL11.glDisable(2929);
+        GL11.glEnable(10754);
+        GL11.glPolygonOffset(1.0f, -2000000.0f);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
+    }
+
+    public static void renderFive() {
+        GL11.glPolygonOffset(1.0f, 2000000.0f);
+        GL11.glDisable(10754);
+        GL11.glEnable(2929);
+        GL11.glDepthMask(true);
+        GL11.glDisable(2960);
+        GL11.glDisable(2848);
+        GL11.glHint(3154, 4352);
+        GL11.glEnable(3042);
+        GL11.glEnable(2896);
+        GL11.glEnable(3553);
+        GL11.glEnable(3008);
+        GL11.glPopAttrib();
+    }
 
     public static void drawFilledBox(AxisAlignedBB bb, int color) {
         GlStateManager.pushMatrix();

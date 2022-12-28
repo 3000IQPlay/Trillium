@@ -1,142 +1,209 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
-import dev._3000IQPlay.trillium.event.events.CrystalRenderEvent;
-
+import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.modules.render.CrystalChams;
+import dev._3000IQPlay.trillium.util.RenderUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderDragon;
 import net.minecraft.client.renderer.entity.RenderEnderCrystal;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(RenderEnderCrystal.class)
-public abstract class MixinRenderEnderCrystal
-        extends Render<EntityEnderCrystal> {
-    @Shadow
+import java.awt.Color;
+
+@Mixin(value = {RenderEnderCrystal.class})
+public abstract class MixinRenderEnderCrystal {
+    private static final ResourceLocation RES_ITEM_GLINT;
+	private static final ResourceLocation RAINBOW_ITEM_GLINT;
     @Final
-    private ModelBase modelEnderCrystal;
     @Shadow
-    @Final
-    private ModelBase modelEnderCrystalNoBase;
-    private float scale;
+    private static ResourceLocation ENDER_CRYSTAL_TEXTURES;
 
-    @Deprecated
-    protected MixinRenderEnderCrystal(RenderManager renderManager) {
-        super(renderManager);
+    static {
+        RES_ITEM_GLINT = new ResourceLocation("textures/glint.png");
+		RAINBOW_ITEM_GLINT = new ResourceLocation("textures/rainbow.png");
     }
 
-    @Inject(
-            method = "doRender(Lnet/minecraft/entity/item/EntityEnderCrystal;DDDFF)V",
-            locals = LocalCapture.CAPTURE_FAILHARD,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/item/EntityEnderCrystal;shouldShowBottom()Z",
-                    shift = At.Shift.BEFORE),
-            cancellable = true)
-    public void preRenderHook(EntityEnderCrystal entity,
-                              double x, double y, double z,
-                              float entityYaw,
-                              float partialTicks,
-                              CallbackInfo ci, float f,
-                              float f1) {
+    @Shadow
+    public ModelBase modelEnderCrystal;
+    @Shadow
+    public ModelBase modelEnderCrystalNoBase;
 
-        float limbSwing = 0.0F;
-        float limbSwingAmount = f * 3.0F;
-        float ageInTicks = f1 * 0.2F;
-        float netHeadYaw = 0.0F;
-        float headPitch = 0.0F;
-        float scale = 0.0625F;
+    @Shadow
+    public abstract void doRender(EntityEnderCrystal var1, double var2, double var4, double var6, float var8, float var9);
 
-        ModelBase modelBase = entity.shouldShowBottom()
-                ? modelEnderCrystal : modelEnderCrystalNoBase;
-        RenderEnderCrystal renderLiving = RenderEnderCrystal.class.cast(this);
-        CrystalRenderEvent.Pre pre = new CrystalRenderEvent.Pre(renderLiving,
-                entity,
-                modelBase,
-                limbSwing,
-                limbSwingAmount,
-                ageInTicks,
-                netHeadYaw,
-                headPitch,
-                scale);
-        MinecraftForge.EVENT_BUS.post(pre);
-        if (pre.isCanceled()) {
-            CrystalRenderEvent.Post post = new CrystalRenderEvent.Post(
-                    renderLiving, entity, modelBase, limbSwing, limbSwingAmount,
-                    ageInTicks, netHeadYaw, headPitch, scale);
-            MinecraftForge.EVENT_BUS.post(post);
-
-            exitDoRender(entity, x, y, z, entityYaw, partialTicks, f1);
-            ci.cancel();
+    @Redirect(method = {"doRender(Lnet/minecraft/entity/item/EntityEnderCrystal;DDDFF)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBase;render(Lnet/minecraft/entity/Entity;FFFFFF)V"))
+    private void render1(ModelBase var1, Entity var2, float var3, float var4, float var5, float var6, float var7, float var8) {
+        if (!Trillium.moduleManager.getModuleByClass(CrystalChams.class).isEnabled()) {
+            var1.render(var2, var3, var4, var5, var6, var7, var8);
         }
     }
 
-    @Inject(
-            method = "doRender(Lnet/minecraft/entity/item/EntityEnderCrystal;DDDFF)V",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/client/renderer/entity/RenderEnderCrystal;renderOutlines:Z",
-                    ordinal = 1,
-                    shift = At.Shift.BEFORE),
-            locals = LocalCapture.CAPTURE_FAILHARD)
-    public void postRenderHook(
-            EntityEnderCrystal entity, double x, double y, double z,
-            float entityYaw, float partialTicks, CallbackInfo ci,
-            float f, float f1) {
-
-        float limbSwingAmount = f * 3.0F;
-        float ageInTicks = f1 * 0.2F;
-        ModelBase modelBase = entity.shouldShowBottom()
-                ? modelEnderCrystal : modelEnderCrystalNoBase;
-        RenderEnderCrystal renderLiving = RenderEnderCrystal.class.cast(this);
-
-        CrystalRenderEvent.Post post = new CrystalRenderEvent.Post(
-                renderLiving, entity, modelBase, 0.0F, limbSwingAmount,
-                ageInTicks, 0.0F, 0.0F, 0.0625F);
-
-        MinecraftForge.EVENT_BUS.post(post);
-
+    @Redirect(method = {"doRender(Lnet/minecraft/entity/item/EntityEnderCrystal;DDDFF)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBase;render(Lnet/minecraft/entity/Entity;FFFFFF)V", ordinal = 1))
+    private void render2(ModelBase var1, Entity var2, float var3, float var4, float var5, float var6, float var7, float var8) {
+        if (!Trillium.moduleManager.getModuleByClass(CrystalChams.class).isEnabled()) {
+            var1.render(var2, var3, var4, var5, var6, var7, var8);
+        }
     }
 
-    private void exitDoRender(EntityEnderCrystal entity, double x, double y,
-                              double z, float entityYaw, float partialTicks,
-                              float f1) {
-
-        if (this.renderOutlines) {
-            GlStateManager.disableOutlineMode();
-            GlStateManager.disableColorMaterial();
+    @Inject(method = {"doRender(Lnet/minecraft/entity/item/EntityEnderCrystal;DDDFF)V"}, at = {@At(value = "RETURN")}, cancellable = true)
+    public void IdoRender(EntityEnderCrystal var1, double var2, double var4, double var6, float var8, float var9, CallbackInfo var10) {
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.gameSettings.fancyGraphics = false;
+        if (Trillium.moduleManager.getModuleByClass(CrystalChams.class).isEnabled()) {
+            Color outlineColor;
+            GL11.glPushMatrix();
+            float var14 = (float) var1.innerRotation + var9;
+            GlStateManager.translate((double) var2, (double) var4, (double) var6);
+            GlStateManager.scale((float) CrystalChams.INSTANCE.size.getValue().floatValue(), (float) CrystalChams.INSTANCE.size.getValue().floatValue(), (float) CrystalChams.INSTANCE.size.getValue().floatValue());
+            Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(ENDER_CRYSTAL_TEXTURES);
+            float var15 = MathHelper.sin((float) (var14 * 0.2f)) / 2.0f + 0.5f;
+            var15 += var15 * var15;
+            float spinSpeed = CrystalChams.INSTANCE.crystalSpeed.getValue().floatValue();
+            float bounceSpeed = CrystalChams.INSTANCE.crystalBounce.getValue().floatValue();
+            if (CrystalChams.INSTANCE.texture.getValue().booleanValue()) {
+                if (var1.shouldShowBottom()) {
+                    this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                } else {
+                    this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                }
+            }
+            GL11.glPushAttrib((int) 1048575);
+            if (CrystalChams.INSTANCE.mode.getValue().equals((Object) CrystalChams.modes.WIREFRAME)) {
+                GL11.glPolygonMode((int) 1032, (int) 6913);
+            }
+            if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Default)) {
+				GL11.glBlendFunc((int) 770, (int) 771);
+            }
+			if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Brighter)) {
+                GL11.glBlendFunc((int)770, (int)32772);
+            }
+            GL11.glDisable((int) 3008);
+            GL11.glDisable((int) 3553);
+            GL11.glDisable((int) 2896);
+            GL11.glEnable((int) 3042);
+            GL11.glLineWidth((float) 1.5f);
+            GL11.glEnable((int) 2960);
+            GL11.glDisable((int) 2929);
+            GL11.glDepthMask((boolean) false);
+            GL11.glEnable((int) 10754);
+            Color visibleColor = new Color(CrystalChams.INSTANCE.colorC.getValue().getRed(), CrystalChams.INSTANCE.colorC.getValue().getGreen(), CrystalChams.INSTANCE.colorC.getValue().getBlue());
+            Color hiddenColor = new Color(CrystalChams.INSTANCE.hiddenC.getValue().getRed(), CrystalChams.INSTANCE.hiddenC.getValue().getGreen(), CrystalChams.INSTANCE.hiddenC.getValue().getBlue());
+            Color color = outlineColor = new Color(CrystalChams.INSTANCE.outlineC.getValue().getRed(), CrystalChams.INSTANCE.outlineC.getValue().getGreen(), CrystalChams.INSTANCE.outlineC.getValue().getBlue());
+            if (CrystalChams.INSTANCE.hiddenSync.getValue().booleanValue()) {
+                GL11.glColor4f((float) ((float) visibleColor.getRed() / 255.0f), (float) ((float) visibleColor.getGreen() / 255.0f), (float) ((float) visibleColor.getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.colorC.getValue().getAlpha() / 255.0f));
+            } else {
+                GL11.glColor4f((float) ((float) hiddenColor.getRed() / 255.0f), (float) ((float) hiddenColor.getGreen() / 255.0f), (float) ((float) hiddenColor.getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.hiddenC.getValue().getAlpha() / 255.0f));
+            }
+            if (var1.shouldShowBottom()) {
+                this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+            } else {
+                this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+            }
+            GL11.glEnable((int) 2929);
+            GL11.glDepthMask((boolean) true);
+            GL11.glColor4f((float) ((float) visibleColor.getRed() / 255.0f), (float) ((float) visibleColor.getGreen() / 255.0f), (float) ((float) visibleColor.getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.colorC.getValue().getAlpha() / 255.0f));
+            if (var1.shouldShowBottom()) {
+                this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+            } else {
+                this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+            }
+            if (CrystalChams.INSTANCE.enchanted.getValue().booleanValue()) {
+				if (CrystalChams.INSTANCE.glint.getValue().equals((Object) CrystalChams.Glint.Normal)) {
+                    mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
+			    } else {
+					mc.getTextureManager().bindTexture(RAINBOW_ITEM_GLINT);
+			    }
+                GL11.glTexCoord3d((double) 1.0, (double) 1.0, (double) 1.0);
+                GL11.glEnable((int) 3553);
+                GL11.glColor4f((float) ((float) CrystalChams.INSTANCE.glintC.getValue().getRed() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getGreen() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getAlpha() / 255.0f));
+                if (var1.shouldShowBottom()) {
+                    this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                } else {
+                    this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                }
+			    if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Brighter)) {
+                    GL11.glBlendFunc((int)770, (int)32772);
+			    } else {
+                    GL11.glBlendFunc((int)768, (int)771);	
+                }
+                GL11.glColor4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+            }
+            GL11.glEnable((int) 3042);
+            GL11.glEnable((int) 2896);
+            GL11.glEnable((int) 3553);
+            GL11.glEnable((int) 3008);
+            GL11.glPopAttrib();
+            if (CrystalChams.INSTANCE.outline.getValue().booleanValue()) {
+                if (CrystalChams.INSTANCE.outlineMode.getValue().equals((Object) CrystalChams.outlineModes.WIRE)) {
+                    GL11.glPushAttrib((int) 1048575);
+                    GL11.glPolygonMode((int) 1032, (int) 6913);
+                    GL11.glDisable((int) 3008);
+                    GL11.glDisable((int) 3553);
+                    GL11.glDisable((int) 2896);
+                    GL11.glEnable((int) 3042);
+                    GL11.glBlendFunc((int) 770, (int) 771);
+                    GL11.glLineWidth((float) CrystalChams.INSTANCE.lineWidth.getValue().floatValue());
+                    GL11.glEnable((int) 2960);
+                    GL11.glDisable((int) 2929);
+                    GL11.glDepthMask((boolean) false);
+                    GL11.glEnable((int) 10754);
+                    GL11.glColor4f((float) ((float) outlineColor.getRed() / 255.0f), (float) ((float) outlineColor.getGreen() / 255.0f), (float) ((float) outlineColor.getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.outlineC.getValue().getAlpha() / 255.0f));
+                    if (var1.shouldShowBottom()) {
+                        this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    } else {
+                        this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    }
+                    GL11.glEnable((int) 2929);
+                    GL11.glDepthMask((boolean) true);
+                    if (var1.shouldShowBottom()) {
+                        this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    } else {
+                        this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    }
+                    GL11.glEnable((int) 3042);
+                    GL11.glEnable((int) 2896);
+                    GL11.glEnable((int) 3553);
+                    GL11.glEnable((int) 3008);
+                    GL11.glPopAttrib();
+                } else {
+                    RenderUtil.setColor(new Color(outlineColor.getRed(), outlineColor.getGreen(), outlineColor.getBlue()));
+                    RenderUtil.renderOne(CrystalChams.INSTANCE.lineWidth.getValue().floatValue());
+                    if (var1.shouldShowBottom()) {
+                        this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    } else {
+                        this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    }
+                    RenderUtil.renderTwo();
+                    if (var1.shouldShowBottom()) {
+                        this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    } else {
+                        this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    }
+                    RenderUtil.renderThree();
+                    RenderUtil.renderFour(outlineColor);
+                    RenderUtil.setColor(new Color(outlineColor.getRed(), outlineColor.getGreen(), outlineColor.getBlue()));
+                    if (var1.shouldShowBottom()) {
+                        this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    } else {
+                        this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
+                    }
+                    RenderUtil.renderFive();
+                    RenderUtil.setColor(Color.WHITE);
+                }
+            }
+            GL11.glPopMatrix();
         }
-
-        GlStateManager.popMatrix();
-        BlockPos blockpos = entity.getBeamTarget();
-
-        if (blockpos != null) {
-            this.bindTexture(RenderDragon.ENDERCRYSTAL_BEAM_TEXTURES);
-            float f2 = (float) blockpos.getX() + 0.5F;
-            float f3 = (float) blockpos.getY() + 0.5F;
-            float f4 = (float) blockpos.getZ() + 0.5F;
-            double d0 = (double) f2 - entity.posX;
-            double d1 = (double) f3 - entity.posY;
-            double d2 = (double) f4 - entity.posZ;
-            RenderDragon.renderCrystalBeams(x + d0,
-                    y - 0.3D + (double) (f1 * 0.4F) + d1,
-                    z + d2, partialTicks,
-                    f2, f3, f4, entity.innerRotation,
-                    entity.posX, entity.posY,
-                    entity.posZ);
-        }
-
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
-
 }

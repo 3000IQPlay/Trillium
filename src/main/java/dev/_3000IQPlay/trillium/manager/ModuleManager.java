@@ -170,6 +170,7 @@ public class ModuleManager
 		this.modules.add(new UnicodeLag());
         this.modules.add(new Strafe());
         this.modules.add(new Flight());
+        this.modules.add(new AntiContainer());
     }
 
     public Module getModuleByName(String name) {

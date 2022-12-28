@@ -1,145 +1,53 @@
 package dev._3000IQPlay.trillium.modules.render;
 
-import dev._3000IQPlay.trillium.command.Command;
-import dev._3000IQPlay.trillium.event.events.CrystalRenderEvent;
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.network.play.client.CPacketChatMessage;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.awt.*;
+import java.awt.Color;
 
-import static org.lwjgl.opengl.GL11.*;
-
-public class CrystalChams extends Module {
-    public CrystalChams() {
-        super("CrystalChams", "CrystalChams", Category.MISC, true, false, false);
-    }
-
-
-    public final Setting<ColorSetting> color = this.register(new Setting<>("Color", new ColorSetting(3649978)));
-    public final Setting<ColorSetting> wireFrameColor = this.register(new Setting<>("WireframeColor", new ColorSetting(3649978)));
-
-    public Setting<Float> lineWidth = this.register(new Setting<Float>("LineWidth", 1.0f, 0.1f, 6.0f));
-
-    private Setting<ChamsMode> mode = register(new Setting("Mode", ChamsMode.Normal));
-
-    public enum ChamsMode {
-        Normal,
-        Gradient
-    }
-
-    public Setting<Boolean> chams = this.register(new Setting<Boolean>("Chams", true));
-    public Setting<Boolean> throughWalls = this.register(new Setting<Boolean>("ThroughWalls", true));
-    public Setting<Boolean> wireframe = this.register(new Setting<Boolean>("Wireframe", true));
-    public Setting<Boolean> wireWalls = this.register(new Setting<Boolean>("WireThroughWalls", true));
+public class CrystalChams
+        extends Module {
+    public static CrystalChams INSTANCE;
+    public Setting<modes> mode = this.register(new Setting<modes>("Mode", modes.FILL));
+    public Setting<outlineModes> outlineMode = this.register(new Setting<outlineModes>("Outline Mode", outlineModes.WIRE));
+    public Setting<Float> size = this.register(new Setting<Float>("Size", Float.valueOf(1.0f), Float.valueOf(0.1f), Float.valueOf(2.0f)));
+    public Setting<Float> crystalSpeed = this.register(new Setting<Float>("Speed", Float.valueOf(1.0f), Float.valueOf(0.1f), Float.valueOf(20.0f)));
+    public Setting<Float> crystalBounce = this.register(new Setting<Float>("Bounce", Float.valueOf(0.2f), Float.valueOf(0.1f), Float.valueOf(1.0f)));
+    public Setting<BlendModes> blendModes = this.register(new Setting<BlendModes>("Blend", BlendModes.Default));
+    public Setting<Boolean> enchanted = this.register(new Setting<Boolean>("Glint", false));
+	public Setting<Glint> glint = this.register(new Setting<Glint>("GlintType", Glint.Normal, v -> this.enchanted.getValue()));
+	public Setting<Color> glintC = this.register(new Setting<Color>("GlintColor", new Color(40, 192, 255, 255), v -> this.enchanted.getValue()));
     public Setting<Boolean> texture = this.register(new Setting<Boolean>("Texture", false));
+    public Setting<Boolean> colorSync = this.register(new Setting<Boolean>("Sync", false));
+	public Setting<Color> colorC = this.register(new Setting<Color>("Color", new Color(40, 192, 255, 255)));
+    public Setting<Boolean> outline = this.register(new Setting<Boolean>("Outline", false));
+    public Setting<Float> lineWidth = this.register(new Setting<Float>("LineWidth", Float.valueOf(1.0f), Float.valueOf(0.1f), Float.valueOf(5.0f), v -> this.outline.getValue()));
+	public Setting<Color> outlineC = this.register(new Setting<Color>("OutlineColor", new Color(40, 192, 255, 255), v -> this.outline.getValue()));
+    public Setting<Boolean> hiddenSync = this.register(new Setting<Boolean>("Hidden Sync", false));
+	public Setting<Color> hiddenC = this.register(new Setting<Color>("HiddenColor", new Color(40, 192, 255, 255), v -> this.hiddenSync.getValue() == false));
 
-
-
-
-
-    @SubscribeEvent
-    public void onRenderCrystal(CrystalRenderEvent.Pre e){
-            if (!texture.getValue()) {
-                e.setCanceled(true);
-            }
-
-            if (mode.getValue() == ChamsMode.Gradient) {
-                glPushAttrib(GL_ALL_ATTRIB_BITS);
-                glEnable(GL_BLEND);
-                glDisable(GL_LIGHTING);
-                glDisable(GL_TEXTURE_2D);
-                float alpha = color.getValue().getAlpha() / 255.0f;
-                glColor4f(1.0f, 1.0f, 1.0f, alpha);
-                e.getModel().render(e.getEntity(), e.getLimbSwing(), e.getLimbSwingAmount(), e.getAgeInTicks(), e.getNetHeadYaw(), e.getHeadPitch(), e.getScale());
-                glEnable(GL_TEXTURE_2D);
-
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                float f = (float) e.getEntity().ticksExisted + mc.getRenderPartialTicks();
-                mc.getTextureManager().bindTexture(new ResourceLocation("textures/rainbow.png"));
-                mc.entityRenderer.setupFogColor(true);
-                GlStateManager.enableBlend();
-                GlStateManager.depthFunc(514);
-                GlStateManager.depthMask(false);
-                GlStateManager.color(1.0f, 1.0f, 1.0f, alpha);
-
-                for (int i = 0; i < 2; ++i)
-                {
-                    GlStateManager.disableLighting();
-                    GlStateManager.color(1.0f, 1.0f, 1.0f, alpha);
-                    GlStateManager.matrixMode(5890);
-                    GlStateManager.loadIdentity();
-                    GlStateManager.scale(0.33333334F, 0.33333334F, 0.33333334F);
-                    GlStateManager.rotate(30.0F - (float)i * 60.0F, 0.0F, 0.0F, 0.5F);
-                    GlStateManager.translate(0.0F, f * (0.001F + (float)i * 0.003F) * 20.0F, 0.0F);
-                    GlStateManager.matrixMode(5888);
-                    e.getModel().render(e.getEntity(), e.getLimbSwing(), e.getLimbSwingAmount(), e.getAgeInTicks(), e.getNetHeadYaw(), e.getHeadPitch(), e.getScale());
-                }
-
-                GlStateManager.matrixMode(5890);
-                GlStateManager.loadIdentity();
-                GlStateManager.matrixMode(5888);
-                GlStateManager.enableLighting();
-                GlStateManager.depthMask(true);
-                GlStateManager.depthFunc(515);
-                GlStateManager.disableBlend();
-                mc.entityRenderer.setupFogColor(false);
-                glPopAttrib();
-            } else {
-                if (wireframe.getValue()) {
-                    Color wireColor = wireFrameColor.getValue().getColorObject();
-                    glPushAttrib(GL_ALL_ATTRIB_BITS);
-                    glEnable(GL_BLEND);
-                    glDisable(GL_TEXTURE_2D);
-                    glDisable(GL_LIGHTING);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                    glLineWidth(lineWidth.getValue());
-                    if (wireWalls.getValue()) {
-                        glDepthMask(false);
-                        glDisable(GL_DEPTH_TEST);
-                    }
-
-                    glColor4f(wireColor.getRed() / 255.0f,
-                            wireColor.getGreen() / 255.0f,
-                            wireColor.getBlue() / 255.0f,
-                            wireColor.getAlpha() / 255.0f);
-                    e.getModel().render(e.getEntity(), e.getLimbSwing(), e.getLimbSwingAmount(),
-                            e.getAgeInTicks(), e.getNetHeadYaw(), e.getHeadPitch(), e.getScale());
-                    glPopAttrib();
-                }
-
-                if (chams.getValue()) {
-                    Color chamsColor = color.getValue().getColorObject();
-                    glPushAttrib(GL_ALL_ATTRIB_BITS);
-                    glEnable(GL_BLEND);
-                    glDisable(GL_TEXTURE_2D);
-                    glDisable(GL_LIGHTING);
-                    glDisable(GL_ALPHA_TEST);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                    glEnable(GL_STENCIL_TEST);
-                    glEnable(GL_POLYGON_OFFSET_LINE);
-                    if (throughWalls.getValue()) {
-                        glDepthMask(false);
-                        glDisable(GL_DEPTH_TEST);
-                    }
-                    glColor4f(chamsColor.getRed() / 255.0f,
-                            chamsColor.getGreen() / 255.0f,
-                            chamsColor.getBlue() / 255.0f,
-                            chamsColor.getAlpha() / 255.0f);
-                    e.getModel().render(e.getEntity(), e.getLimbSwing(), e.getLimbSwingAmount(),
-                            e.getAgeInTicks(), e.getNetHeadYaw(), e.getHeadPitch(), e.getScale());
-                    glPopAttrib();
-                }
-            }
+    public CrystalChams() {
+        super("CrystalChams", "Modifies crystal rendering in different ways", Module.Category.RENDER, true, false, false);
+        INSTANCE = this;
     }
 
+    public static enum modes {
+        FILL,
+        WIREFRAME;
+    }
 
-
-
-
+    public static enum outlineModes {
+        WIRE,
+        FLAT;
+    }
+	
+    public static enum BlendModes {
+        Default,
+        Brighter;
+    }
+	
+	public static enum Glint {
+        Normal,
+        Rainbow;
+    }
 }
