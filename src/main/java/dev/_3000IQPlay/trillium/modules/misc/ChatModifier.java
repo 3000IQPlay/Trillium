@@ -26,9 +26,9 @@ public class ChatModifier
         extends Module {
     private static ChatModifier INSTANCE = new ChatModifier();
     private final Timer timer = new Timer();
-	public Setting<ColorSetting> cbgC = register(new Setting<ColorSetting>("ChatBGColor", new ColorSetting(0x14141423)));
+	public Setting<ColorSetting> cbgC = register(new Setting<ColorSetting>("ChatBGColor", new ColorSetting(-2038431489)));
 	public Setting<Boolean> gradient = register(new Setting<Boolean>("GradientBG", true));
-	public Setting<ColorSetting> gC = register(new Setting<ColorSetting>("GradientBGColor", new ColorSetting(0x28c0ff80), v -> this.gradient.getValue()));
+	public Setting<ColorSetting> gC = register(new Setting<ColorSetting>("GradientBGColor", new ColorSetting(-2046754817), v -> this.gradient.getValue()));
 	public Setting<Suffix> suffix = this.register(new Setting<Suffix>("Suffix", Suffix.None));
 	public Setting<Boolean> ctc = register(new Setting<Boolean>("CustomTextColor", false));
 	public Setting<TextColor> textcolor = this.register(new Setting<TextColor>("TextColorType", TextColor.GREEN, v -> this.ctc.getValue()));
