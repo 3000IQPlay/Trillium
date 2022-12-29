@@ -443,7 +443,4 @@ public abstract class MixinEntityRenderer
         d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double)partialTicks;
         cloudFog = this.mc.renderGlobal.hasCloudFog(d0, d1, d2, partialTicks);
     }
-
-
-
 }

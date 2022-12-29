@@ -27,24 +27,10 @@ public class CoolCrosshair extends Module {
     }
 
     public final Setting<ColorSetting> color = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
-
-
-
-
     public Setting<Float> car = this.register(new Setting<Float>("otstup", Float.valueOf(0.0f), Float.valueOf(0.1f), Float.valueOf(1.0f)));
     private final Setting<Boolean> smt = this.register(new Setting<Boolean>("smooth", Boolean.FALSE));
     public Setting<Float> lwid = this.register(new Setting<Float>("otstup", Float.valueOf(0.0f), Float.valueOf(0.1f), Float.valueOf(1.0f)));
     public Setting<Float> rounded2 = this.register(new Setting<Float>("Round2", Float.valueOf(0.0f), Float.valueOf(0.5f), Float.valueOf(20.0f)));
-
-
-
-
-
-
-
-
-
-
 
     @SubscribeEvent
     public void onRenderAttackIndicator(RenderAttackIndicatorEvent event) {
@@ -93,38 +79,36 @@ public class CoolCrosshair extends Module {
         boolean blend = GL11.glIsEnabled(GL_BLEND);
         GL11.glEnable(GL_BLEND);
 
-        if(BowKiller.Ready || mc.player.getHeldItemMainhand().getItem() != Items.BOW) {
-            animation = 0f;
-            status = (int) (360 / (1f / mc.itemRenderer.equippedProgressMainHand));
-            drawPartialCircle(x1, y1, rounded2.getValue(), 0, 360, lwid.getValue(), color.getValue().withAlpha(color.getValue().getAlpha() > 210 ? color.getValue().getAlpha() : color.getValue().getAlpha() + 40).getColorObject(), smt.getValue());
-            drawPartialCircle(x1, y1, rounded2.getValue() - car.getValue(), 0, 360, lwid.getValue(), color.getValue().withAlpha(color.getValue().getAlpha() > 210 ? color.getValue().getAlpha() : color.getValue().getAlpha() + 40).getColorObject(), smt.getValue());
-            drawPartialCircle(x1, y1, rounded2.getValue() + car.getValue(), 0, 360, lwid.getValue(), color.getValue().withAlpha(color.getValue().getAlpha() > 210 ? color.getValue().getAlpha() : color.getValue().getAlpha() + 40).getColorObject(), smt.getValue());
-            drawPartialCircle(x1, y1, rounded2.getValue(), 0, status, lwid.getValue(), PaletteHelper.astolfo(false, 1), smt.getValue());
-            drawPartialCircle(x1, y1, rounded2.getValue() - car.getValue(), 0, status, lwid.getValue(), PaletteHelper.astolfo(false, 1), smt.getValue());
-            drawPartialCircle(x1, y1, rounded2.getValue() + car.getValue(), 0, status, lwid.getValue(), PaletteHelper.astolfo(false, 1), smt.getValue());
-        } else {
-            if(animation < 20){
-                animation += 1f;
+        if (Trillium.moduleManager.getModuleByClass(BowKiller.class).isEnabled()) {
+            if(BowKiller.Ready || mc.player.getHeldItemMainhand().getItem() != Items.BOW) {
+                animation = 0f;
+                status = (int) (360 / (1f / mc.itemRenderer.equippedProgressMainHand));
+                drawPartialCircle(x1, y1, rounded2.getValue(), 0, 360, lwid.getValue(), color.getValue().withAlpha(color.getValue().getAlpha() > 210 ? color.getValue().getAlpha() : color.getValue().getAlpha() + 40).getColorObject(), smt.getValue());
+                drawPartialCircle(x1, y1, rounded2.getValue() - car.getValue(), 0, 360, lwid.getValue(), color.getValue().withAlpha(color.getValue().getAlpha() > 210 ? color.getValue().getAlpha() : color.getValue().getAlpha() + 40).getColorObject(), smt.getValue());
+                drawPartialCircle(x1, y1, rounded2.getValue() + car.getValue(), 0, 360, lwid.getValue(), color.getValue().withAlpha(color.getValue().getAlpha() > 210 ? color.getValue().getAlpha() : color.getValue().getAlpha() + 40).getColorObject(), smt.getValue());
+                drawPartialCircle(x1, y1, rounded2.getValue(), 0, status, lwid.getValue(), PaletteHelper.astolfo(false, 1), smt.getValue());
+                drawPartialCircle(x1, y1, rounded2.getValue() - car.getValue(), 0, status, lwid.getValue(), PaletteHelper.astolfo(false, 1), smt.getValue());
+                drawPartialCircle(x1, y1, rounded2.getValue() + car.getValue(), 0, status, lwid.getValue(), PaletteHelper.astolfo(false, 1), smt.getValue());
+            } else {
+                if(animation < 20){
+                    animation += 1f;
+                }
+                RoundedShader.drawRound(x1 - animation, y1 - 3f, animation*2, 6, 4,  new Color(0x0A0A0A));
+                RenderUtil.glScissor(x1 - animation, y1 - 3f, x1 + animation*2, x1 + 6, sr);
+                GL11.glEnable(GL11.GL_SCISSOR_TEST);
+                if(BowKiller.ticks > (float)Trillium.moduleManager.getModuleByClass(BowKiller.class).getMaxDelay() * 0.666f){
+                    FontRender.drawCentString5("charging.  ",x1,y1 - 0.5f,-1);
+                } else if(BowKiller.ticks > Trillium.moduleManager.getModuleByClass(BowKiller.class).getMaxDelay()/3f){
+                    FontRender.drawCentString5("charging.. ",x1,y1 - 0.5f,-1);
+                } else{
+                    FontRender.drawCentString5("charging...",x1,y1 - 0.5f,-1);
+                }
+                GL11.glDisable(GL11.GL_SCISSOR_TEST);
             }
-            RoundedShader.drawRound(x1 - animation, y1 - 3f, animation*2, 6, 4,  new Color(0x0A0A0A));
-            RenderUtil.glScissor(x1 - animation, y1 - 3f, x1 + animation*2, x1 + 6, sr);
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-
-            if(BowKiller.ticks > (float)Trillium.moduleManager.getModuleByClass(BowKiller.class).getMaxDelay() * 0.666f){
-                FontRender.drawCentString5("charging.  ",x1,y1 - 0.5f,-1);
-            } else if(BowKiller.ticks > Trillium.moduleManager.getModuleByClass(BowKiller.class).getMaxDelay()/3f){
-                FontRender.drawCentString5("charging.. ",x1,y1 - 0.5f,-1);
-            } else{
-                FontRender.drawCentString5("charging...",x1,y1 - 0.5f,-1);
+            if(!blend){
+                GL11.glDisable(GL_BLEND);
             }
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        }
-
-
-
-        if(!blend){
-            GL11.glDisable(GL_BLEND);
-        }
+		}
     }
 
 

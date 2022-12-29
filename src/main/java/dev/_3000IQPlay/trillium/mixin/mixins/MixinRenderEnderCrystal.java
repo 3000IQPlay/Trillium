@@ -25,14 +25,12 @@ import java.awt.Color;
 @Mixin(value = {RenderEnderCrystal.class})
 public abstract class MixinRenderEnderCrystal {
     private static final ResourceLocation RES_ITEM_GLINT;
-	private static final ResourceLocation RAINBOW_ITEM_GLINT;
     @Final
     @Shadow
     private static ResourceLocation ENDER_CRYSTAL_TEXTURES;
 
     static {
-        RES_ITEM_GLINT = new ResourceLocation("textures/glint.png");
-		RAINBOW_ITEM_GLINT = new ResourceLocation("textures/rainbow.png");
+        RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
     }
 
     @Shadow
@@ -120,23 +118,23 @@ public abstract class MixinRenderEnderCrystal {
                 this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
             }
             if (CrystalChams.INSTANCE.enchanted.getValue().booleanValue()) {
-				if (CrystalChams.INSTANCE.glint.getValue().equals((Object) CrystalChams.Glint.Normal)) {
-                    mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
-			    } else {
-					mc.getTextureManager().bindTexture(RAINBOW_ITEM_GLINT);
-			    }
+                mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
                 GL11.glTexCoord3d((double) 1.0, (double) 1.0, (double) 1.0);
                 GL11.glEnable((int) 3553);
+                GL11.glBlendFunc((int) 768, (int) 771);
                 GL11.glColor4f((float) ((float) CrystalChams.INSTANCE.glintC.getValue().getRed() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getGreen() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getAlpha() / 255.0f));
                 if (var1.shouldShowBottom()) {
                     this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                 } else {
                     this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                 }
+                if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Default)) {
+				    GL11.glBlendFunc((int) 768, (int) 771);
+                }
 			    if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Brighter)) {
                     GL11.glBlendFunc((int)770, (int)32772);
 			    } else {
-                    GL11.glBlendFunc((int)768, (int)771);	
+                    GL11.glBlendFunc((int)770, (int)771);	
                 }
                 GL11.glColor4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
             }

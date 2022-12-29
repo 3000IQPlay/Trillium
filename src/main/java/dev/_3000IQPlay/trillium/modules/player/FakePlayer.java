@@ -28,6 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FakePlayer extends Module {
+	private static FakePlayer INSTANCE = new FakePlayer();
     final private ItemStack[] armors = new ItemStack[]{
             new ItemStack(Items.DIAMOND_BOOTS),
             new ItemStack(Items.DIAMOND_LEGGINGS),
@@ -63,8 +64,19 @@ public class FakePlayer extends Module {
 
     public FakePlayer() {
         super("FakePlayer", "Summons client sided NPC :scream:", Module.Category.PLAYER, true, false, false);
+		this.setInstance();
+    }
+	
+	public static FakePlayer getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new FakePlayer();
+        }
+        return INSTANCE;
     }
 
+    private void setInstance() {
+        INSTANCE = this;
+    }
 
     @Override
     public void onLogout() {

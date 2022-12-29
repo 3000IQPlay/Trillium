@@ -18,6 +18,7 @@ public class CommandManager extends Feature {
         super("Command");
         this.commands.add(new TpCommand());
         this.commands.add(new BackCommand());
+		this.commands.add(new BookCommand());
         this.commands.add(new MacroCommand());
         this.commands.add(new BindCommand());
         this.commands.add(new ModuleCommand());
@@ -36,6 +37,10 @@ public class CommandManager extends Feature {
         this.commands.add(new VClipCommand());
         this.commands.add(new DrawCommand());
         this.commands.add(new RamClearCommand());
+		this.commands.add(new QueueCommand());
+		this.commands.add(new BrowseCommand());
+		this.commands.add(new FakePlayerCommand());
+		this.commands.add(new CoordsCommand());
     }
 
     public static String[] removeElement(String[] input, int indexToDelete) {
