@@ -18,7 +18,7 @@ public class ConfigCommand extends Command {
     public void execute(String[] commands) {
         File dir = new File("Trillium/");
         if (commands.length == 1) {
-            sendMessage("Конфиги сохраняются в  Trillium/config");
+            sendMessage("Configs are saved in Trillium/config");
             return;
         }
         if (commands.length == 2)

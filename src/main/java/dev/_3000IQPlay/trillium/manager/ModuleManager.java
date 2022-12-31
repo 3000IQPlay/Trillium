@@ -172,6 +172,7 @@ public class ModuleManager
         this.modules.add(new Flight());
         this.modules.add(new AntiContainer());
 		this.modules.add(new ChatModifier());
+		this.modules.add(new Replenish());
     }
 
     public Module getModuleByName(String name) {

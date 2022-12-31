@@ -107,6 +107,6 @@ public class Step
 	
 	public static enum Mode {
 	    Vanilla,
-		Normal;
+		NCP;
 	}
 }

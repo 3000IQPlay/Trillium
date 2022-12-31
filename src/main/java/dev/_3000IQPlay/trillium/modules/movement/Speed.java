@@ -1,8 +1,10 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
+import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.UpdateWalkingPlayerEvent;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.modules.movement.Strafe;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.EntityUtil;
 import dev._3000IQPlay.trillium.util.MovementUtil;
@@ -43,9 +45,7 @@ public class Speed
 	private final Setting<Boolean> sprintPacket = this.register(new Setting<Boolean>("SprintPacket", true));
     private final Setting<Boolean> resetXZ = this.register(new Setting<Boolean>("ResetXZ", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
     private final Setting<Boolean> resetY = this.register(new Setting<Boolean>("ResetY", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
-    private double lastDist;
-    private double moveSpeedNew;
-	private int airDance;
+	public boolean wasStrafeEnabled;
     int stage;
 
     public Speed() {
@@ -244,6 +244,12 @@ public class Speed
 
     @Override
     public void onEnable() {
+		if (Trillium.moduleManager.getModuleByClass(Strafe.class).isEnabled()) {
+			Strafe.getInstance().disable();
+			this.wasStrafeEnabled = true;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
 		if (this.mode.getValue() == SpeedNewModes.Custom) {
             if (this.resetXZ.getValue().booleanValue()) {
                 Speed.mc.player.motionX = Speed.mc.player.motionZ = 0.0;
@@ -258,6 +264,12 @@ public class Speed
 	@Override
     public void onDisable() {
         Speed.mc.timer.tickLength = 50.0f / 1.0f;
+		if (this.wasStrafeEnabled == true) { // return shit somehow doesnt work so im making this chinese check
+			Strafe.getInstance().enable();
+			this.wasStrafeEnabled = false;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
 		super.onDisable();
     }
 	

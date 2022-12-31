@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiCrafting;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -128,6 +129,23 @@ public class InventoryUtil
             ;
             }
         });
+    }
+	
+	public static boolean areStacksCompatible(ItemStack stack1, ItemStack stack2) {
+        if (!stack1.getItem().equals(stack2.getItem())) {
+            return false;
+        }
+        if (stack1.getItem() instanceof ItemBlock && stack2.getItem() instanceof ItemBlock) {
+            Block block1 = ((ItemBlock) stack1.getItem()).getBlock();
+            Block block2 = ((ItemBlock) stack2.getItem()).getBlock();
+            if (!block1.material.equals(block2.material)) {
+                return false;
+            }
+        }
+        if (!stack1.getDisplayName().equals(stack2.getDisplayName())) {
+            return false;
+        }
+        return stack1.getItemDamage() == stack2.getItemDamage();
     }
 
     public static EnumHand getHand(int slot)
@@ -370,7 +388,21 @@ public class InventoryUtil
             InventoryUtil.switchToHotbarSlot(slot, silent);
         }
     }
-
+	
+	public static Map<Integer, ItemStack> getInventoryAndHotbarSlots() {
+        if (InventoryUtil.mc.currentScreen instanceof GuiCrafting) {
+            return InventoryUtil.fuckYou3arthqu4kev2(10, 45);
+        }
+        return InventoryUtil.getInventorySlots(9, 44);
+    }
+	
+	private static Map<Integer, ItemStack> fuckYou3arthqu4kev2(int currentI, int last) {
+        HashMap<Integer, ItemStack> fullInventorySlots = new HashMap<>();
+        for (int current = currentI; current <= last; ++current) {
+            fullInventorySlots.put(current, InventoryUtil.mc.player.openContainer.getInventory().get(current));
+        }
+        return fullInventorySlots;
+    }
 
     public static int getAxeAtHotbar() {
         for (int i = 0; i < 9; ++i) {
@@ -497,11 +529,14 @@ public class InventoryUtil
     public static boolean isHolding(EntityPlayer player, Item experienceBottle) {
         return player.getHeldItemMainhand().getItem() == experienceBottle || player.getHeldItemOffhand().getItem() == experienceBottle;
     }
+	
     public static boolean isHolding(Item experienceBottle) {
         return mc.player.getHeldItemMainhand().getItem() == experienceBottle || mc.player.getHeldItemOffhand().getItem() == experienceBottle;
     }
-
-
+	
+	public static int convertHotbarToInv(int input) {
+        return 36 + input;
+    }
 
     public static boolean isHolding(Block block)
     {
@@ -512,6 +547,41 @@ public class InventoryUtil
         return ((ItemBlock) mainHand.getItem()).getBlock() == block || ((ItemBlock) offHand.getItem()).getBlock() == block;
     }
 
+    public static class Task {
+        private final int slot;
+        private final boolean update;
+        private final boolean quickClick;
 
+        public Task() {
+            this.update = true;
+            this.slot = -1;
+            this.quickClick = false;
+        }
+
+        public Task(int slot) {
+            this.slot = slot;
+            this.quickClick = false;
+            this.update = false;
+        }
+
+        public Task(int slot, boolean quickClick) {
+            this.slot = slot;
+            this.quickClick = quickClick;
+            this.update = false;
+        }
+
+        public void run() {
+            if (this.update) {
+                Util.mc.playerController.updateController();
+            }
+            if (this.slot != -1) {
+                Util.mc.playerController.windowClick(Util.mc.player.inventoryContainer.windowId, this.slot, 0, this.quickClick ? ClickType.QUICK_MOVE : ClickType.PICKUP, Util.mc.player);
+            }
+        }
+
+        public boolean isSwitching() {
+            return !this.update;
+        }
+    }
 }
 

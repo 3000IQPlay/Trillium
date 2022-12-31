@@ -1,8 +1,10 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
+import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.mixin.mixins.ICPacketPlayer;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.modules.movement.Strafe;
 import dev._3000IQPlay.trillium.setting.Setting;
 
 import dev._3000IQPlay.trillium.util.Util;
@@ -17,40 +19,44 @@ import java.math.RoundingMode;
 
 import static dev._3000IQPlay.trillium.util.MovementUtil.isMoving;
 
-public class GroundBoost extends Module {
-
+public class GroundBoost
+        extends Module {
+	public Setting<Integer> ticks = this.register(new Setting<>("RbandDelay", 2, 2, 40));
+    public Setting <Boolean> autoSprint = this.register ( new Setting <> ( "AutoSprint", true));
+    public Setting <Integer> spddd = this.register (new Setting <>( "Speed", 2149, 50, 2149 ));
+    private int rhh = 0;
+    private int stage = 0;
+    private double moveSpeed = 0;
+    private double distance = 0;
+    private float startY = 0;
+	boolean hasact = false;
+	public boolean wasStrafeEnabled;
+	
     public GroundBoost() {
         super("GroundBoost", "Makes you go faster on ground", Category.MOVEMENT, true, false, false);
     }
-
-
-    boolean hasact = false;
-
 
     @Override
     public void onDisable(){
         if(hasact){
             mc.gameSettings.viewBobbing = true;
         }
+		if (this.wasStrafeEnabled == true) { // return shit somehow doesnt work so im making this chinese check
+			Strafe.getInstance().enable();
+			this.wasStrafeEnabled = false;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
     }
-
-    public Setting<Integer> ticks = this.register(new Setting<>("RbandDelay", 2, 2, 40));
-    public Setting <Boolean> autoSprint = this.register ( new Setting <> ( "AutoSprint", true));
-
-    public Setting <Integer> spddd = this.register (new Setting <>( "Speed", 2149, 50, 2149 ));
-
-
-
-    private int rhh = 0;
-    private int stage = 0;
-    private double moveSpeed = 0;
-    private double distance = 0;
-    private float startY = 0;
-
-
 
     @Override
     public void onEnable( ) {
+		if (Trillium.moduleManager.getModuleByClass(Strafe.class).isEnabled()) {
+			Strafe.getInstance().disable();
+			this.wasStrafeEnabled = true;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
         try {
             if(mc.gameSettings.viewBobbing){
                 hasact = true;
@@ -67,10 +73,7 @@ public class GroundBoost extends Module {
 
         }
     }
-
-
-
-
+	
     @SubscribeEvent
     public void onPacketReceive(PacketEvent.Receive e) {
         if ( e.getPacket( ) instanceof SPacketPlayerPosLook) {
@@ -80,9 +83,6 @@ public class GroundBoost extends Module {
             moveSpeed = getBaseMoveSpeed( );
         }
     }
-
-
-
 
     @SubscribeEvent
     public void onPacketSend(PacketEvent.Send e) {

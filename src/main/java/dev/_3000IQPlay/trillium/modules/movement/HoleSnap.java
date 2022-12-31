@@ -9,6 +9,7 @@ import dev._3000IQPlay.trillium.util.EntityUtil;
 import dev._3000IQPlay.trillium.util.Timer;
 import dev._3000IQPlay.trillium.util.HoleUtilSafety;
 import dev._3000IQPlay.trillium.modules.movement.Speed;
+import dev._3000IQPlay.trillium.modules.movement.Strafe;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +31,7 @@ public class HoleSnap
 	private final Setting<Boolean> StepCheck = this.register(new Setting<Boolean>("Disable Step", Boolean.valueOf(true), v -> this.mode.getValue() == Mode.Motion));
     private final Setting<Float> range = this.register(new Setting<Float>("Instant Range", Float.valueOf(0.5f), Float.valueOf(0.1f), Float.valueOf(5.0f), f -> this.mode.getValue() == Mode.Instant));
 	private int ticks = 0;
+	public boolean wasStrafeEnabled;
 	
 	public HoleSnap() {
         super("HoleSnap", "Teleport to Hole", Module.Category.MOVEMENT, true, false, false);
@@ -96,10 +98,22 @@ public class HoleSnap
         this.timer.reset();
         this.holes = null;
         HoleSnap.mc.timer.tickLength = 50.0f;
+		if (this.wasStrafeEnabled == true) { // return shit somehow doesnt work so im making this chinese check
+			Strafe.getInstance().enable();
+			this.wasStrafeEnabled = false;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
     }
 
     @Override
     public void onEnable() {
+		if (Trillium.moduleManager.getModuleByClass(Strafe.class).isEnabled()) {
+			Strafe.getInstance().disable();
+			this.wasStrafeEnabled = true;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
         if (this.mode.getValue() == Mode.Motion && this.motionstop.getValue().booleanValue()) {
             HoleSnap.mc.player.motionX = 0.0;
             HoleSnap.mc.player.motionZ = 0.0;
