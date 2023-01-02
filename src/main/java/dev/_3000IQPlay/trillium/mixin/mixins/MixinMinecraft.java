@@ -2,11 +2,13 @@ package dev._3000IQPlay.trillium.mixin.mixins;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.*;
+import dev._3000IQPlay.trillium.modules.client.AntiDisconnect;
 import dev._3000IQPlay.trillium.util.phobos.IMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.crash.CrashReport;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
@@ -113,15 +115,28 @@ public abstract class MixinMinecraft implements IMinecraft {
                 Keyboard.getEventKey(),
                 Keyboard.getEventCharacter()));
     }
-	
-	@Inject(method = {"shutdown"}, at = {@At(value = "HEAD")})
-    public void shutdownHook(CallbackInfo info) {
-        this.unload();
+
+    @Redirect(method={"runGameLoop"}, at=@At(value="INVOKE", target="Lnet/minecraft/client/Minecraft;shutdown()V"))
+    private void Method5080(Minecraft minecraft) {
+        if (minecraft.world != null && Trillium.moduleManager.getModuleByClass(AntiDisconnect.class).isOn()) {
+            GuiScreen screen = minecraft.currentScreen;
+            GuiYesNo g = new GuiYesNo((result, id) -> {
+                if (result) {
+                    minecraft.shutdown();
+                } else {
+                    Minecraft.getMinecraft().displayGuiScreen(screen);
+                }
+            }, "Are you sure you want to close the lane?", "", 0);
+            Minecraft.getMinecraft().displayGuiScreen((GuiScreen)g);
+        } else {
+            minecraft.shutdown();
+        }
     }
 
     private void unload() {
         Trillium.onUnload();
     }
+
 
     @Redirect(method = "sendClickBlockToController", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;isHandActive()Z"))
     public boolean handActiveRedirect(EntityPlayerSP entityPlayerSP) {
