@@ -4,6 +4,7 @@ import dev._3000IQPlay.trillium.util.phobos.Passable;
 
 public class Timer implements Passable {
     private long time = -1L;
+	private long current;
 
     public boolean passedS(double s) {
         return this.getMs(System.nanoTime() - this.time) >= (long) (s * 1000.0);
@@ -23,6 +24,10 @@ public class Timer implements Passable {
 
     public boolean passedMs(long ms) {
         return this.getMs(System.nanoTime() - this.time) >= ms;
+    }
+	
+	public boolean hasReached(long passedTime) {
+        return System.currentTimeMillis() - this.current >= passedTime;
     }
 
     public boolean passedNS(long ns) {

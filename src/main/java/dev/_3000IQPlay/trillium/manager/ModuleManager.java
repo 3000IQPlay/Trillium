@@ -109,7 +109,6 @@ public class ModuleManager
         this.modules.add(new ArmorHud());
         this.modules.add(new Surround());
         this.modules.add(new LogoutSpots());
-        this.modules.add(new PopChams());
         this.modules.add(new RPC());
         this.modules.add(new ViewModel());
         this.modules.add(new NoRender());
@@ -131,7 +130,7 @@ public class ModuleManager
         this.modules.add(new Velocity());
         this.modules.add(new NameTags());
         this.modules.add(new AutoTPaccept());
-        this.modules.add(new AntiDisconnect());
+		this.modules.add(new AntiDisconnect());
         this.modules.add(new MultiConnect());
         this.modules.add(new RadarRewrite());
         this.modules.add(new dev._3000IQPlay.trillium.gui.hud.ArrayList());

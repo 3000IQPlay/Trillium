@@ -8,10 +8,14 @@ import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.ArmorUtils;
 import dev._3000IQPlay.trillium.util.ColorUtil;
 import dev._3000IQPlay.trillium.util.RenderUtil;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.input.Mouse;
+
+import java.awt.*;
 
 public class ArmorHud extends Module{
     public ArmorHud() {
@@ -35,22 +39,34 @@ public class ArmorHud extends Module{
         y1 = sr.getScaledHeight() * pos.getValue().getY();
         x1 = sr.getScaledWidth() * pos.getValue().getX();
         renderArmorHUD(true);
+		if(mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof HudEditorGui){
+            if(isHovering()){
+                if(Mouse.isButtonDown(0) && mousestate){
+                    pos.getValue().setX( (float) (normaliseX() - dragX) /  sr.getScaledWidth());
+                    pos.getValue().setY( (float) (normaliseY() - dragY) / sr.getScaledHeight());
+                }
 
+                RenderUtil.drawRect2(x1 - 10,y1 ,x1 + 50, y1 + 10, new Color(0x73A9A9A9, true).getRGB());
+            }
+        }
+		if (Mouse.isButtonDown(0) && isHovering()){
+            if(!mousestate){
+                dragX = (int) (normaliseX() - (pos.getValue().getX() * sr.getScaledWidth()));
+                dragY = (int) (normaliseY() - (pos.getValue().getY() * sr.getScaledHeight()));
+            }
+            mousestate = true;
+        } else {
+            mousestate = false;
+        }
     }
+	
     public void renderArmorHUD(boolean percent) {
         ScaledResolution sr = new ScaledResolution(mc);
-
         y1 = sr.getScaledHeight() * pos.getValue().getY();
         x1 = sr.getScaledWidth() * pos.getValue().getX();
         GlStateManager.enableTexture2D();
-
         int iteration = 0;
         int y = (int) (y1 - 55 - ((mc.player.isInWater() && mc.playerController.gameIsSurvivalOrAdventure()) ? 10 : 0));
-
-
-
-
-
         for (ItemStack is : mc.player.inventory.armorInventory) {
             iteration++;
             if (is.isEmpty())
@@ -73,5 +89,20 @@ public class ArmorHud extends Module{
         }
         GlStateManager.enableDepth();
         GlStateManager.disableLighting();
+    }
+	
+	int dragX, dragY = 0;
+    boolean mousestate = false;
+
+    public int normaliseX(){
+        return (int) ((Mouse.getX()/2f));
+    }
+    public int normaliseY(){
+        ScaledResolution sr = new ScaledResolution(mc);
+        return (((-Mouse.getY() + sr.getScaledHeight()) + sr.getScaledHeight())/2);
+    }
+
+    public boolean isHovering(){
+        return normaliseX() > x1 - 10 && normaliseX()< x1 + 50 && normaliseY() > y1 &&  normaliseY() < y1 + 10;
     }
 }
