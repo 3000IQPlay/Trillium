@@ -4,6 +4,7 @@ import dev._3000IQPlay.trillium.event.events.AttackEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.render.NameTags;
+import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.MathUtil;
@@ -33,8 +34,13 @@ public class TargetHud extends Module {
     public TargetHud() {
         super("TargetHud", "TargetHud", Category.HUD, true, false, false);
     }
-
-
+	
+	public Setting<ColorSetting> healthMixColorOne = this.register(new Setting<ColorSetting>("HealthMixColor1", new ColorSetting(0x4ea1fd)));
+	public Setting<ColorSetting> healthMixColorTwo = this.register(new Setting<ColorSetting>("HealthMixColor2", new ColorSetting(0x4efd9a)));
+	
+	public Setting<ColorSetting> particleMixColorOne = this.register(new Setting<ColorSetting>("ParticleMixColor1", new ColorSetting(0x4ea1fd)));
+	public Setting<ColorSetting> particleMixColorTwo = this.register(new Setting<ColorSetting>("ParticleMixColor2", new ColorSetting(0x4efd9a)));
+	
     private final Setting<PositionSetting> pos = this.register(new Setting<>("Position", new PositionSetting(0.5f,0.5f)));
 
 
@@ -220,17 +226,9 @@ public class TargetHud extends Module {
 
         if (displayHealth > 0.1)
             for (int i = 0; i < displayHealth * 4; i++) {
-
                 int color = -1;
-
-                final Color color1 = new Color(78, 161, 253, 100);
-                final Color color2 = new Color(78, 253, 154, 100);
-
-                color = Particles.mixColors(color1, color2, (Math.sin(ticks + posX * 0.4f + i * 0.6f / 14f) + 1) * 0.5f).hashCode();
-
-
+                color = Particles.mixColors(this.healthMixColorOne.getValue().getColorObject(), this.healthMixColorTwo.getValue().getColorObject(), (Math.sin(ticks + posX * 0.4f + i * 0.6f / 14f) + 1) * 0.5f).hashCode();
                 Gui.drawRect((int) (drawBarPosX + offset), (int) (posY + 5), (int) (drawBarPosX + 1 + offset * 1.25), (int) (posY + 10), color);
-
                 offset += 1;
             }
 
@@ -238,18 +236,8 @@ public class TargetHud extends Module {
 
             for (int i = 0; i <= 15; i++) {
                 final Particles p = new Particles();
-
-
-                    final Color c;
-
-
-                    final Color color12 = new Color(78, 161, 253, 100);
-                    final Color color22 = new Color(78, 253, 154, 100);
-
-                    c = Particles.mixColors(color12, color22, (Math.sin(ticks + posX * 0.4f + i) + 1) * 0.5f);
-
-
-
+                final Color c;
+                c = Particles.mixColors(this.particleMixColorOne.getValue().getColorObject(), this.particleMixColorTwo.getValue().getColorObject(), (Math.sin(ticks + posX * 0.4f + i) + 1) * 0.5f);
                 p.init(posX + 55, posY - 15, ((Math.random() - 0.5) * 2) * 1.4, ((Math.random() - 0.5) * 2) * 1.4, Math.random() * 4, c);
                 particles.add(p);
             }

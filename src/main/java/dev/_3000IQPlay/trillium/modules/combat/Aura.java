@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.combat;
 
-
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
