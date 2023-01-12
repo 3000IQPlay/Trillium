@@ -1,7 +1,3 @@
-//
-// Decompiled by Procyon v0.5.36
-//
-
 package dev._3000IQPlay.trillium.modules.render;
 
 import dev._3000IQPlay.trillium.modules.Module;

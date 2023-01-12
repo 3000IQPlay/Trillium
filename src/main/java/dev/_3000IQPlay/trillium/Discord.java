@@ -30,11 +30,11 @@ public class Discord {
     public static void start ( ) {
         started = true;
         DiscordEventHandlers handlers = new DiscordEventHandlers ( );
-        rpc.Discord_Initialize("1055777520227721237", handlers, true, "");
+        rpc.Discord_Initialize("1062399880208863252", handlers, true, "");
             Discord.presence.startTimestamp = (System.currentTimeMillis() / 1000L);
             Discord.presence.details = Util.mc.currentScreen instanceof GuiMainMenu ? "In the main menu" : "Playing " + (Minecraft.getMinecraft().currentServerData != null ? (RPC.INSTANCE.showIP.getValue() ? Minecraft.getMinecraft().currentServerData.serverIP.equals("localhost") ? "on " + "2bt2.org via 2bored2wait" : "on " + Minecraft.getMinecraft().currentServerData.serverIP : " Multiplayer") : " Singleplayer");
             Discord.presence.state = RPC.INSTANCE.state.getValue();
-            Discord.presence.largeImageText = "v1.0.0-Beta";
+            Discord.presence.largeImageText = "v1.1.6-Beta";
             rpc.Discord_UpdatePresence(presence);
             thread = new Thread(() -> {
                 while (!Thread.currentThread().isInterrupted()) {

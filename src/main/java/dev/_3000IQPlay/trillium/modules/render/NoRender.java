@@ -36,6 +36,7 @@ class NoRender
     public Setting < Boolean > fire = this.register ( new Setting <> ( "Fire" , false  ) );
     public Setting < Boolean > blin = this.register ( new Setting <> ( "Blind" , false  ) );
     public Setting < Boolean > arrows = this.register ( new Setting <> ( "Arrows" , false ) );
+	public Setting < Boolean > maps = this.register ( new Setting <> ( "Maps" , false ) );
     public Setting < Boolean > containerBackground = this.register ( new Setting <> ( "ContainerBG" , false ) );
     public Setting < Boolean > SkyLight = this.register ( new Setting <> ( "SkyLight" , false ) );
     public Setting < Boolean > portal = this.register ( new Setting <> ( "portal" , false  ) );
@@ -98,6 +99,9 @@ class NoRender
     public
     void onPacketReceive ( final PacketEvent.Receive event ) {
         if ( event.getPacket ( ) instanceof SPacketTimeUpdate & this.timeChange.getValue ( ) ) {
+            event.setCanceled ( true );
+        }
+		if ( event.getPacket ( ) instanceof SPacketMaps & this.maps.getValue ( ) ) {
             event.setCanceled ( true );
         }
         if ( event.getPacket ( ) instanceof SPacketExplosion & this.explosions.getValue ( ) ) {

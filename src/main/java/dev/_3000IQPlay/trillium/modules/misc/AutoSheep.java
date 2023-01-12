@@ -3,6 +3,7 @@ package dev._3000IQPlay.trillium.modules.misc;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.item.ItemShears;
@@ -16,24 +17,24 @@ import java.util.Comparator;
 
 public class AutoSheep extends Module {
     public AutoSheep() {
-        super("AutoSheep", "AutoSheep", Category.MISC, true, false, false);
+        super("AutoSheep", "Gives the sheep cool hair cut", Category.MISC, true, false, false);
     }
 
-    public Setting<Boolean> Rotate = this.register(new Setting<>("Rotate", true));
+    public Setting<Integer> delay = this.register(new Setting<Integer>("Delay", 250, 0, 2000));
+    public Setting<Boolean> rotate = this.register(new Setting<Boolean>("Rotate", true));
+	private final Timer timer = new Timer();
 
     @SubscribeEvent
     public void onUpdateWalkingPlayerPre(EventPreMotion p_Event ) {
-        if (!(mc.player.getHeldItemMainhand().getItem() instanceof ItemShears))
-            return;
-
+        if (!(mc.player.getHeldItemMainhand().getItem() instanceof ItemShears)) return;
+		if (!timer.passed(this.delay.getValue())) return;
         EntitySheep l_Sheep = mc.world.loadedEntityList.stream()
                 .filter(p_Entity -> IsValidSheep(p_Entity))
                 .map(p_Entity -> (EntitySheep) p_Entity)
                 .min(Comparator.comparing(p_Entity -> mc.player.getDistance(p_Entity)))
                 .orElse(null);
-
         if (l_Sheep != null) {
-            if (Rotate.getValue()) {
+            if (this.rotate.getValue()) {
                 float[] angle = calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), l_Sheep.getPositionEyes(mc.getRenderPartialTicks()));
                 mc.player.rotationYaw = (angle[0]);
                 mc.player.rotationPitch = (angle[1]);

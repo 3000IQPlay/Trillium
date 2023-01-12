@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class AutoTPaccept extends Module {
 
     public AutoTPaccept() {
-        super("AutoTPaccept", "Accepts tp automatically", Category.PLAYER, true, false, false);
+        super("AutoTPAccept", "Accepts tp automatically", Category.PLAYER, true, false, false);
     }
     public Setting<Boolean> onlyFriends = register(new Setting("OnlyFriends", Boolean.TRUE));
 

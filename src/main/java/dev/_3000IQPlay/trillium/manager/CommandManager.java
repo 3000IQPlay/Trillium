@@ -42,6 +42,9 @@ public class CommandManager extends Feature {
 		this.commands.add(new BrowseCommand());
 		this.commands.add(new FakePlayerCommand());
 		this.commands.add(new CoordsCommand());
+		this.commands.add(new Chest1Command());
+		this.commands.add(new Chest2Command());
+		this.commands.add(new Chest3Command());
     }
 
     public static String[] removeElement(String[] input, int indexToDelete) {

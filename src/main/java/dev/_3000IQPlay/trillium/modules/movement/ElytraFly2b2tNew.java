@@ -4,6 +4,7 @@ import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.modules.movement.Strafe;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.block.Block;
@@ -41,7 +42,6 @@ public class ElytraFly2b2tNew extends Module {
     private final Setting<Float> speedSetting = register(new Setting<>("FSpeed", 16F, 0.1F, 20F));
     public Setting<Boolean> glide = register(new Setting<>("Glide", false));
     private final Setting<Float> glideSpeed = register(new Setting<>("GlideSpeed", 1F, 0.1F, 10f ,v ->glide.getValue()));
-
     private boolean elytraIsEquipped = false;
     private int elytraDurability = 0;
     private boolean isFlying = false;
@@ -49,6 +49,8 @@ public class ElytraFly2b2tNew extends Module {
 
     private double hoverTarget = -1.0f;
     private boolean hoverState = false;
+	
+	public boolean wasStrafeEnabled;
 
 
     @SubscribeEvent
@@ -215,10 +217,16 @@ public class ElytraFly2b2tNew extends Module {
 
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         reset2(true);
         mc.player.capabilities.isFlying = false;
         mc.player.capabilities.setFlySpeed(0.05f);
+		if (this.wasStrafeEnabled == true) { // return shit somehow doesnt work so im making this chinese check
+			Strafe.getInstance().enable();
+			this.wasStrafeEnabled = false;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
     }
 
     public double calcMoveYaw(){
@@ -306,8 +314,14 @@ public class ElytraFly2b2tNew extends Module {
 
 
     @Override
-    public void onEnable ( ) {
+    public void onEnable() {
         dYaw = 0;
         dPitch = 0;
+		if (Trillium.moduleManager.getModuleByClass(Strafe.class).isEnabled()) {
+			Strafe.getInstance().disable();
+			this.wasStrafeEnabled = true;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
     }
 }

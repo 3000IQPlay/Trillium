@@ -3,6 +3,7 @@ package dev._3000IQPlay.trillium.modules.movement;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.ElytraEvent;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.modules.movement.Strafe;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.block.Block;
@@ -72,6 +73,8 @@ public class ElytraFlight extends Module {
     private Timer rocketTimer = new Timer();
 
     private Timer strictTimer = new Timer();
+	
+	public boolean wasStrafeEnabled;
 
     private enum Mode {
         BOOST, CONTROL, FIREWORK
@@ -91,6 +94,12 @@ public class ElytraFlight extends Module {
             if (!mc.player.isCreative()) mc.player.capabilities.allowFlying = false;
             mc.player.capabilities.isFlying = false;
         }
+		if (Trillium.moduleManager.getModuleByClass(Strafe.class).isEnabled()) {
+			Strafe.getInstance().disable();
+			this.wasStrafeEnabled = true;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
         isJumping = false;
         hasElytra = false;
     }
@@ -101,6 +110,12 @@ public class ElytraFlight extends Module {
             mc.player.capabilities.isFlying = false;
         }
        // KonasGlobals.INSTANCE.timerManager.resetTimer(this); //TODO
+	    if (this.wasStrafeEnabled == true) { // return shit somehow doesnt work so im making this chinese check
+			Strafe.getInstance().enable();
+			this.wasStrafeEnabled = false;
+		} else {
+			this.wasStrafeEnabled = false;
+		}
         ElytraFlight.mc.timer.tickLength = 50.0f / 1.0f;
         hasElytra = false;
     }

@@ -172,6 +172,10 @@ public class ModuleManager
         this.modules.add(new AntiContainer());
 		this.modules.add(new ChatModifier());
 		this.modules.add(new Replenish());
+		this.modules.add(new AntiPlantStomp());
+		this.modules.add(new AutoTrader());
+		this.modules.add(new AutoChunkDupe());
+		this.modules.add(new PacketCanceller());
     }
 
     public Module getModuleByName(String name) {

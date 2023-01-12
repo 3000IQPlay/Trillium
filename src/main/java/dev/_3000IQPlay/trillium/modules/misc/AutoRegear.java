@@ -44,7 +44,7 @@ public class AutoRegear extends Module {
     public Setting<Boolean> debugMode = this.register(new Setting<Boolean>("Debug Mode", false));
     public Setting<Boolean> infoMsgs = this.register(new Setting<Boolean>("Info Msgs", false));
     public Setting<Boolean> closeAfter = this.register(new Setting<Boolean>("Close After", false));
-    public Setting<Boolean> invasive = this.register(new Setting<Boolean>("saInvasive", false));
+    public Setting<Boolean> invasive = this.register(new Setting<Boolean>("SaInvasive", false));
     public Setting<Boolean> confirmSort = this.register(new Setting<Boolean>("Confirm Sort", false));
     public Setting<Boolean> enderChest = this.register(new Setting<Boolean>("enderChest", false));
 

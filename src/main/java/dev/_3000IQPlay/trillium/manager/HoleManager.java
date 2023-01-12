@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.manager;
 
 import dev._3000IQPlay.trillium.modules.Feature;
+import dev._3000IQPlay.trillium.modules.render.HoleESP;
 import dev._3000IQPlay.trillium.util.BlockUtils;
 import dev._3000IQPlay.trillium.util.EntityUtil;
 import net.minecraft.block.Block;
@@ -12,10 +13,18 @@ import java.util.Comparator;
 import java.util.List;
 
 public class HoleManager
-        extends Feature {
+        extends Feature
+		implements Runnable {
     private static final BlockPos[] surroundOffset = BlockUtils.toBlockPos(EntityUtil.getOffsets(0, true, true));
     private final List<BlockPos> midSafety = new ArrayList<BlockPos>();
 	private List<BlockPos> holes = new ArrayList<BlockPos>();
+	
+	@Override
+    public void run() {
+        if (!HoleManager.fullNullCheck() && (HoleESP.getInstance().isOn())) {
+            this.holes = this.calcHoles();
+        }
+    }
 	
 	public List<BlockPos> getHoles() {
         return this.holes;

@@ -78,7 +78,6 @@ dependencies {
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
-
     compile 'club.minnced:java-discord-rpc:2.0.2'
     implementation configurations.jarLibs
 }
