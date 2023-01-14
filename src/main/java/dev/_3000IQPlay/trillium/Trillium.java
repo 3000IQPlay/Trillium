@@ -1,10 +1,12 @@
 package dev._3000IQPlay.trillium;
 
+import dev._3000IQPlay.trillium.event.EventProcessor;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.*;
 import dev._3000IQPlay.trillium.manager.*;
 import dev._3000IQPlay.trillium.util.IconUtil;
 import dev._3000IQPlay.trillium.util.ffp.NetworkHandler;
 import dev._3000IQPlay.trillium.util.phobos.*;
+import dev._3000IQPlay.trillium.util.protect.*;
 import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,6 +35,8 @@ public class Trillium {
     public static final String MODID = "trillium";
 	public static final String MODNAME = "Trillium";
     public static final String MODVER = "1.1.6-Beta";
+	public static final String HWIDS_LIST = "https://pastebin.com/raw/QUDYSAZZ";
+    public static boolean isOpenAuthGui;
     public static CommandManager commandManager;
     public static FriendManager friendManager;
 	public static MovementManager movementManager;
@@ -65,6 +69,7 @@ public class Trillium {
     public static CombatManager combatManager;
     public static Scheduler yahz;
     public static NoMotionUpdateService nobitches;
+	public static EventProcessor eventProcessor;
 
     public static String ServerIp;
     public static int ServerPort;
@@ -75,6 +80,7 @@ public class Trillium {
     static {
         unloaded = false;
     }
+	
     public static void load() {
         unloaded = false;
         if (reloadManager != null) {
@@ -215,6 +221,7 @@ public class Trillium {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+		AntiDump.check();
         GlobalExecutor.EXECUTOR.submit(() -> Sphere.cacheSphere(LOGGER));
     }
 
@@ -225,5 +232,7 @@ public class Trillium {
         Trillium.load();
 		setWindowsIcon();
         MinecraftForge.EVENT_BUS.register(networkHandler);
+		eventProcessor = new EventProcessor();
+        eventProcessor.onInit();
     }
 }

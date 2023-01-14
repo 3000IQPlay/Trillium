@@ -78,6 +78,13 @@ dependencies {
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
+	compile 'org.apache.httpcomponents:httpasyncclient:4.1.4'
+    compile 'org.apache.httpcomponents:httpclient:4.5.13'
+    compile 'org.apache.httpcomponents:httpcore:4.4.14'
+    compile 'org.apache.httpcomponents:httpcore-nio:4.4.14'
+    compile 'org.apache.httpcomponents:httpmime:4.5.13'
+	compile 'org.json:json:20210307'
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'club.minnced:java-discord-rpc:2.0.2'
     implementation configurations.jarLibs
 }
@@ -107,6 +114,13 @@ shadowJar {
         include(dependency('club.minnced:java-discord-rpc'))
         include(dependency('com.googlecode.json-simple:json-simple:1.1.1'))
         include(dependency('org.spongepowered:mixin'))
+		include(dependency('org.json:json'))
+        include(dependency('com.mashape.unirest:unirest-java'))
+		include(dependency('org.apache.httpcomponents:httpasyncclient'))
+        include(dependency('org.apache.httpcomponents:httpclient'))
+        include(dependency('org.apache.httpcomponents:httpcore'))
+        include(dependency('org.apache.httpcomponents:httpcore-nio'))
+        include(dependency('org.apache.httpcomponents:httpmime'))
     }
     exclude 'dummyThing'
     exclude 'LICENSE.txt'
