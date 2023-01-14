@@ -78,6 +78,8 @@ dependencies {
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
+	compile 'org.json:json:20210307'
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'club.minnced:java-discord-rpc:2.0.2'
     implementation configurations.jarLibs
 }
@@ -107,6 +109,8 @@ shadowJar {
         include(dependency('club.minnced:java-discord-rpc'))
         include(dependency('com.googlecode.json-simple:json-simple:1.1.1'))
         include(dependency('org.spongepowered:mixin'))
+		include(dependency('org.json:json'))
+        include(dependency('com.mashape.unirest:unirest-java'))
     }
     exclude 'dummyThing'
     exclude 'LICENSE.txt'
