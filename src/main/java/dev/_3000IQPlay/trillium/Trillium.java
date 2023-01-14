@@ -35,8 +35,7 @@ public class Trillium {
     public static final String MODID = "trillium";
 	public static final String MODNAME = "Trillium";
     public static final String MODVER = "1.1.6-Beta";
-	public static final String HWIDS_LIST = "https://pastebin.com/raw/yM7s0G4u";
-	public static boolean allowToConfiguredAnotherClients = false;
+	public static final String HWIDS_LIST = "https://pastebin.com/raw/QUDYSAZZ";
     public static boolean isOpenAuthGui;
     public static CommandManager commandManager;
     public static FriendManager friendManager;
@@ -74,10 +73,6 @@ public class Trillium {
 
     public static String ServerIp;
     public static int ServerPort;
-	
-	static {
-        allowToConfiguredAnotherClients = HWID.getHWID().equals("42d17b8fbbd970b9f4db02f9a65fca3b");
-    }
 
     @Mod.Instance
     public static Trillium INSTANCE;

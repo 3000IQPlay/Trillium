@@ -24,8 +24,8 @@ public class AuthGui extends GuiScreen {
 
         keyField.drawTextBox();
 
-        drawCenteredStringWithShadow("If you have access but havent key, you can dm _kisman_#5039 for get help", width / 2, 10, ColorUtil.astolfoRainbow2(100, 100));
-        drawCenteredStringWithShadow("(C) All rights reserved", width / 2, height - 14, ColorUtil.astolfoRainbow2(100, 100));
+        drawCenteredStringWithShadow("If you have access but haven't got a key, you can dm _3000IQPlay#8278 for help", width / 2, 10, ColorUtil.astolfoRainbow2(100, 100));
+        drawCenteredStringWithShadow("(C) All rights reserved || TKDevs", width / 2, height - 14, ColorUtil.astolfoRainbow2(100, 100));
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
@@ -71,7 +71,7 @@ public class AuthGui extends GuiScreen {
                 break;
             case 1:
                 if(KeyAuthApp.keyAuth.license(keyField.getText())) {
-                    System.out.println("bebra");
+                    System.out.println("You have been verified");
                     Trillium.isOpenAuthGui = false;
                     mc.displayGuiScreen(new GuiMainMenu());
                 }
