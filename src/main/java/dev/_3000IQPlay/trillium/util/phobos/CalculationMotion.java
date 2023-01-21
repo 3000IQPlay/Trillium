@@ -160,7 +160,6 @@ public class CalculationMotion extends AbstractCalculation<CrystalDataMotion>
         }
 
         if (module.noRotateNigga(AutoCrystal.ACRotate.Break)
-                || module.isNotCheckingRotations()
                 || (isLegit(crystal, crystal)
                 && AutoCrystal.POSITION_HISTORY
                 .arePreviousRotationsLegit(crystal,

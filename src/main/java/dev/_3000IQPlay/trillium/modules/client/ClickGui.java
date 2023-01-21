@@ -36,18 +36,30 @@ public class ClickGui
     private Setting<colorModeEn> colorMode = register(new Setting("ColorMode", colorModeEn.Analogous));
 	public Setting<Boolean> darkBackGround = this.register(new Setting<Boolean>("DarkBackGround", true));
 	public Setting<Boolean> showBinds = this.register(new Setting<Boolean>("ShowBinds", true));
+	public Setting<Boolean> scroll = this.register(new Setting<Boolean>("Scroll", true));
+    public Setting<Integer> scrollval = this.register(new Setting<Integer>("Scroll Speed", 10, 1, 30, v -> this.scroll.getValue()));
 	public Setting<Integer> fadeintimeout = this.register(new Setting<Integer>("FadeInTimeout", 512, 0, 2048));
     public Setting<Float> fadeintimespeed = this.register(new Setting<Float>("FadeInSpeed", 0.5f, 0.1f, 5.0f));
     public Setting<Integer> colorSpeed = this.register(new Setting<Integer>("ColorSpeed", 18, 2, 54));
 	public Setting<Integer> hoverAlpha = this.register(new Setting<Integer>("HoverAlpha", 170, 0, 255));
+	public Setting<Boolean> gradientBG = this.register(new Setting<Boolean>("GradientBG", true));
+	
+	public final Setting<ColorSetting> gradientLB = this.register(new Setting<>("GLeftBotom", new ColorSetting(-8453889), v -> this.gradientBG.getValue()));
+    public final Setting<ColorSetting> gradientLT = this.register(new Setting<>("GLeftTop", new ColorSetting(-16711681), v -> this.gradientBG.getValue()));
+	public final Setting<ColorSetting> gradientRB = this.register(new Setting<>("GRightBottom", new ColorSetting(-16711808), v -> this.gradientBG.getValue()));
+    public final Setting<ColorSetting> gradientRT = this.register(new Setting<>("GRightTop", new ColorSetting(-14024449), v -> this.gradientBG.getValue()));
+	
+	public final Setting<ColorSetting> mainColor = this.register(new Setting<>("MainColor", new ColorSetting(-8453889)));
 	public final Setting<ColorSetting> hcolor1 = this.register(new Setting<>("MainColor1", new ColorSetting(-8453889)));
     public final Setting<ColorSetting> acolor = this.register(new Setting<>("MainColor2", new ColorSetting(-16711681)));
 	public final Setting<ColorSetting> mainColor3 = this.register(new Setting<>("MainColor3", new ColorSetting(-16711808)));
     public final Setting<ColorSetting> mainColor2 = this.register(new Setting<>("MainColor4", new ColorSetting(-14024449)));
+	
     public final Setting<ColorSetting> slidercolor = this.register(new Setting<>("SliderColor", new ColorSetting(-16733441)));
+	
     public final Setting<ColorSetting> gcolor1 = this.register(new Setting<>("gcolor1", new ColorSetting(-4597637,true)));
     public final Setting<ColorSetting> gcolor2 = this.register(new Setting<>("gcolor2", new ColorSetting(-16777216)));
-    public final Setting<ColorSetting> mainColor = this.register(new Setting<>("MainColor", new ColorSetting(-8453889)));
+	
     public final Setting<ColorSetting> topColor = this.register(new Setting<>("TopColor", new ColorSetting(-115042915)));
     public final Setting<ColorSetting> downColor = this.register(new Setting<>("DownColor", new ColorSetting(-114219739)));
 

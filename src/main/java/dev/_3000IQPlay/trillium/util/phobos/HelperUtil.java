@@ -60,7 +60,6 @@ public class HelperUtil
 
         // TODO: lastPos and then check isLegit???????? not sure if this is ok
         if (module.noRotateNigga(AutoCrystal.ACRotate.Break)
-                || module.isNotCheckingRotations()
                 || (isLegit(crystal, crystal)
                 && AutoCrystal.POSITION_HISTORY
                 .arePreviousRotationsLegit(crystal,

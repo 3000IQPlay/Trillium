@@ -9,7 +9,6 @@ import dev._3000IQPlay.trillium.mixin.ducks.ISPacketSpawnObject;
 import dev._3000IQPlay.trillium.mixin.mixins.ICPacketUseEntity;
 import dev._3000IQPlay.trillium.mixin.mixins.ISPacketEntity;
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.SubBind;
@@ -412,7 +411,6 @@ public class AutoCrystal extends Module {
     /* ---------------- Dev and Debugging -------------- */
     public Setting<Integer> priority = register(new Setting<>("Priority", 1500, Integer.MIN_VALUE, Integer.MAX_VALUE,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
     public Setting<Boolean> spectator =register(new Setting<Boolean>("Spectator", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> noPacketFlyRotationChecks = register(new Setting<Boolean>("NoPacketFlyRotationChecks", true,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
     public Setting<Boolean> clearPost = register(new Setting<Boolean>("ClearPost", true,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
     public Setting<Boolean> sequential = register(new Setting<Boolean>("Sequential", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
     public Setting<Integer> seqTime = register(new Setting<>("Seq-Time", 250, 0, 1000,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
@@ -497,11 +495,6 @@ public class AutoCrystal extends Module {
     public final HelperRotation rotationHelper = new HelperRotation(this);
     public ServerTimeHelper serverTimeHelper = new ServerTimeHelper(this, rotate, placeSwing, antiFeetPlace, newVer, feetBuffer);
     public final HelperRange rangeHelper = new HelperRange(this);
-
-
-    public boolean isNotCheckingRotations() {
-        return noPacketFlyRotationChecks.getValue() && (Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled());
-    }
 
     @Override
     public void onEnable() {

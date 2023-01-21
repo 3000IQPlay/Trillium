@@ -395,11 +395,6 @@ public abstract class MixinEntityRenderer
     @Shadow
     public boolean cloudFog;
 
-    /**
-     * @author
-     */
-
-
     @Overwrite
     public void orientCamera(float partialTicks) {
         Entity entity = this.mc.getRenderViewEntity();
@@ -418,8 +413,53 @@ public abstract class MixinEntityRenderer
                 GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, -1.0F, 0.0F);
                 GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
             }
+        } else if (this.mc.gameSettings.thirdPersonView > 0) {
+            double d3 = (double)(this.thirdPersonDistancePrev + (4.0F - this.thirdPersonDistancePrev) * partialTicks);
+            if (this.mc.gameSettings.debugCamEnable) {
+                GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
+            } else {
+                float f2;
+                f1 = entity.rotationYaw;
+                f2 = entity.rotationPitch;
+					
+                if (this.mc.gameSettings.thirdPersonView == 2) {
+                    f2 += 180.0F;
+                }
+
+                double d4 = (double)(-MathHelper.sin(f1 * 0.017453292F) * MathHelper.cos(f2 * 0.017453292F)) * d3;
+                double d5 = (double)(MathHelper.cos(f1 * 0.017453292F) * MathHelper.cos(f2 * 0.017453292F)) * d3;
+                double d6 = (double)(-MathHelper.sin(f2 * 0.017453292F)) * d3;
+
+                for(int i = 0; i < 8; ++i) {
+                    float f3 = (float)((i & 1) * 2 - 1);
+                    float f4 = (float)((i >> 1 & 1) * 2 - 1);
+                    float f5 = (float)((i >> 2 & 1) * 2 - 1);
+                    f3 *= 0.1F;
+                    f4 *= 0.1F;
+                    f5 *= 0.1F;
+                    RayTraceResult raytraceresult = this.mc.world.rayTraceBlocks(new Vec3d(d0 + (double)f3, d1 + (double)f4, d2 + (double)f5), new Vec3d(d0 - d4 + (double)f3 + (double)f5, d1 - d6 + (double)f4, d2 - d5 + (double)f5));
+                    if (raytraceresult != null) {
+                        double d7 = raytraceresult.hitVec.distanceTo(new Vec3d(d0, d1, d2));
+                        if (d7 < d3) {
+                            d3 = d7;
+                        }
+                    }
+                }
+
+                if (this.mc.gameSettings.thirdPersonView == 2) {
+                    GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                }
+
+                GlStateManager.rotate(entity.rotationPitch - f2, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(entity.rotationYaw - f1, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
+                GlStateManager.rotate(f1 - entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(f2 - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+            }
+        } else {
+            GlStateManager.translate(0.0F, 0.0F, 0.05F);
         }
-        GlStateManager.translate(0.0F, 0.0F, 0.05F);
+
         if (!this.mc.gameSettings.debugCamEnable) {
             float yaw = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F;
             float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;

@@ -299,7 +299,7 @@ public class HelperPlace
 
     private boolean noPlaceTrace(BlockPos pos)
     {
-        if (module.isNotCheckingRotations() || module.rayTraceBypass.getValue() && !Visible.INSTANCE.check(pos, module.bypassTicks.getValue()))
+        if (module.rayTraceBypass.getValue() && !Visible.INSTANCE.check(pos, module.bypassTicks.getValue()))
         {
             return false;
         }

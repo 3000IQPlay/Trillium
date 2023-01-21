@@ -7,7 +7,6 @@ import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
 import dev._3000IQPlay.trillium.modules.movement.ElytraFlight;
 import dev._3000IQPlay.trillium.modules.movement.ElytraFly2b2tNew;
-import dev._3000IQPlay.trillium.modules.movement.GroundBoost;
 import dev._3000IQPlay.trillium.modules.movement.HoleSnap;
 import dev._3000IQPlay.trillium.modules.movement.Speed;
 import dev._3000IQPlay.trillium.modules.player.FreeCam;
@@ -52,7 +51,7 @@ public class Strafe
     }
 	
 	private boolean shouldReturn() {
-        return Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(GroundBoost.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled();
+        return Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled();
     }
 
     @SubscribeEvent

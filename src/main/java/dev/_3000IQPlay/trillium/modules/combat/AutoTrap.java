@@ -31,11 +31,8 @@ import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-
 public class AutoTrap
         extends Module {
-
-
     public AutoTrap() {
         super("AutoTrap", "Traps players in a obsidian trap", Module.Category.COMBAT, true, false, false);
     }
@@ -353,12 +350,4 @@ public class AutoTrap
 
         return !(baseBlock instanceof BlockAir) && !(baseBlock instanceof BlockLiquid);
     }
-
-
-
-
-
-
-
 }
-

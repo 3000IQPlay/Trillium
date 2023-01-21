@@ -280,7 +280,7 @@ public class HelperRotation
             RayTraceResult ray = rayTraceTo(pos, mc.world);
             if (ray == null || !pos.equals(ray.getBlockPos()))
             {
-                if (!module.noRotateNigga(AutoCrystal.ACRotate.Place) && !module.isNotCheckingRotations())
+                if (!module.noRotateNigga(AutoCrystal.ACRotate.Place))
                 {
                     return;
                 }
@@ -398,7 +398,6 @@ public class HelperRotation
             if (w.needsSwitch() && w.getSlot() == -1
                     || (EntityUtil.isDead(entity))
                     || !module.noRotateNigga(AutoCrystal.ACRotate.Break)
-                    && !module.isNotCheckingRotations()
                     && !isLegit(entity))
             {
                 return;

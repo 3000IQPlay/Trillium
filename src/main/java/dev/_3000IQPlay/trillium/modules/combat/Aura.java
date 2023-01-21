@@ -19,11 +19,14 @@ import dev._3000IQPlay.trillium.util.rotations.AdvancedCast;
 import dev._3000IQPlay.trillium.util.rotations.CastHelper;
 import dev._3000IQPlay.trillium.util.rotations.RaycastHelper;
 import dev._3000IQPlay.trillium.util.Timer;
+import dev._3000IQPlay.trillium.util.Util;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -60,7 +63,7 @@ import java.util.Map.Entry;
 public class Aura extends Module {
 
     public Aura() {
-        super("Aura", "AuraAura", Category.COMBAT, true, false, false);
+        super("KillAura", "AuraAura", Category.COMBAT, true, false, false);
     }
 
 
@@ -68,9 +71,11 @@ public class Aura extends Module {
 
     public enum rotmod {
         Matrix, Nexus, FunnyGame,DeadCode;
-
     }
-
+	
+	public enum AutoSwitch {
+        None, Default;
+    }
 
     /*-------------   AntiCheat  ----------*/
   //  public  Setting<Parent> antiCheat = this.register(new Setting<>("AntiCheat", new Parent(false)));
@@ -96,6 +101,8 @@ public class Aura extends Module {
     public Setting<Boolean> nointer = register(new Setting<>("NoInteract", true));//(misc);
     public Setting<Boolean> criticals = register(new Setting<>("Criticals", true));//(misc);
     public Setting<Boolean> weaponOnly = register(new Setting<>("WeaponOnly", true));//(misc);
+	public Setting<AutoSwitch> autoswitch = register(new Setting("AutoSwitch", AutoSwitch.None));
+    public Setting<Boolean> firstAxe = register(new Setting<>("FirstAxe", false,v -> autoswitch.getValue() != AutoSwitch.None));
     public Setting<Boolean> shieldDesyncOnlyOnAura = register(new Setting<>("Wait Target", true));//(misc);
     public Setting<Boolean> shieldDesync = register(new Setting<>("Shield Desync", true));//(misc);
     public Setting<Boolean> clientLook = register(new Setting<>("ClientLook", true));//(misc);
@@ -147,6 +154,7 @@ public class Aura extends Module {
     public static int backtracketHits;
     public static int backtracketMisses;
     public static float backtrackedMaxDist;
+	private boolean needAxeSwap = false;
 
     private Queue<Vec3d> btPositions = new LinkedList<>();
 
@@ -298,6 +306,21 @@ public class Aura extends Module {
     }
 
     public void aura() {
+	    if(firstAxe.getValue() && hitttimer.passedMs(1000) && getBestAxe() != -1){
+            if(autoswitch.getValue() == AutoSwitch.Default){
+                mc.player.inventory.currentItem = getAxe();
+                needAxeSwap = true;
+            }
+        } else {
+            if(autoswitch.getValue() == AutoSwitch.Default){
+                if(getBestSword() != -1){
+                    mc.player.inventory.currentItem = getBestSword();
+                } else if(getBestAxe() != -1){
+                    mc.player.inventory.currentItem = getBestAxe();
+                }
+            }
+        }
+		
         boolean shieldDesyncActive = shieldDesync.getValue();
         if (shieldDesyncOnlyOnAura.getValue() && target == null) {
             shieldDesyncActive = false;
@@ -403,6 +426,12 @@ public class Aura extends Module {
                     }
                     if(betterCrits.getValue()){
                         mc.gameSettings.keyBindSneak.pressed = false;
+                    }
+					if(firstAxe.getValue() && getBestSword() != -1 && needAxeSwap){
+                        if(autoswitch.getValue() == AutoSwitch.Default){
+                            mc.player.inventory.currentItem = getBestSword();
+                            needAxeSwap = false;
+                        }
                     }
                 }
             }
@@ -835,6 +864,42 @@ public class Aura extends Module {
     private Vec3d getBacktrackPos() {
         if (btPositions.isEmpty()) return null;
         return btPositions.peek();
+    }
+	
+	public int getBestSword() {
+        int b = -1;
+        float f = 1.0F;
+        for (int b1 = 0; b1 < 9; b1++) {
+            ItemStack itemStack =  Util.mc.player.inventory.getStackInSlot(b1);
+            if (itemStack != null && itemStack.getItem() instanceof ItemSword) {
+                ItemSword itemSword = (ItemSword)itemStack.getItem();
+                float f1 = itemSword.getMaxDamage();
+                f1 += EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByID(20), itemStack);
+                if (f1 > f) {
+                    f = f1;
+                    b = b1;
+                }
+            }
+        }
+        return b;
+    }
+	
+    public int getBestAxe() {
+        int b = -1;
+        float f = 1.0F;
+        for (int b1 = 0; b1 < 9; b1++) {
+            ItemStack itemStack =  Util.mc.player.inventory.getStackInSlot(b1);
+            if (itemStack != null && itemStack.getItem() instanceof ItemAxe) {
+                ItemAxe axe = (ItemAxe)itemStack.getItem();
+                float f1 = axe.getMaxDamage();
+                f1 += EnchantmentHelper.getEnchantmentLevel(Enchantment.getEnchantmentByID(20), itemStack);
+                if (f1 > f) {
+                    f = f1;
+                    b = b1;
+                }
+            }
+        }
+        return b;
     }
 
 }

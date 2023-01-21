@@ -1012,7 +1012,7 @@ public abstract class AbstractCalculation<T extends CrystalData> extends Finisha
             return false;
         }
 
-        if (!module.noRotateNigga(AutoCrystal.ACRotate.Place) && !module.isNotCheckingRotations())
+        if (!module.noRotateNigga(AutoCrystal.ACRotate.Place))
         {
             RayTraceResult result = rayTraceTo(pos, mc.world);
             if (result == null || !result.getBlockPos().equals(pos))
@@ -1031,15 +1031,7 @@ public abstract class AbstractCalculation<T extends CrystalData> extends Finisha
             }
 
             RayTraceResult result;
-            if (module.isNotCheckingRotations())
-            {
-                float[] rotations = getRotationsToTopMiddle(pos);
-                result = rayTraceWithYP(pos, mc.world, rotations[0], rotations[1], (b,p) -> true);
-            }
-            else
-            {
-                result = rayTraceTo(pos, mc.world, (b,p) -> true);
-            }
+            result = rayTraceTo(pos, mc.world, (b,p) -> true);
 
             if (result != null && !result.getBlockPos().equals(pos))
             {

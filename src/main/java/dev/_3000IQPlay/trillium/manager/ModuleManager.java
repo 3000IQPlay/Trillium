@@ -51,14 +51,12 @@ public class ModuleManager
         this.modules.add(new AutoSheep());
         this.modules.add(new Aura());
         this.modules.add(new NoSlowDown());
-        this.modules.add(new KillauraAddon());
         this.modules.add(new BlockHighlight());
         this.modules.add(new StorageEsp());
         this.modules.add(new Ambience());
         this.modules.add(new Ghost());
         this.modules.add(new BowAim());
         this.modules.add(new Interactions());
-        this.modules.add(new MotionBlur());
         this.modules.add(new SolidBlock());
         this.modules.add(new Sprint());
         this.modules.add(new TargetHud());
@@ -121,7 +119,6 @@ public class ModuleManager
         this.modules.add(new FastPlace2());
         this.modules.add(new AutoArmor());
         this.modules.add(new PacketCounter());
-        this.modules.add(new GroundBoost());
         this.modules.add(new OffHand());
         this.modules.add(new Speed());
         this.modules.add(new Burrow());
@@ -176,6 +173,8 @@ public class ModuleManager
 		this.modules.add(new AutoTrader());
 		this.modules.add(new AutoChunkDupe());
 		this.modules.add(new PacketCanceller());
+		this.modules.add(new PasswordHider());
+		this.modules.add(new Aspect());
     }
 
     public Module getModuleByName(String name) {

@@ -28,13 +28,13 @@ import java.util.Objects;
 @Mod(
         modid = "trillium",
         name = "Trillium",
-        version = "1.1.6-Beta")
+        version = "1.2.2-Beta")
 
 
 public class Trillium {
     public static final String MODID = "trillium";
 	public static final String MODNAME = "Trillium";
-    public static final String MODVER = "1.1.6-Beta";
+    public static final String MODVER = "1.2.2-Beta";
 	public static final String HWIDS_LIST = "https://pastebin.com/raw/QUDYSAZZ";
     public static boolean isOpenAuthGui;
     public static CommandManager commandManager;

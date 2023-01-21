@@ -4,7 +4,6 @@ import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.mixin.mixins.ICPacketPlayer;
 import dev._3000IQPlay.trillium.modules.combat.AutoCrystal;
-import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
 import dev._3000IQPlay.trillium.modules.render.Rotation;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.Timer;
@@ -46,7 +45,7 @@ public class RotationCanceller
     public synchronized void onPacketNigger(PacketEvent.Send event)
     {
         if(event.getPacket() instanceof CPacketPlayer) {
-            if (event.isCanceled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled()) {
+            if (event.isCanceled()) {
                 return;
             }
 
@@ -162,11 +161,6 @@ public class RotationCanceller
 
 
     public void onPacketNigger9(CPacketPlayer.Rotation rotation) {
-
-            if (Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled()) {
-                return;
-            }
-
             reset(); // Send last Packet if it hasn't been yet
             if (Trillium.rotationManager.isBlocking()) {
                 return;

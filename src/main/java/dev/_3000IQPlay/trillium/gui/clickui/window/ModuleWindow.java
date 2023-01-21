@@ -1,10 +1,5 @@
 package dev._3000IQPlay.trillium.gui.clickui.window;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import dev._3000IQPlay.trillium.util.Drawable;
 import dev._3000IQPlay.trillium.gui.clickui.EaseBackIn;
 import dev._3000IQPlay.trillium.util.RenderUtil;
@@ -25,6 +20,11 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+
+import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static dev._3000IQPlay.trillium.util.Util.mc;
 

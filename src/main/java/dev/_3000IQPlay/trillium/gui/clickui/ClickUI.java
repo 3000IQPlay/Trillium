@@ -12,6 +12,7 @@ import dev._3000IQPlay.trillium.modules.client.ClickGui;
 import dev._3000IQPlay.trillium.notification.Animation;
 import dev._3000IQPlay.trillium.notification.DecelerateAnimation;
 import dev._3000IQPlay.trillium.notification.Direction;
+import dev._3000IQPlay.trillium.util.RenderUtil;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -99,14 +100,27 @@ public class ClickUI extends GuiScreen {
 			mc.currentScreen = null;
 			mc.displayGuiScreen(null);
 		}
-
-		dWheel = Mouse.getDWheel();
-
-
-		if (dWheel > 0)
-			scrollSpeed += 14;
-		else if (dWheel < 0)
-			scrollSpeed -= 14;
+		
+		ScaledResolution sr = new ScaledResolution(mc);
+		
+		if (ClickGui.getInstance().gradientBG.getValue().booleanValue()) {
+            RenderUtil.draw2DGradientRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(),
+			    new Color(ClickGui.getInstance().gradientLB.getValue().getRed(), ClickGui.getInstance().gradientLB.getValue().getGreen(), ClickGui.getInstance().gradientLB.getValue().getBlue(), ClickGui.getInstance().gradientLB.getValue().getAlpha() / 2).getRGB(),
+			    new Color(ClickGui.getInstance().gradientLT.getValue().getRed(), ClickGui.getInstance().gradientLT.getValue().getGreen(), ClickGui.getInstance().gradientLT.getValue().getBlue(), ClickGui.getInstance().gradientLT.getValue().getAlpha() / 2).getRGB(),
+			    new Color(ClickGui.getInstance().gradientRB.getValue().getRed(), ClickGui.getInstance().gradientRB.getValue().getGreen(), ClickGui.getInstance().gradientRB.getValue().getBlue(), ClickGui.getInstance().gradientRB.getValue().getAlpha() / 2).getRGB(),
+			    new Color(ClickGui.getInstance().gradientRT.getValue().getRed(), ClickGui.getInstance().gradientRT.getValue().getGreen(), ClickGui.getInstance().gradientRT.getValue().getBlue(), ClickGui.getInstance().gradientRT.getValue().getAlpha() / 2).getRGB()
+		    );
+        }
+		
+		int dWheel = Mouse.getDWheel();
+		
+        if (dWheel > 0) {
+            if (ClickGui.getInstance().scroll.getValue().booleanValue()) {
+                scrollSpeed += ClickGui.getInstance().scrollval.getValue();
+            }
+        } else if (dWheel < 0 && ClickGui.getInstance().scroll.getValue().booleanValue()) {
+            scrollSpeed -= ClickGui.getInstance().scrollval.getValue();
+        }
 
 		double anim = (openAnimation.getOutput() + .6f);
 

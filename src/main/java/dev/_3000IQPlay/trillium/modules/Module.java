@@ -121,14 +121,14 @@ public class Module
         this.onToggle();
         this.onEnable();
 
-        if((Objects.equals(this.getDisplayName(), "ClickGUI")))){
+        if ((Objects.equals(this.getDisplayName(), "ClickGUI"))){
             mc.world.playSound(getPlayerPos(), SoundEvents.BLOCK_ENDERCHEST_OPEN, SoundCategory.AMBIENT, 150.0f, 1.5F, true);
-        }else {
+        } else {
             mc.world.playSound(getPlayerPos(), SoundEvents.BLOCK_NOTE_XYLOPHONE, SoundCategory.AMBIENT, 150.0f, 2.0F, true);
         }
 
 
-        if(((!Objects.equals(this.getDisplayName(), "ACRender")) && (!Objects.equals(this.getDisplayName(), "ClickGui")))) {
+        if (((!Objects.equals(this.getDisplayName(), "ACRender")) && (!Objects.equals(this.getDisplayName(), "ClickGui")))) {
             NotificationManager.publicity(this.getDisplayName(), "was enabled!", 2, NotificationType.INFO);
         }
         if (Trillium.moduleManager.getModuleByClass(MainSettings.class).notifyToggles.getValue()) {
@@ -141,13 +141,13 @@ public class Module
     }
 
     public void disable() {
-        if ( !this.alwaysListening) {
+        if (!this.alwaysListening) {
             MinecraftForge.EVENT_BUS.unregister(this);
         }
-        if(mc.player == null){
+        if (mc.player == null){
             return;
         }
-        if((Objects.equals(this.getDisplayName(), "ClickGUI"))){
+        if ((Objects.equals(this.getDisplayName(), "ClickGUI"))){
             mc.world.playSound(getPlayerPos(), SoundEvents.BLOCK_ENDERCHEST_CLOSE, SoundCategory.AMBIENT, 150.0f, 1.0F, true);
         } else {
             mc.world.playSound(getPlayerPos(), SoundEvents.BLOCK_NOTE_XYLOPHONE, SoundCategory.AMBIENT, 150.0f, 1.0F, true);
@@ -155,7 +155,7 @@ public class Module
         }
 
         this.enabled.setValue(false);
-        if((!Objects.equals(this.getDisplayName(), "ClickGui"))) {
+        if ((!Objects.equals(this.getDisplayName(), "ClickGui"))) {
             NotificationManager.publicity(this.getDisplayName(), "was disabled!", 2, NotificationType.INFO);
         }
         if (Trillium.moduleManager.getModuleByClass(MainSettings.class).notifyToggles.getValue()) {

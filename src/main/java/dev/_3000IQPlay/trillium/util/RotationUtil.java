@@ -1,5 +1,6 @@
 package dev._3000IQPlay.trillium.util;
 
+import dev._3000IQPlay.trillium.util.Util;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -74,10 +75,10 @@ public class RotationUtil
         return getRotations(x, y, z, from);
     }
 
-    public static float[] getRotations(double x, double y, double z, Entity f)
-    {
+    public static float[] getRotations(double x, double y, double z, Entity f) {
         return getRotations(x, y, z, f.posX, f.posY, f.posZ, f.getEyeHeight());
     }
+	
     public static float[] getRotations(double x,
                                        double y,
                                        double z,
@@ -105,8 +106,39 @@ public class RotationUtil
 
         return new float[]{ prevYaw + diff, pitch };
     }
+	
+	public static float[] getNCPRotations(Entity entityIn, boolean interpolate) {
+        double diffX;
+        double diffZ;
+        if(interpolate){
+            diffX = entityIn.posX + (entityIn.posX - entityIn.prevPosX) * mc.getRenderPartialTicks() - mc.player.posX - mc.player.motionX *  mc.getRenderPartialTicks() ;
+            diffZ = entityIn.posZ + (entityIn.posZ - entityIn.prevPosZ) * mc.getRenderPartialTicks() - mc.player.posZ - mc.player.motionZ * mc.getRenderPartialTicks();
+        } else {
+            diffX = entityIn.posX - mc.player.posX;
+            diffZ = entityIn.posZ - mc.player.posZ;
+        }
 
+        double diffY;
 
+        if (entityIn instanceof EntityLivingBase) {
+            diffY = entityIn.posY + entityIn.getEyeHeight() - (mc.player.posY + mc.player.getEyeHeight()) - 0.2f;
+        } else {
+            diffY = (entityIn.getEntityBoundingBox().minY + entityIn.getEntityBoundingBox().maxY) / 2 - (mc.player.posY + mc.player.getEyeHeight());
+        }
+        if (!mc.player.canEntityBeSeen(entityIn)) {
+            diffY = entityIn.posY + entityIn.height - (mc.player.posY + mc.player.getEyeHeight());
+        }
+        final double diffXZ = MathHelper.sqrt(diffX * diffX + diffZ * diffZ);
+
+        float yaw = (float) ((Math.toDegrees(Math.atan2(diffZ, diffX)) - 90));
+        float pitch = (float) ((Math.toDegrees(-Math.atan2(diffY, diffXZ))));
+
+        yaw = (mc.player.rotationYaw + RotationUtil.getFixedRotation(MathHelper.wrapDegrees(yaw - mc.player.rotationYaw)));
+        pitch = mc.player.rotationPitch + RotationUtil.getFixedRotation(MathHelper.wrapDegrees(pitch - mc.player.rotationPitch));
+        pitch = MathHelper.clamp(pitch, -90F, 90F);
+
+        return new float[]{yaw, pitch};
+    }
 
     public static Vec2f getRotationTo(Vec3d posTo) {
         EntityPlayerSP player = mc.player;
@@ -116,6 +148,7 @@ public class RotationUtil
     public static Vec2f getRotationTo(Vec3d posFrom, Vec3d posTo) {
         return getRotationFromVec(posTo.subtract(posFrom));
     }
+	
     public static Vec2f getRotationFromVec(Vec3d vec) {
         double lengthXZ = Math.hypot(vec.x, vec.z);
         double yaw = normalizeAngle(Math.toDegrees(Math.atan2(vec.z, vec.x)) - 90.0);
@@ -123,6 +156,7 @@ public class RotationUtil
 
         return new Vec2f((float) yaw, (float) pitch);
     }
+	
     public static double normalizeAngle(double angle) {
         angle %= 360.0;
 
@@ -137,8 +171,6 @@ public class RotationUtil
         return angle;
     }
 
-
-
     public static boolean canSeeEntityAtFov(Entity entityLiving, float scope) {
         Util.mc.getMinecraft();
         double diffX = entityLiving.posX - Util.mc.player.posX;
@@ -150,6 +182,7 @@ public class RotationUtil
         double difference = RotationUtil.angleDifference(d, Util.mc.player.rotationYaw);
         return difference <= (double)scope;
     }
+	
     public static double angleDifference(double a, double b) {
         float yaw360 = (float)(Math.abs(a - b) % 360.0);
         if (yaw360 > 180.0f) {
@@ -157,6 +190,7 @@ public class RotationUtil
         }
         return yaw360;
     }
+	
     public static float[] getNeededRotations(final Entity entityLivingBase) {
         final double d = entityLivingBase.posX - Util.mc.player.posX;
         final double d2 = entityLivingBase.posZ - Util.mc.player.posZ;
@@ -166,7 +200,6 @@ public class RotationUtil
         final float f2 = (float)(-(MathHelper.atan2(d3, d4) * 180.0 / 3.141592653589793));
         return new float[] { f, f2 };
     }
-
 
     public static double angle(Vec3d vec3d, Vec3d other) {
         double lengthSq = vec3d.length() * other.length();
@@ -238,6 +271,23 @@ public class RotationUtil
 
     public static float getHalvedfov() {
         return RotationUtil.getFov() / 2.0f;
+    }
+	
+	public static float getFixedRotation(float rot) {
+        return getDeltaMouse(rot) * getGCDValue();
+    }
+
+    public static float getGCDValue() {
+        return (float) (getGCD() * 0.15);
+    }
+
+    public static float getGCD() {
+        float f1;
+        return (f1 = (float) (Util.mc.gameSettings.mouseSensitivity * 0.6 + 0.2)) * f1 * f1 * 8;
+    }
+
+    public static float getDeltaMouse(float delta) {
+        return Math.round(delta / getGCDValue());
     }
 }
 

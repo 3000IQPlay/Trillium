@@ -1,10 +1,5 @@
 package dev._3000IQPlay.trillium.gui.clickui.button;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.gui.clickui.ColorUtil;
 import dev._3000IQPlay.trillium.util.Drawable;
@@ -28,6 +23,11 @@ import org.lwjgl.input.Keyboard;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.renderer.GlStateManager;
+
+import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModuleButton {
 
