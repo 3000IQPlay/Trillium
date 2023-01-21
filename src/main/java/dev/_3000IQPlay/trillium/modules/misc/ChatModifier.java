@@ -11,6 +11,7 @@ import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.TextUtil;
 import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraft.network.play.server.SPacketChat;
@@ -26,9 +27,12 @@ public class ChatModifier
         extends Module {
     private static ChatModifier INSTANCE = new ChatModifier();
     private final Timer timer = new Timer();
-	public Setting<ColorSetting> cbgC = register(new Setting<ColorSetting>("ChatBGColor", new ColorSetting(-2038431489)));
+	public Setting<ColorSetting> cbgC = register(new Setting<ColorSetting>("ChatBGColor", new ColorSetting(-2038431489), v -> this.gradient.getValue() == false));
 	public Setting<Boolean> gradient = register(new Setting<Boolean>("GradientBG", true));
-	public Setting<ColorSetting> gC = register(new Setting<ColorSetting>("GradientBGColor", new ColorSetting(-2046754817), v -> this.gradient.getValue()));
+	public final Setting<ColorSetting> gradientLB = this.register(new Setting<>("GLeftBotom", new ColorSetting(-8453889), v -> this.gradient.getValue()));
+    public final Setting<ColorSetting> gradientLT = this.register(new Setting<>("GLeftTop", new ColorSetting(-16711681), v -> this.gradient.getValue()));
+	public final Setting<ColorSetting> gradientRB = this.register(new Setting<>("GRightBottom", new ColorSetting(-16711808), v -> this.gradient.getValue()));
+    public final Setting<ColorSetting> gradientRT = this.register(new Setting<>("GRightTop", new ColorSetting(-14024449), v -> this.gradient.getValue()));
 	public Setting<Suffix> suffix = this.register(new Setting<Suffix>("Suffix", Suffix.None));
 	public Setting<Boolean> ctc = register(new Setting<Boolean>("CustomTextColor", false));
 	public Setting<TextColor> textcolor = this.register(new Setting<TextColor>("TextColorType", TextColor.GREEN, v -> this.ctc.getValue()));
@@ -56,11 +60,18 @@ public class ChatModifier
 	@Override
     public void onRender2D(Render2DEvent event) {
         if (ChatModifier.mc.currentScreen instanceof GuiChat) {
-            RenderUtil.drawRectangleCorrectly(0, 0, 1920, 1080, ColorUtil.toRGBA(this.cbgC.getValue().getRed(), this.cbgC.getValue().getGreen(), this.cbgC.getValue().getBlue(), this.cbgC.getValue().getAlpha()));
+			ScaledResolution sr = new ScaledResolution(mc);
             if (this.gradient.getValue().booleanValue()) {
-                RenderUtil.drawGradientRect(0, 0, 1920, 1080, 0, new Color(this.gC.getValue().getRed(), this.gC.getValue().getGreen(), this.gC.getValue().getBlue(), this.gC.getValue().getAlpha()).getRGB());
-            }
-        }
+                RenderUtil.draw2DGradientRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(),
+			        new Color(this.gradientLB.getValue().getRed(), this.gradientLB.getValue().getGreen(), this.gradientLB.getValue().getBlue(), this.gradientLB.getValue().getAlpha() / 2).getRGB(),
+			        new Color(this.gradientLT.getValue().getRed(), this.gradientLT.getValue().getGreen(), this.gradientLT.getValue().getBlue(), this.gradientLT.getValue().getAlpha() / 2).getRGB(),
+			        new Color(this.gradientRB.getValue().getRed(), this.gradientRB.getValue().getGreen(), this.gradientRB.getValue().getBlue(), this.gradientRB.getValue().getAlpha() / 2).getRGB(),
+			        new Color(this.gradientRT.getValue().getRed(), this.gradientRT.getValue().getGreen(), this.gradientRT.getValue().getBlue(), this.gradientRT.getValue().getAlpha() / 2).getRGB()
+		        );
+            } else {
+				RenderUtil.drawRectangleCorrectly(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), ColorUtil.toRGBA(this.cbgC.getValue().getRed(), this.cbgC.getValue().getGreen(), this.cbgC.getValue().getBlue(), this.cbgC.getValue().getAlpha()));
+            }    
+		}
     }
 
     @SubscribeEvent

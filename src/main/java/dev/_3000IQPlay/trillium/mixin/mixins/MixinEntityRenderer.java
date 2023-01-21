@@ -1,6 +1,8 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.event.events.*;
+import dev._3000IQPlay.trillium.modules.render.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -10,13 +12,13 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.Project;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.callback.*;
 import net.minecraft.client.entity.*;
-import dev._3000IQPlay.trillium.event.events.*;
 import net.minecraftforge.common.*;
 import net.minecraft.world.*;
 import net.minecraft.entity.*;
@@ -31,7 +33,6 @@ import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 
-import dev._3000IQPlay.trillium.modules.render.*;
 import org.spongepowered.asm.mixin.injection.*;
 
 import javax.vecmath.Vector3f;
@@ -63,15 +64,8 @@ public abstract class MixinEntityRenderer
             GlStateManager.shadeModel(7425);
             GlStateManager.disableDepth();
             GlStateManager.glLineWidth(1.0F);
-
-
-
-
-
             PostRenderEvent render3dEvent = new PostRenderEvent(partialTicks);
             MinecraftForge.EVENT_BUS.post(render3dEvent);
-
-
             GlStateManager.glLineWidth(1.0F);
             GlStateManager.shadeModel(7424);
             GlStateManager.disableBlend();
@@ -192,8 +186,27 @@ public abstract class MixinEntityRenderer
         }
         return entityPlayerSP.prevTimeInPortal;
     }
+	
+	@Redirect(method={"setupCameraTransform"}, at=@At(value="INVOKE", target="Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V"))
+    private void onSetupCameraTransform(float f, float f2, float f3, float f4) {
+        PerspectiveEvent perspectiveEvent = new PerspectiveEvent((float)this.mc.displayWidth / (float)this.mc.displayHeight);
+        MinecraftForge.EVENT_BUS.post((Event)perspectiveEvent);
+        Project.gluPerspective((float)f, (float)perspectiveEvent.getAspect(), (float)f3, (float)f4);
+    }
 
+    @Redirect(method={"renderWorldPass"}, at=@At(value="INVOKE", target="Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V"))
+    private void onRenderWorldPass(float f, float f2, float f3, float f4) {
+        PerspectiveEvent perspectiveEvent = new PerspectiveEvent((float)this.mc.displayWidth / (float)this.mc.displayHeight);
+        MinecraftForge.EVENT_BUS.post((Event)perspectiveEvent);
+        Project.gluPerspective((float)f, (float)perspectiveEvent.getAspect(), (float)f3, (float)f4);
+    }
 
+    @Redirect(method={"renderCloudsCheck"}, at=@At(value="INVOKE", target="Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V"))
+    private void onRenderCloudsCheck(float f, float f2, float f3, float f4) {
+        PerspectiveEvent perspectiveEvent = new PerspectiveEvent((float)this.mc.displayWidth / (float)this.mc.displayHeight);
+        MinecraftForge.EVENT_BUS.post((Event)perspectiveEvent);
+        Project.gluPerspective((float)f, (float)perspectiveEvent.getAspect(), (float)f3, (float)f4);
+    }
 
     @Inject(method = { "setupFog" },  at = { @At("HEAD") },  cancellable = true)
     public void setupFogHook(final int startCoords,  final float partialTicks,  final CallbackInfo info) {
