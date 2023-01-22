@@ -3,7 +3,6 @@ package dev._3000IQPlay.trillium.gui.auth;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.protect.keyauth.KeyAuthApp;
-import dev._3000IQPlay.trillium.gui.clickui.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import org.lwjgl.input.Keyboard;
@@ -18,14 +17,18 @@ public class AuthGui extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        RenderUtil.drawRect(0, 0, width, height, Color.BLACK.getRGB());
-
-        drawCenteredStringWithShadow("Auth with license key", width / 2, height / 4 + 6, ColorUtil.astolfoRainbow2(100, 100));
+        RenderUtil.draw2DGradientRect(0, 0, width, height,
+			new Color(0, 255, 255, 255).getRGB(),
+	        new Color(135, 0, 255, 255).getRGB(),
+			new Color(0, 255, 125, 255).getRGB(),
+	        new Color(0, 135, 255, 255).getRGB()
+		);
+        drawCenteredStringWithShadow("Auth with license key", width / 2, height / 4 + 6, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();
 
-        drawCenteredStringWithShadow("If you have access but haven't got a key, you can dm _3000IQPlay#8278 for help", width / 2, 10, ColorUtil.astolfoRainbow2(100, 100));
-        drawCenteredStringWithShadow("(C) All rights reserved || TKDevs", width / 2, height - 14, ColorUtil.astolfoRainbow2(100, 100));
+        drawCenteredStringWithShadow("If you have access but haven't got a key, you can dm _3000IQPlay#8278 for help", width / 2, 10, new Color(255, 255, 255, 255).getRGB());
+        drawCenteredStringWithShadow("(C) All rights reserved || TKDevs", width / 2, height - 14, new Color(255, 255, 255, 255).getRGB());
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
