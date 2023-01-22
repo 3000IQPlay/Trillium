@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL20;
 import java.nio.FloatBuffer;
 
 import static dev._3000IQPlay.trillium.util.RenderUtil.bindTexture;
-import static dev._3000IQPlay.trillium.gui.hud.WaterMark.createFrameBuffer;
 import static dev._3000IQPlay.trillium.util.ItemUtil.mc;
 import static org.lwjgl.opengl.GL11.GL_GREATER;
 
@@ -20,6 +19,17 @@ public class BloomUtil {
     public static ShaderUtil gaussianBloom = new ShaderUtil("textures/bloom.frag");
 
     public static Framebuffer framebuffer = new Framebuffer(1, 1, false);
+	
+	public static Framebuffer createFrameBuffer(Framebuffer framebuffer) {
+        if (framebuffer == null || framebuffer.framebufferWidth != mc.displayWidth || framebuffer.framebufferHeight != mc.displayHeight) {
+            if (framebuffer != null) {
+                framebuffer.deleteFramebuffer();
+            }
+            return new Framebuffer(mc.displayWidth, mc.displayHeight, true);
+        }
+        return framebuffer;
+    }
+
 
 
     public static void renderBlur(int sourceTexture, int radius, int offset) {
