@@ -62,7 +62,7 @@ public class HoleESP
 			if (drawnHoles >= this.holes.getValue()) {
 			    break;
 			}
-		    if (pos.equals(new BlockPos(HoleESP.mc.player.posX, HoleESP.mc.player.posY, HoleESP.mc.player.posZ)) && !this.ownHole.getValue().booleanValue() || !RotationUtil.isInFov(pos)) {
+		    if (pos.equals(new BlockPos(HoleESP.mc.player.posX, HoleESP.mc.player.posY, HoleESP.mc.player.posZ)) && !this.ownHole.getValue().booleanValue()) {
 				continue;
 			}
 		    if (this.renderBedrockHoles.getValue() && Trillium.holeManager.isSafe(pos)) {
