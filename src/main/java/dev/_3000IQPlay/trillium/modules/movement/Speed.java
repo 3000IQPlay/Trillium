@@ -1,6 +1,8 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.event.events.EventMove;
+import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.UpdateWalkingPlayerEvent;
 import dev._3000IQPlay.trillium.modules.Module;
@@ -8,18 +10,38 @@ import dev._3000IQPlay.trillium.modules.movement.Strafe;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.EntityUtil;
 import dev._3000IQPlay.trillium.util.MovementUtil;
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.network.play.server.SPacketExplosion;
+import net.minecraft.network.play.server.SPacketPlayerPosLook;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static dev._3000IQPlay.trillium.util.PyroSpeed.*;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.Objects;
 
 public class Speed
         extends Module {
 	private static Speed instance;
     private final Setting<SpeedNewModes> mode = this.register(new Setting<SpeedNewModes>("Mode", SpeedNewModes.Custom));
+	
+	
+	public Setting<Integer> bticks  = this.register(new Setting<>("BoostTicks", 10, 1, 40, v -> this.mode.getValue() == SpeedNewModes.Default));
+    public Setting<Boolean> strafeBoost = this.register(new Setting<>("StrafeBoost", false, v -> this.mode.getValue() == SpeedNewModes.Default));
+    public Setting<Float> reduction  = this.register(new Setting<>("Reduction ", 2f, 1f, 10f, v -> this.mode.getValue() == SpeedNewModes.Default));
+    public Setting<Boolean> jumpBoost = this.register (new Setting<>("JumpBoostApplifier", false, v -> this.mode.getValue() == SpeedNewModes.Default));
+	public Setting<Boolean> uav = this.register( new Setting<>("UseAllVelocity", false, v -> this.mode.getValue() == SpeedNewModes.Default));
+	
 	private final Setting<Float> yPortAirSpeed = this.register(new Setting<Float>("YPortAirSpeed", 0.35f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
 	private final Setting<Float> yPortGroundSpeed = this.register(new Setting<Float>("YPortGroundSpeed", 0.35f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
 	private final Setting<Float> yPortJumpMotionY = this.register(new Setting<Float>("YPortJumpMotionY", 0.42f, 0.0f, 4.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
@@ -46,6 +68,16 @@ public class Speed
     private final Setting<Boolean> resetXZ = this.register(new Setting<Boolean>("ResetXZ", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
     private final Setting<Boolean> resetY = this.register(new Setting<Boolean>("ResetY", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
 	public boolean wasStrafeEnabled;
+	public double defaultBaseSpeed = getBaseMoveSpeed();
+    public double distance;
+    public int Field2015 = 4;
+    public int FunnyGameStage;
+    public boolean flip;
+    int velocity = 0;
+    int boostticks = 0;
+    boolean isBoosting = false;
+    private double maxVelocity = 0;
+    private Timer velocityTimer = new Timer();
     int stage;
 
     public Speed() {
@@ -58,6 +90,175 @@ public class Speed
             instance = new Speed();
         }
         return instance;
+    }
+	
+	@SubscribeEvent( priority = EventPriority.HIGHEST)
+    public void onPacketReceive(PacketEvent.Receive event) {
+		if (this.mode.getValue() == SpeedNewModes.Default) {
+        if (event.getPacket() instanceof SPacketEntityVelocity) {
+            if(((SPacketEntityVelocity) event.getPacket()).getEntityID() == mc.player.getEntityId()) {
+                SPacketEntityVelocity pack = event.getPacket();
+                int vX = pack.getMotionX();
+                int vZ = pack.getMotionZ();
+                if (vX < 0) vX *= -1;
+                if (vZ < 0) vZ *= -1;
+
+                if((vX + vZ) < 3000 && !this.uav.getValue()) return;
+                velocity = vX + vZ;
+
+                boostticks = this.bticks.getValue();
+            }
+        }
+        if (event.getPacket() instanceof SPacketPlayerPosLook) {
+            maxVelocity = 0;
+            toggle();
+        } else if (event.getPacket() instanceof SPacketExplosion) {
+            SPacketExplosion velocity = event.getPacket();
+            maxVelocity = Math.sqrt(velocity.getMotionX() * velocity.getMotionX() + velocity.getMotionZ() * velocity.getMotionZ());
+            velocityTimer.reset();
+        }
+		}
+    }
+	
+	public double getBaseMoveSpeed() {
+        if (Speed.fullNullCheck()) {
+            return 0.2873;
+        }
+
+        int n;
+        double d = 0.2873;
+        if (mc.player.isPotionActive(MobEffects.SPEED)) {
+            n = Objects.requireNonNull(mc.player.getActivePotionEffect(MobEffects.SPEED)).getAmplifier();
+            d *= 1.0 + 0.2 * (double)(n + 1);
+        }
+        if (mc.player.isPotionActive(MobEffects.JUMP_BOOST) && this.jumpBoost.getValue()) {
+            n = Objects.requireNonNull(mc.player.getActivePotionEffect(MobEffects.JUMP_BOOST)).getAmplifier();
+            d /= 1.0 + 0.2 * (double)(n + 1);
+        }
+        if (this.strafeBoost.getValue() && velocity > 0 && boostticks > 0){
+            d += (velocity / 8000f) / this.reduction.getValue();
+            boostticks--;
+        }
+        if(boostticks == 1){
+            velocity = 0;
+        }
+        return d;
+    }
+	
+	public double getBaseMotionSpeed() {
+        double baseSpeed =  0.2873D;
+        if (mc.player.isPotionActive(MobEffects.SPEED)) {
+            int amplifier = Objects.requireNonNull(mc.player.getActivePotionEffect(MobEffects.SPEED)).getAmplifier();
+            baseSpeed *= 1.0D + 0.2D * ((double) amplifier + 1);
+        }
+        return baseSpeed;
+    }
+	
+	public double isJumpBoost(){
+        if (mc.player.isPotionActive(MobEffects.JUMP_BOOST)) {
+            return 0.2;
+        } else {
+            return 0;
+        }
+    }
+	
+	private double round(double value) {
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(3, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+	
+	@SubscribeEvent
+	public void onMoveEvent(EventMove event) {
+	    if (event.getStage() == 1) return;
+        if (Speed.fullNullCheck()) return;
+	    switch (this.mode.getValue()) {
+	        case Default: {
+                double d;
+                if (event.getStage() != 0) return;
+                if (event.isCanceled()) {
+                    return;
+                }
+                if (!isMovingClient() || mc.player.fallDistance > 5.0f) {
+                    return;
+                }
+                if (mc.player.collidedHorizontally) {
+                    if (mc.player.onGround && (d = Method5402(1.0)) == 1.0) {
+                        FunnyGameStage++;
+                    }
+                    if (FunnyGameStage > 0) {
+                        switch (FunnyGameStage) {
+                            case 1: {
+                                event.setCanceled(true);
+
+                                event.set_y(0.41999998688698);
+                                int n2 = FunnyGameStage;
+                                FunnyGameStage = n2 + 1;
+                                return;
+                            }
+                            case 2: {
+                                event.setCanceled(true);
+
+                                event.set_y(0.33319999363422);
+                                int n3 = FunnyGameStage;
+                                FunnyGameStage = n3 + 1;
+                                return;
+                            }
+                            case 3: {
+                                float f = (float)Method718();
+                                event.set_y(0.24813599859094704);
+                                event.set_x((double) (-MathHelper.sin(f)) * 0.2);
+                                event.set_z((double) MathHelper.cos(f) * 0.2);
+                                FunnyGameStage = 0;
+                                mc.player.motionY = 0.0;
+                                event.setCanceled(true);
+                                return;
+                            }
+                        }
+                        return;
+                    }
+                }
+                FunnyGameStage = 0;
+                if (this.Field2015 == 1 && (mc.player.moveForward != 0.0f || mc.player.moveStrafing != 0.0f)) {
+                    defaultBaseSpeed = 1.35 * getBaseMoveSpeed() - 0.01;
+                } else if (this.Field2015 == 2 && mc.player.collidedVertically) {
+                    d = 0.4;
+                    double d2 = d;
+                    mc.player.motionY = d2 + isJumpBoost();
+                    double d3 = d;
+                    event.set_y(d3 + isJumpBoost());
+                    flip = !flip;
+                    defaultBaseSpeed *= flip ? 1.6835 : 1.395;
+                } else if (this.Field2015 == 3) {
+                    d = 0.66 * (distance - getBaseMoveSpeed());
+                    defaultBaseSpeed = distance - d;
+                } else {
+                    List<AxisAlignedBB> list = mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0));
+                    if ((list.size() > 0 || mc.player.collidedVertically) && this.Field2015 > 0) {
+                        this.Field2015 = 1;
+                    }
+                    defaultBaseSpeed = distance - distance / 159.0;
+                }
+                event.setCanceled(true);
+                defaultBaseSpeed = Math.max(defaultBaseSpeed, getBaseMoveSpeed());
+                Method744(event, defaultBaseSpeed);
+                ++this.Field2015;
+                break;
+            }
+		}
+	}
+	
+	@SubscribeEvent
+    public void onUpdateWalkingPlayerPre(EventPreMotion event) {
+		if (this.mode.getValue() == SpeedNewModes.Default) {
+		    if (this.strafeBoost.getValue() && isBoosting){
+                return;
+            }
+			double d2 = mc.player.posX - mc.player.prevPosX;
+            double d3 = mc.player.posZ - mc.player.prevPosZ;
+            double d4 = d2 * d2 + d3 * d3;
+            distance = Math.sqrt(d4);
+		}
     }
 
     @SubscribeEvent
@@ -250,6 +451,7 @@ public class Speed
 		} else {
 			this.wasStrafeEnabled = false;
 		}
+		this.maxVelocity = 0;
 		if (this.mode.getValue() == SpeedNewModes.Custom) {
             if (this.resetXZ.getValue().booleanValue()) {
                 Speed.mc.player.motionX = Speed.mc.player.motionZ = 0.0;
@@ -264,6 +466,11 @@ public class Speed
 	@Override
     public void onDisable() {
         Speed.mc.timer.tickLength = 50.0f / 1.0f;
+		this.defaultBaseSpeed = getBaseMoveSpeed();
+        this.Field2015 = 4;
+        this.distance = 0.0;
+        this.FunnyGameStage = 0;
+        this.velocity = 0;
 		if (this.wasStrafeEnabled == true) { // return shit somehow doesnt work so im making this chinese check
 			Strafe.getInstance().enable();
 			this.wasStrafeEnabled = false;
@@ -289,6 +496,7 @@ public class Speed
     }
 	
 	public static enum SpeedNewModes {
+		Default,
         Custom,
 		NCP,
 		YPort;

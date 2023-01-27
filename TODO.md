@@ -1,11 +1,12 @@
-Fix HoleESP Not Rendering
-
 Maybe add loading screen?
 
-Add Better Watermark | Experium -> Trillium
-
-Add Aspect
-
-Add Working PopChams
-
 Advence the GUI little bit
+
+*In Next Update*
++ Fov changer - MainSettings (Done)
++ HoleFiller
++ Some Translations (Done)
++ Secondary CA
++ HoleESP Fix
++ Fixed Bind command issues
++ Add Working PopChams

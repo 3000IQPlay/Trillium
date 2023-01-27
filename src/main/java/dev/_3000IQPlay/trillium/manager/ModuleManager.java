@@ -103,7 +103,7 @@ public class ModuleManager
         this.modules.add(new TPSCounter());
         this.modules.add(new WaterMark());
         this.modules.add(new Player());
-        this.modules.add(new dev._3000IQPlay.trillium.gui.hud.Speed());
+        this.modules.add(new dev._3000IQPlay.trillium.gui.hud.SpeedMeter());
         this.modules.add(new ArmorHud());
         this.modules.add(new Surround());
         this.modules.add(new LogoutSpots());

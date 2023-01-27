@@ -17,7 +17,7 @@ public class ReloadManager
         this.prefix = prefix;
         MinecraftForge.EVENT_BUS.register(this);
         if (!ReloadManager.fullNullCheck()) {
-            Command.sendMessage(ChatFormatting.RED + "Тандерхак отключен! напиши " + prefix + "reload чтобы включить");
+            Command.sendMessage(ChatFormatting.RED + "Trillium Unlocked! Type" + prefix + "reload to enable");
         }
     }
 

@@ -23,7 +23,7 @@ public class AuthGui extends GuiScreen {
 			new Color(0, 255, 125, 255).getRGB(),
 	        new Color(0, 135, 255, 255).getRGB()
 		);
-        drawCenteredStringWithShadow("Auth with license key", width / 2, height / 4 + 6, new Color(255, 255, 255, 255).getRGB());
+        drawCenteredStringWithShadow("Once you will enter the key and log in we will receive your IP, HWID and Last Login Date", width / 2, height / 4 + 6, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();
 

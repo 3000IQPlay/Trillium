@@ -16,9 +16,9 @@ import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 
-public class Speed extends Module{
-    public Speed() {
-        super("Speed", "Speed", Module.Category.HUD, true, false, false);
+public class SpeedMeter extends Module{
+    public SpeedMeter() {
+        super("SpeedMeter", "Speed", Module.Category.HUD, true, false, false);
     }
 
     public final Setting<ColorSetting> color = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));

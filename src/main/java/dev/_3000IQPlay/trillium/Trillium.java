@@ -70,8 +70,8 @@ public class Trillium {
     public static Scheduler yahz;
     public static NoMotionUpdateService nobitches;
 	public static EventProcessor eventProcessor;
-
-    public static String ServerIp;
+	
+	public static String ServerIp;
     public static int ServerPort;
 
     @Mod.Instance
@@ -82,6 +82,7 @@ public class Trillium {
     }
 	
     public static void load() {
+		AntiDump.check();
         unloaded = false;
         if (reloadManager != null) {
             reloadManager.unload();
@@ -183,6 +184,7 @@ public class Trillium {
     }
 
     public static void reload() {
+		AntiDump.check();
         Trillium.unload(false);
         Trillium.load();
     }
@@ -227,10 +229,11 @@ public class Trillium {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+		AntiDump.check();
 		Minecraft mc = Minecraft.getMinecraft();
         Display.setTitle(MODNAME + " v"+ MODVER + " || User: " + mc.getSession().getUsername());
-        Trillium.load();
 		setWindowsIcon();
+        Trillium.load();
         MinecraftForge.EVENT_BUS.register(networkHandler);
 		eventProcessor = new EventProcessor();
         eventProcessor.onInit();
