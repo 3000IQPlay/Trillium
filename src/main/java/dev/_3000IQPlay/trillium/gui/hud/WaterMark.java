@@ -44,7 +44,7 @@ public class WaterMark
             String fpsText = Minecraft.debugFPS + "fps ";
 			String name = mc.player.getDisplayNameString();
 			String server = Minecraft.getMinecraft().isSingleplayer() ? "singleplayer".toLowerCase() : WaterMark.mc.getCurrentServerData().serverIP.toLowerCase();
-			String Trillium = "Trillium v1.2.2-Beta";
+			String Trillium = "Trillium b1.3.7";
 			String text = Trillium + " | " + server + " | " + ping + " | " + fpsText;
             float width = Minecraft.getMinecraft().fontRenderer.getStringWidth(text) + 6;
             int height = 20;

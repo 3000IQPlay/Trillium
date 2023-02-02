@@ -34,6 +34,7 @@ public class ClickGui
     public int i = 85;
     private final Timer timer = new Timer();
     private Setting<colorModeEn> colorMode = register(new Setting("ColorMode", colorModeEn.Analogous));
+	public Setting<GM> gradientMode = register(new Setting("GradientMode", GM.Horizontal));
 	public Setting<Boolean> darkBackGround = this.register(new Setting<Boolean>("DarkBackGround", true));
 	public Setting<Boolean> showBinds = this.register(new Setting<Boolean>("ShowBinds", true));
 	public Setting<Boolean> scroll = this.register(new Setting<Boolean>("Scroll", true));
@@ -158,6 +159,11 @@ public class ClickGui
         GL11.glVertex3f((float) width, 0.0f, 0.0f);
         GL11.glEnd();
         GL11.glPopMatrix();
+    }
+	
+	public static enum GM {
+        Horizontal,
+        Vertical;
     }
 
     public enum colorModeEn {

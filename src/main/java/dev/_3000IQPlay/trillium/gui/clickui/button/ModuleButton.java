@@ -82,10 +82,17 @@ public class ModuleButton {
 		if (isOpen()) {
 
 			int sbg = new Color(24, 24, 27).getRGB();
-			Drawable.horizontalGradient(x, y + height + 2, (x + width) * (1 - enableAnimation.getOutput()),
-					(y + height + 2) + getElementsHeight() * (1 - enableAnimation.getOutput()),
+			if (ClickGui.getInstance().gradientMode.getValue() == ClickGui.GM.Horizontal) {
+			    Drawable.horizontalGradient(x, y + height + 2, (x + width) * (1 - enableAnimation.getOutput()),
+			    	(y + height + 2) + getElementsHeight() * (1 - enableAnimation.getOutput()),
 					module.isEnabled() ? ColorUtil.applyOpacity(ClickGui.getInstance().getColor(200), 0.7f).getRGB() : sbg, //200
 					module.isEnabled() ? ColorUtil.applyOpacity(ClickGui.getInstance().getColor(0), 0.7f).getRGB() : sbg); //0
+			} else {
+				Drawable.verticalGradient(x, y + height + 2, (x + width) * (1 - enableAnimation.getOutput()),
+			    	(y + height + 2) + getElementsHeight() * (1 - enableAnimation.getOutput()),
+					module.isEnabled() ? ColorUtil.applyOpacity(ClickGui.getInstance().getColor(200), 0.7f).getRGB() : sbg, //200
+					module.isEnabled() ? ColorUtil.applyOpacity(ClickGui.getInstance().getColor(0), 0.7f).getRGB() : sbg); //0
+			}
 
 			double offsetY = 0;
 			for (AbstractElement element : elements) {
@@ -128,10 +135,17 @@ public class ModuleButton {
 		Drawable.drawRectWH(x, y, width, isOpen() ? height + 2 : height, new Color(32, 32, 35, 255).getRGB());
 
 		if (!enableAnimation.finished(Direction.FORWARDS)) {
-			Drawable.horizontalGradient(x, y, (x + width) * (1 - enableAnimation.getOutput()),
+			if (ClickGui.getInstance().gradientMode.getValue() == ClickGui.GM.Horizontal) {
+			    Drawable.horizontalGradient(x, y, (x + width) * (1 - enableAnimation.getOutput()),
 					y + ((isOpen() ? height + 2 : height)),
 					ColorUtil.applyOpacity(ClickGui.getInstance().getColor(200), 0.9f).getRGB(), //200
 					ColorUtil.applyOpacity(ClickGui.getInstance().getColor(0), 0.9f).getRGB());// 0
+			} else {
+				Drawable.verticalGradient(x, y, (x + width) * (1 - enableAnimation.getOutput()),
+					y + ((isOpen() ? height + 2 : height)),
+					ColorUtil.applyOpacity(ClickGui.getInstance().getColor(200), 0.9f).getRGB(), //200
+					ColorUtil.applyOpacity(ClickGui.getInstance().getColor(0), 0.9f).getRGB());// 0
+			}
 		}
 
 		if(!ClickGui.getInstance().showBinds.getValue() ){

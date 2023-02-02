@@ -74,7 +74,6 @@ public class AuthGui extends GuiScreen {
                 break;
             case 1:
                 if(KeyAuthApp.keyAuth.license(keyField.getText())) {
-                    System.out.println("You have been verified");
                     Trillium.isOpenAuthGui = false;
                     mc.displayGuiScreen(new GuiMainMenu());
                 }

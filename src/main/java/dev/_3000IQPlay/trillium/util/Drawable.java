@@ -177,8 +177,7 @@ public class Drawable {
         GlStateManager.enableTexture2D();
     }
 
-    public static void verticalGradient(double left, double top, double right, double bottom, int startColor,
-                                        int endColor) {
+    public static void verticalGradient(double left, double top, double right, double bottom, int startColor, int endColor) {
         float f = (float) (startColor >> 24 & 255) / 255.0F;
         float f1 = (float) (startColor >> 16 & 255) / 255.0F;
         float f2 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -208,8 +207,7 @@ public class Drawable {
         GlStateManager.enableTexture2D();
     }
 
-    public static void horizontalRGradient(double x, double y, double width, double height, double radius, int color,
-                                           int endColor) {
+    public static void horizontalRGradient(double x, double y, double width, double height, double radius, int color, int endColor) {
         float f = (float) (color >> 24 & 255) / 255.0F;
         float f1 = (float) (color >> 16 & 255) / 255.0F;
         float f2 = (float) (color >> 8 & 255) / 255.0F;

@@ -126,11 +126,6 @@ public class ItemShaders extends Module{
     private final Setting<ColorSetting> secondcolorImgFill = this.register(new Setting<>("secondcolorImgFill", new ColorSetting(0x8800FF00)));
     private final Setting<ColorSetting> thirdcolorImgFill = this.register(new Setting<>("thirdcolorImgFill", new ColorSetting(0x8800FF00)));
 
-
-
-    //  @EventHandler
-   // private final Listener<RenderHand.PreOutline> preOutline = new Listener<>(event -> {
-
     @SubscribeEvent
     public void onRenderHand(RenderHand.PreOutline event){
         if (mc.world == null || mc.player == null)

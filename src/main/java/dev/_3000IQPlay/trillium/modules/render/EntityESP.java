@@ -54,7 +54,7 @@ public class EntityESP extends Module {
     public enum triangleModeEn {
         Custom, Astolfo,Rainbow,Client;
     }
-    private Setting<espModeEn> espMode = register(new Setting("espMode", espModeEn.Flat));
+    private Setting<espModeEn> espMode = register(new Setting("ESPMode", espModeEn.Flat));
     public enum espModeEn {
         Flat, Box;
     }
@@ -62,7 +62,7 @@ public class EntityESP extends Module {
     public enum rectModeEn {
         Default, Smooth;
     }
-    private Setting<csgoModeEn> csgoMode = register(new Setting("csgoMode", csgoModeEn.Box));
+    private Setting<csgoModeEn> csgoMode = register(new Setting("CSGOMode", csgoModeEn.Box));
     public enum csgoModeEn {
         Box, Corner;
     }

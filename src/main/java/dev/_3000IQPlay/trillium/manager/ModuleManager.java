@@ -175,6 +175,7 @@ public class ModuleManager
 		this.modules.add(new PacketCanceller());
 		this.modules.add(new PasswordHider());
 		this.modules.add(new Aspect());
+		this.modules.add(new KeyPearl());
     }
 
     public Module getModuleByName(String name) {

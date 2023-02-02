@@ -68,23 +68,19 @@ public class KeyAuth {
 			response = Unirest.post(url).field("type", "init").field("ver", version).field("name", appname)
 					.field("ownerid", ownerid).asString();
 
-			System.out.println(response.getBody());
 			try {
 				JSONObject responseJSON = new JSONObject(response.getBody());
 
 				if (response.getBody().equalsIgnoreCase("KeyAuth_Invalid")) {
 					Minecraft.getMinecraft().shutdown();
-					System.out.println("invalid");
 				}
 
 				if (responseJSON.getBoolean("success")) {
 					sessionid = responseJSON.getString("sessionid");
 					initialized = true;
-					System.out.println("Session ID: " + responseJSON.getString("sessionid"));
 
 				} else if (responseJSON.getString("message").equalsIgnoreCase("invalidver")) {
 				} else {
-					System.out.println(responseJSON.getString("message"));
 					Minecraft.getMinecraft().shutdown();
 				}
 			} catch (Exception ignored) {}
@@ -93,7 +89,6 @@ public class KeyAuth {
 
 	public boolean license(String key) {
 		if (!initialized) {
-			System.out.println("\n\n Please initzalize first");
 			init();
 			return false;
 		}
@@ -105,13 +100,11 @@ public class KeyAuth {
 			response = Unirest.post(url).field("type", "license").field("key", key).field("hwid", hwid)
 					.field("sessionid", sessionid).field("name", appname).field("ownerid", ownerid).asString();
 
-			System.out.println(response.getBody());
 
 			try {
 				JSONObject responseJSON = new JSONObject(response.getBody());
 
 				if (!responseJSON.getBoolean("success")) {
-					System.out.println("the license does not exist");
 					Minecraft.getMinecraft().shutdown();
 				} else userData = new UserData(responseJSON);
 			} catch (Exception e) {return false;}
@@ -124,7 +117,6 @@ public class KeyAuth {
 
 	public void ban() {
 		if (!initialized) {
-			System.out.println("\n\n Please initzalize first");
 			return;
 		}
 
@@ -139,7 +131,6 @@ public class KeyAuth {
 				JSONObject responseJSON = new JSONObject(response.getBody());
 
 				if (!responseJSON.getBoolean("success")) {
-					System.out.println("Error");
 					// System.exit(0);
 				} else {
 
@@ -156,7 +147,6 @@ public class KeyAuth {
 
 	public void webhook(String webid, String param) {
 		if (!initialized) {
-			System.out.println("\n\n Please initzalize first");
 			return;
 		}
 
@@ -171,7 +161,6 @@ public class KeyAuth {
 				JSONObject responseJSON = new JSONObject(response.getBody());
 
 				if (!responseJSON.getBoolean("success")) {
-					System.out.println("Error");
 					// System.exit(0);
 				} else {
 
