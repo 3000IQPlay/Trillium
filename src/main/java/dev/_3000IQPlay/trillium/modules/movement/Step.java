@@ -1,112 +1,162 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
+import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.event.events.StepEvent;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.modules.player.FreeCam;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.EntityUtil;
-import net.minecraft.block.material.Material;
+import dev._3000IQPlay.trillium.util.Timer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.passive.EntityLlama;
+import net.minecraft.entity.passive.EntityMule;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+* @author Doogie13, linustouchtips, aesthetical
+* @since 12/27/2021
+*/
+
 public class Step
         extends Module {
-    private static Step instance;
-	public Setting<Mode> mode = this.register(new Setting<Mode>("StepType", Mode.Vanilla));
-    public Setting<Integer> stepHeight = this.register(new Setting<Integer>("Height", 2, 1, 10));
-	public Setting<Boolean> noLiquid = this.register(new Setting<Boolean>("NoLiquid", true));
-    public Setting<Boolean> turnOff = this.register(new Setting<Boolean>("Disable", false));
+	private static Step instance;
+    private Setting<Mode> mode = this.register (new Setting<>("Mode", Mode.Normal));
+    public Setting<Float> height = register(new Setting("Height", 2.0F, 1F, 2.5F));
+    public Setting<Boolean> entityStep = this.register(new Setting<>("EntityStep", false));
+    public Setting<Boolean> useTimer = this.register(new Setting<>("Timer", true));
+    public Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
+    public Setting<Integer> stepDelay = register(new Setting("StepDelay", 200, 0, 1000));
 
-    public Step() {
-        super("Step", "Allows you to step up blocks", Module.Category.MOVEMENT, true, false, false);
-        instance = this;
+    private boolean timer;
+    private Entity entityRiding;
+    private final Timer stepTimer = new Timer();
+	
+	public Step() {
+        super("Step", "Lets you step up blocks", Module.Category.MOVEMENT, true, false, false);
+		instance = this;
     }
-
-    public static Step getInstance() {
+	
+	public static Step getInstance() {
         if (instance == null) {
             instance = new Step();
         }
         return instance;
     }
-	
-	@Override
-    public void onUpdate() {
-        if (Step.fullNullCheck()) {
-            return;
-        }
-        if (this.noLiquid.getValue().booleanValue() && EntityUtil.isInLiquid()) {
-            return;
-        }
-		if (Step.mc.player.onGround && !Step.mc.player.isInsideOfMaterial(Material.WATER) && !Step.mc.player.isInsideOfMaterial(Material.LAVA) && Step.mc.player.collidedVertically && Step.mc.player.fallDistance == 0.0f && !Step.mc.gameSettings.keyBindJump.pressed && !Step.mc.player.isOnLadder()) {
-            Step.mc.player.stepHeight = this.stepHeight.getValue().intValue();
-            double rheight = Step.mc.player.getEntityBoundingBox().minY - Step.mc.player.posY;
-            if (rheight >= 0.625) {
-                if (this.mode.getValue() != Mode.Vanilla) {
-                    this.ncpStep(rheight);
-                }
-                if (this.turnOff.getValue().booleanValue()) {
-                    this.disable();
-                }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        mc.player.stepHeight = 0.6F;
+        if (entityRiding != null) {
+            if (entityRiding instanceof EntityHorse || entityRiding instanceof EntityLlama || entityRiding instanceof EntityMule || entityRiding instanceof EntityPig && entityRiding.isBeingRidden() && ((EntityPig) entityRiding).canBeSteered()) {
+                entityRiding.stepHeight = 1;
+            } else {
+                entityRiding.stepHeight = 0.5F;
             }
-        } else {
-            Step.mc.player.stepHeight = 0.6f;
         }
     }
 
-    private void ncpStep(double height) {
-        block12: {
-            double y;
-            double posZ;
-            double posX;
-            block11: {
-                posX = Step.mc.player.posX;
-                posZ = Step.mc.player.posZ;
-                y = Step.mc.player.posY;
-                if (!(height < 1.1)) break block11;
-                double first = 0.42;
-                double second = 0.75;
-                if (height != 1.0) {
-                    first *= height;
-                    second *= height;
-                    if (first > 0.425) {
-                        first = 0.425;
-                    }
-                    if (second > 0.78) {
-                        second = 0.78;
-                    }
-                    if (second < 0.49) {
-                        second = 0.49;
-                    }
-                }
-                Step.mc.player.connection.sendPacket(new CPacketPlayer.Position(posX, y + first, posZ, false));
-                if (!(y + second < y + height)) break block12;
-                Step.mc.player.connection.sendPacket(new CPacketPlayer.Position(posX, y + second, posZ, false));
-                break block12;
-            }
-            if (height < 1.6) {
-                double[] offset;
-                for (double off : offset = new double[]{0.42, 0.33, 0.24, 0.083, -0.078}) {
-                    Step.mc.player.connection.sendPacket(new CPacketPlayer.Position(posX, y += off, posZ, false));
-                }
-            } else if (height < 2.1) {
-                double[] heights;
-                for (double off : heights = new double[]{0.425, 0.821, 0.699, 0.599, 1.022, 1.372, 1.652, 1.869}) {
-                    Step.mc.player.connection.sendPacket(new CPacketPlayer.Position(posX, y + off, posZ, false));
+    @Override
+    public void onUpdate() {
+        if (mc.player.capabilities.isFlying || Trillium.moduleManager.getModuleByClass(FreeCam.class).isOn()) {
+            mc.player.stepHeight = 0.6F;
+            return;
+        }
+        if (Jesus.isInLiquid()) {
+            mc.player.stepHeight = 0.6F;
+            return;
+        }
+        if (timer && mc.player.onGround) {
+            Step.mc.timer.tickLength = 50.0f;
+            timer = false;
+        }
+
+        if (mc.player.onGround && stepTimer.passedMs(stepDelay.getValue())) {
+            if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
+                entityRiding = mc.player.getRidingEntity();
+                if (entityStep.getValue()) {
+                    mc.player.getRidingEntity().stepHeight = height.getValue().floatValue();
                 }
             } else {
-                double[] heights;
-                for (double off : heights = new double[]{0.425, 0.821, 0.699, 0.599, 1.022, 1.372, 1.652, 1.869, 2.019, 1.907}) {
-                    Step.mc.player.connection.sendPacket(new CPacketPlayer.Position(posX, y + off, posZ, false));
+                mc.player.stepHeight = height.getValue().floatValue();
+            }
+        } else {
+            if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
+                entityRiding = mc.player.getRidingEntity();
+                if (entityRiding != null) {
+                    if (entityRiding instanceof EntityHorse || entityRiding instanceof EntityLlama || entityRiding instanceof EntityMule || entityRiding instanceof EntityPig && entityRiding.isBeingRidden() && ((EntityPig) entityRiding).canBeSteered()) {
+                        entityRiding.stepHeight = 1;
+                    } else {
+                        entityRiding.stepHeight = 0.5F;
+                    }
                 }
+            } else {
+                mc.player.stepHeight = 0.6F;
             }
         }
     }
-	
-	@Override
-	public void onDisable() {
-		Step.mc.player.stepHeight = 0.5f;
-	}
+
+    @SubscribeEvent
+    public void onStep(StepEvent event) {
+        if (mode.getValue().equals(Mode.Normal)) {
+            double stepHeight = event.getAxisAlignedBB().minY - mc.player.posY;
+            if (stepHeight <= 0 || stepHeight > height.getValue()) {
+                return;
+            }
+            double[] offsets = getOffset(stepHeight);
+            if (offsets != null && offsets.length > 1) {
+                if (useTimer.getValue()) {
+					Step.mc.timer.tickLength = 50.0f / (1.0f / offsets.length);
+                    timer = true;
+                }
+                for (double offset : offsets) {
+                    mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + offset, mc.player.posZ, false));
+                }
+            }
+            stepTimer.reset();
+        }
+    }
+
+    public double[] getOffset(double height) {
+        if (height == 0.75) {
+            if (strict.getValue()) {
+                return new double[] {0.42, 0.753, 0.75};}
+            else {return new double[] {0.42, 0.753};}
+        }
+
+        else if (height == 0.8125) {
+            if (strict.getValue()) {
+                return new double[] {0.39, 0.7, 0.8125};}
+            else {return new double[] {0.39, 0.7};}
+        }
+        else if (height == 0.875) {
+            if (strict.getValue()) {
+                return new double[] {0.39, 0.7, 0.875};
+            }
+
+            else {return new double[] {0.39, 0.7};}
+        }
+        else if (height == 1) {
+            if (strict.getValue()) {return new double[] {0.42, 0.753, 1};}
+            else {return new double[] {0.42, 0.753};}
+        }
+        else if (height == 1.5) {
+            return new double[] {0.42, 0.75, 1.0, 1.16, 1.23, 1.2};
+        }
+        else if (height == 2) {
+            return new double[] {0.42, 0.78, 0.63, 0.51, 0.9, 1.21, 1.45, 1.43};
+        }
+        else if (height == 2.5) {
+            return new double[] {0.425, 0.821, 0.699, 0.599, 1.022, 1.372, 1.652, 1.869, 2.019, 1.907};
+        }
+
+        return null;
+    }
 	
 	public static enum Mode {
-	    Vanilla,
-		NCP;
-	}
+        Normal,
+        Vanilla;
+    }
 }

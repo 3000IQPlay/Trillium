@@ -231,7 +231,7 @@ public class Trillium {
     public void init(FMLInitializationEvent event) {
 		AntiDump.check();
 		Minecraft mc = Minecraft.getMinecraft();
-        Display.setTitle(MODNAME + " v"+ MODVER + " || User: " + mc.getSession().getUsername());
+        Display.setTitle(MODNAME + " "+ MODVER + " || User: " + mc.getSession().getUsername());
 		setWindowsIcon();
         Trillium.load();
         MinecraftForge.EVENT_BUS.register(networkHandler);
