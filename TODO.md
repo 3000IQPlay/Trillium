@@ -6,7 +6,7 @@ Advence the GUI little bit
 + Added Fov changer - MainSettings (Done)
 * Some Translations (Done)
 + Added Secondary CA
-* HoleESP Fix
+* Fixed HoleESP
 * Fixed Bind command issues (Done)
 + Added Working PopChams
 + Added Default Speed Mode (Done)
@@ -14,3 +14,4 @@ Advence the GUI little bit
 + Added GlowESP
 + Added KeyPearl (Done)
 - Removed KeyAuth Debugging (Done)
+* Fixed Wave Speed in GUI (Done)

@@ -82,23 +82,23 @@ public class ClickGui
         int index = (int) (count);
         switch (colorMode.getValue()) {
             case Sky:
-                return ColorUtil.skyRainbow((int) colorSpeed.getValue(), index);
+                return ColorUtil.skyRainbow((int)30 - this.colorSpeed.getValue(), index);
             case LightRainbow:
-                return ColorUtil.rainbow((int) colorSpeed.getValue(), index, .6f, 1, 1);
+                return ColorUtil.rainbow((int)30 - this.colorSpeed.getValue(), index, .6f, 1, 1);
 
             case Rainbow:
-                return ColorUtil.rainbow((int) colorSpeed.getValue(), index, 1f, 1, 1);
+                return ColorUtil.rainbow((int)30 - this.colorSpeed.getValue(), index, 1f, 1, 1);
 
             case Fade:
-                return ColorUtil.fade((int) colorSpeed.getValue(), index, hcolor1.getValue().getColorObject(), 1);
+                return ColorUtil.fade((int)30 - this.colorSpeed.getValue(), index, hcolor1.getValue().getColorObject(), 1);
 
             case DoubleColor:
-                return ColorUtil.interpolateColorsBackAndForth((int) colorSpeed.getValue(), index,
+                return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index,
                         hcolor1.getValue().getColorObject(), Colors.ALTERNATE_COLOR, true);
             case Analogous:
                 int val = 1;
                 Color analogous = ColorUtil.getAnalogousColor(acolor.getValue().getColorObject())[val];
-                return ColorUtil.interpolateColorsBackAndForth((int) colorSpeed.getValue(), index, hcolor1.getValue().getColorObject(), analogous, true);
+                return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index, hcolor1.getValue().getColorObject(), analogous, true);
             default:
                 return hcolor1.getValue().getColorObject();
         }
