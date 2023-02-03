@@ -176,6 +176,7 @@ public class ModuleManager
 		this.modules.add(new PasswordHider());
 		this.modules.add(new Aspect());
 		this.modules.add(new KeyPearl());
+	    this.modules.add(new DiscordEmbeds());
     }
 
     public Module getModuleByName(String name) {
