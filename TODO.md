@@ -16,4 +16,5 @@ Advence the GUI little bit
 - Removed KeyAuth Debugging (Done)
 * Fixed Wave Speed in GUI (Done)
 + Added DiscordEmbeds Renderer (Done)
-+ Added New Step (Done)
+% Replaced Step with new Step (Done)
+% Replaced Old HUD GUI with the Latest one (Done)

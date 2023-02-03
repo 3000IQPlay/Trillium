@@ -16,7 +16,6 @@ import dev._3000IQPlay.trillium.modules.player.*;
 import dev._3000IQPlay.trillium.modules.render.*;
 import dev._3000IQPlay.trillium.notification.NotificationManager;
 import dev._3000IQPlay.trillium.modules.Feature;
-import dev._3000IQPlay.trillium.gui.classic.ClassicGui;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.util.PlayerUtils;
 import net.minecraftforge.common.MinecraftForge;
@@ -278,7 +277,7 @@ public class ModuleManager
     }
 
     public void onKeyPressed(int eventKey) {
-        if (eventKey == 0 || !Keyboard.getEventKeyState() || ModuleManager.mc.currentScreen instanceof ClassicGui) {
+        if (eventKey == 0 || !Keyboard.getEventKeyState()) {
             return;
         }
         this.modules.forEach(module -> {

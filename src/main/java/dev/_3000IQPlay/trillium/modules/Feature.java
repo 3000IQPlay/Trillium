@@ -1,7 +1,5 @@
 package dev._3000IQPlay.trillium.modules;
 
-import dev._3000IQPlay.trillium.gui.hud.HudEditorGui;
-import dev._3000IQPlay.trillium.gui.classic.ClassicGui;
 import dev._3000IQPlay.trillium.setting.Setting;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +48,6 @@ public class Feature implements Util{
     public Setting register(Setting setting) {
         setting.setFeature(this);
         this.settings.add(setting);
-        if (this instanceof Module && mc.currentScreen instanceof ClassicGui) {
-            ClassicGui.getInstance().updateModule((Module) this);
-        }
-        if (this instanceof Module && mc.currentScreen instanceof HudEditorGui) {
-            HudEditorGui.getInstance().updateModule((Module) this);
-        }
         return setting;
     }
 
