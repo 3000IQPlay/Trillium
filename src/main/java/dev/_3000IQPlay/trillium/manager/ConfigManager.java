@@ -262,16 +262,16 @@ public class ConfigManager implements Util {
         return name;
     }
 	
-	public static void loadAlts(){
+    public static void loadAlts(){
         try {
             File altFile = new File("Trillium/alts.txt");
             if (altFile.exists()) {
                 try (BufferedReader reader = new BufferedReader(new FileReader(altFile))) {
-                    while (reader.ready()) {
-                        String name = reader.readLine();
+		    while (!reader.ready()) {} //To wait till its ready, could actually just leave this entirely since it should be ready normally, otherwise the file prob doesnt exist which will be catched anyways
+                    String name = null;
+                    while ((name = reader.readLine()) != null) {
                         Trillium.alts.add(name);
                     }
-
                 }
             }
         } catch (Exception ignored) {}
