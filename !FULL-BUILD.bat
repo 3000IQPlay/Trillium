@@ -1,0 +1,1 @@
+cmd /k "gradlew setupdecompworkspace & gradlew clean & gradlew build & exit"
