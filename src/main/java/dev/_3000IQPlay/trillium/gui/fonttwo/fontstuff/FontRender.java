@@ -92,14 +92,15 @@ public class FontRender{
 
     public static float drawCentString6(String text, float x, float y, int color) {
         return Trillium.fontRenderer6.drawString(text, x - getStringWidth6(text) / 2f, y, color);
-
     }
 
     public static float drawCentString5(String text, float x, float y, int color) {
         return Trillium.fontRenderer5.drawString(text, x - getStringWidth5(text) / 2f, y, color);
-
     }
-
+	
+	public static float drawCentIQString(String text, float x, float y, int color) {
+        return Trillium.iqfont.drawString(text, x - getIQStringWidth(text) / 2f, y, color);
+    }
 
     public static int getStringWidth(String str) {
         if (isCustomFontEnabled())
@@ -114,6 +115,10 @@ public class FontRender{
 
     public static int getStringWidth5(String str) {
         return Trillium.fontRenderer5.getStringWidth(str);
+    }
+	
+	public static int getIQStringWidth(String str) {
+        return Trillium.iqfont.getStringWidth(str);
     }
 
     public static int getStringWidth3(String str) {
@@ -147,10 +152,15 @@ public class FontRender{
     }
 
     public static int getFontHeight6() {
-            return Trillium.fontRenderer6.getHeight();
+        return Trillium.fontRenderer6.getHeight();
     }
+	
     public static int getFontHeight5() {
         return Trillium.fontRenderer5.getHeight() + 2;
+    }
+	
+	public static int getIQFontHeight() {
+        return Trillium.iqfont.getHeight();
     }
 
 }

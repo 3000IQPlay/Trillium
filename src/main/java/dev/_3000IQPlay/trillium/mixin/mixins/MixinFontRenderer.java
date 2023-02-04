@@ -16,24 +16,31 @@ import static dev._3000IQPlay.trillium.util.Util.mc;
 public abstract class MixinFontRenderer {
     @Shadow
     protected abstract void renderStringAtPos(String var1, boolean var2);
-	
+
     @Redirect(method = {"renderString(Ljava/lang/String;FFIZ)I"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;renderStringAtPos(Ljava/lang/String;Z)V"))
     public void renderStringAtPosHook(FontRenderer fontRenderer, String string, boolean bl) {
-        if(Trillium.moduleManager == null){
+        if (Trillium.moduleManager == null){
             renderStringAtPos(string, bl);
             return;
         }
         if (Trillium.moduleManager.getModuleByClass(PasswordHider.class).isEnabled()) {
-            if(string.contains("/login") || string.contains("/register") && mc.currentScreen instanceof GuiChat) {
+            if(string.contains("/l ") || string.contains("/login ") || string.contains("/reg ") || string.contains("/register ") && mc.currentScreen instanceof GuiChat) {
                 StringBuilder final_string = new StringBuilder("");
-                for(char cha: string.replace("/login","").replace("/register","").toCharArray()){
+                for(char cha: string.replace("/login ","").replace("/register ","").replace("/l ","").replace("/reg ","").toCharArray()){
                     final_string.append("*");
                 }
-                if (string.contains("/register")){
+
+                if(string.contains("/register")){
                     renderStringAtPos("/register " + final_string, bl);
                     return;
-                } else if (string.contains("/login")){
+                }else if(string.contains("/login")){
                     renderStringAtPos("/login " + final_string, bl);
+                    return;
+                } else if(string.contains("/l ")) {
+                    renderStringAtPos("/l " + final_string, bl);
+                    return;
+                } else if(string.contains("/reg ")){
+                    renderStringAtPos("/reg " + final_string, bl);
                     return;
                 }
             }

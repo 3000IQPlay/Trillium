@@ -2,7 +2,9 @@ package dev._3000IQPlay.trillium.mixin.mixins;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.*;
+import dev._3000IQPlay.trillium.gui.mainmenu.TrilliumMenu;
 import dev._3000IQPlay.trillium.modules.client.AntiDisconnect;
+import dev._3000IQPlay.trillium.modules.client.MainSettings;
 import dev._3000IQPlay.trillium.util.phobos.IMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -132,11 +134,24 @@ public abstract class MixinMinecraft implements IMinecraft {
             minecraft.shutdown();
         }
     }
+	
+	@Inject(method={"runTick()V"}, at={@At(value="RETURN")})
+    private void runTick(CallbackInfo callbackInfo) {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiMainMenu && Trillium.moduleManager != null && Trillium.moduleManager.getModuleByClass(MainSettings.class).mainMenu.getValue() ) {
+            Minecraft.getMinecraft().displayGuiScreen(new TrilliumMenu());
+        }
+    }
+
+    @Inject(method={"displayGuiScreen"}, at={@At(value="HEAD")})
+    private void displayGuiScreenHook(GuiScreen screen, CallbackInfo ci) {
+        if (screen instanceof GuiMainMenu && Trillium.moduleManager != null && Trillium.moduleManager.getModuleByClass(MainSettings.class).mainMenu.getValue()) {
+            mc.displayGuiScreen(new TrilliumMenu());
+        }
+    }
 
     private void unload() {
         Trillium.onUnload();
     }
-
 
     @Redirect(method = "sendClickBlockToController", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;isHandActive()Z"))
     public boolean handActiveRedirect(EntityPlayerSP entityPlayerSP) {

@@ -9,4 +9,3 @@ public interface Util {
     FontRenderer fr = mc.fontRenderer;
     RenderManager rendermgr = mc.getRenderManager();
 }
-

@@ -261,6 +261,30 @@ public class ConfigManager implements Util {
         currentcfg = name;
         return name;
     }
+	
+	public static void loadAlts(){
+        try {
+            File altFile = new File("Trillium/alts.txt");
+            if (altFile.exists()) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(altFile))) {
+                    while (reader.ready()) {
+                        String name = reader.readLine();
+                        Trillium.alts.add(name);
+                    }
+
+                }
+            }
+        } catch (Exception ignored) {}
+    }
+
+    public static void saveAlts() {
+        File altFile = new File("Trillium/alts.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(altFile))) {
+            for (String name : Trillium.alts) {
+                writer.write(name + "\n");
+            }
+        } catch (Exception ignored){}
+    }
 
     public void resetConfig(boolean saveConfig, String name) {
         for (Feature feature : this.features)

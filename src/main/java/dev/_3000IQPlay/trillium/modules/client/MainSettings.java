@@ -16,6 +16,8 @@ public class MainSettings extends Module {
 
     public Setting<String> prefix = this.register(new Setting<String>("Prefix", "."));
     public Setting<Boolean> notifyToggles = this.register(new Setting<Boolean>("NotifyToggles", false));
+	public Setting<Boolean> mainMenu = this.register(new Setting<>("MainMenu", true));
+    public Setting<ShaderModeEn> shaderMode = register(new Setting("ShaderMode", ShaderModeEn.Smoke));
 	public Setting<Boolean> customFov = this.register(new Setting<Boolean>("CustomFov", false));
 	public Setting<Float> fov = this.register(new Setting<Float>("Fov", 125.0f, 0.0f, 300.0f, v -> this.customFov.getValue()));
 	
@@ -34,5 +36,9 @@ public class MainSettings extends Module {
                 Command.sendMessage("Prefix set to: " + ChatFormatting.DARK_GRAY + Trillium.commandManager.getPrefix());
             }
         }
+    }
+	
+	public static enum ShaderModeEn {
+        Smoke;
     }
 }

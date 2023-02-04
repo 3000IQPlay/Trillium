@@ -22,6 +22,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -50,6 +51,7 @@ public class Trillium {
     public static CFontRenderer4 fontRenderer4;
     public static CFontRenderer5 fontRenderer5;
     public static CFontRenderer6 fontRenderer6;
+	public static CIQFontRenderer iqfont;
     public static PotionManager potionManager;
     public static SpeedManager speedManager;
 	public static PositionManager positionManager;
@@ -77,6 +79,8 @@ public class Trillium {
     @Mod.Instance
     public static Trillium INSTANCE;
     private static boolean unloaded;
+	public static java.util.List<String> alts = new ArrayList<>();
+	public static long initTime;	
     static {
         unloaded = false;
     }
@@ -84,6 +88,8 @@ public class Trillium {
     public static void load() {
 		AntiDump.check();
         unloaded = false;
+		Minecraft mc = Minecraft.getMinecraft();
+		ConfigManager.loadAlts();
         if (reloadManager != null) {
             reloadManager.unload();
             reloadManager = null;
@@ -112,6 +118,10 @@ public class Trillium {
             Font verdanapro6 = Font.createFont( Font.TRUETYPE_FONT, Objects.requireNonNull(Trillium.class.getResourceAsStream("/fonts/Monsterrat.ttf")));
             verdanapro6 = verdanapro6.deriveFont( 14.f );
             fontRenderer6 = new CFontRenderer6( verdanapro6, true, true );
+			
+			Font varsity = Font.createFont( Font.TRUETYPE_FONT, Objects.requireNonNull(Trillium.class.getResourceAsStream("/fonts/IQFont.ttf")));
+            varsity = varsity.deriveFont( 27.f );
+            iqfont = new CIQFontRenderer( varsity, true, true );
         } catch ( Exception e ) {
             e.printStackTrace( );
             return;
@@ -155,11 +165,14 @@ public class Trillium {
         nobitches.init();
         entityProvider.init();
         moduleManager.onLoad();
+		if (mc.session != null && !alts.contains(mc.session.getUsername())){
+            alts.add(mc.session.getUsername());
+        }
     }
 
     public static void unload(boolean unload) {
         Display.setTitle("Minecraft 1.12.2");
-
+		ConfigManager.saveAlts();
         if (unload) {
             reloadManager = new ReloadManager();
             reloadManager.init(commandManager != null ? commandManager.getPrefix() : ".");
@@ -233,9 +246,10 @@ public class Trillium {
 		Minecraft mc = Minecraft.getMinecraft();
         Display.setTitle(MODNAME + " "+ MODVER + " || User: " + mc.getSession().getUsername());
 		setWindowsIcon();
+		initTime = System.currentTimeMillis();
         Trillium.load();
         MinecraftForge.EVENT_BUS.register(networkHandler);
-		eventProcessor = new EventProcessor();
-        eventProcessor.onInit();
+		/*eventProcessor = new EventProcessor();
+        eventProcessor.onInit();*/
     }
 }
