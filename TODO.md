@@ -12,6 +12,7 @@ Advence the GUI little bit
 + Added Default Speed Mode (Done)
 + Added Vertical Gradient GUI Mode (Done)
 + Added GlowESP
++ Added AutoCity (Done)
 + Added KeyPearl (Done)
 - Removed KeyAuth Debugging (Done)
 * Fixed Wave Speed in GUI (Done)
