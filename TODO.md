@@ -8,3 +8,4 @@ Advence the GUI little bit
 + Added Working PopChams
 + Added GlowESP
 + Added Main Menu
+- Removed AutoCity
