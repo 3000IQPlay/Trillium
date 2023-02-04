@@ -176,6 +176,7 @@ public class ModuleManager
 		this.modules.add(new Aspect());
 		this.modules.add(new KeyPearl());
 	    this.modules.add(new DiscordEmbeds());
+		this.modules.add(new AutoCity());
     }
 
     public Module getModuleByName(String name) {

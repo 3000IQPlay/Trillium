@@ -6,10 +6,18 @@ import dev._3000IQPlay.trillium.util.phobos.IEntity;
 import dev._3000IQPlay.trillium.util.MathUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.passive.EntityAmbientCreature;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemSword;
+import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.potion.Potion;
@@ -23,6 +31,7 @@ import net.minecraft.util.math.Vec3d;
 import java.awt.*;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.*;
 
@@ -142,7 +151,7 @@ public class EntityUtil
         }
         return inLiquid;
     }
-	
+
 	public static void moveEntityStrafe(final double speed, final Entity entity) {
         if (entity != null) {
             final MovementInput movementInput = EntityUtil.mc.player.movementInput;
@@ -369,5 +378,74 @@ public class EntityUtil
 	
 	public static BlockPos getPlayerPos(final EntityPlayer player) {
         return new BlockPos(Math.floor(player.posX), Math.floor(player.posY), Math.floor(player.posZ));
+    }
+	
+	public static int toMode(String mode) {
+        if (mode.equalsIgnoreCase("Closest")) {
+            return 0;
+        }
+        if (mode.equalsIgnoreCase("Lowest Health")) {
+            return 1;
+        }
+        if (mode.equalsIgnoreCase("Highest Health")) {
+            return 2;
+        }
+        throw new IllegalArgumentException(mode);
+    }
+	
+	public static EntityLivingBase getTarget(boolean players, boolean neutral, boolean friends, boolean hostile, boolean passive, double range, int mode) {
+        EntityLivingBase entity = null;
+        if (mode == 0) {
+            entity = (EntityLivingBase) EntityUtil.mc.world.loadedEntityList.stream().filter(entity1 -> EntityUtil.isValid(entity1, players, neutral, friends, hostile, passive, range)).min(Comparator.comparing(entity1 -> EntityUtil.mc.player.getPositionVector().squareDistanceTo(entity1.getPositionVector()))).orElse(null);
+        } else if (mode == 1) {
+            entity = EntityUtil.mc.world.loadedEntityList.stream().filter(entity1 -> EntityUtil.isValid(entity1, players, neutral, friends, hostile, passive, range)).map(entity1 -> (EntityLivingBase)entity1).min(Comparator.comparing(EntityLivingBase::getHealth)).orElse(null);
+        } else if (mode == 2) {
+            entity = EntityUtil.mc.world.loadedEntityList.stream().filter(entity1 -> EntityUtil.isValid(entity1, players, neutral, friends, hostile, passive, range)).map(entity1 -> (EntityLivingBase)entity1).max(Comparator.comparing(EntityLivingBase::getHealth)).orElse(null);
+        }
+        return entity;
+    }
+	
+	private static boolean isValid(Entity entity, boolean players, boolean neutral, boolean friends, boolean hostile, boolean passive, double range) {
+        if (entity.isDead) {
+            return false;
+        }
+        if (entity instanceof EntityLivingBase && entity != EntityUtil.mc.player && entity.getDistanceSq((Entity)EntityUtil.mc.player) <= range * range) {
+            if (entity instanceof EntityPlayer && players) {
+                if (!friends) {
+                    return !Trillium.friendManager.isFriend((EntityPlayer)entity);
+                }
+                return true;
+            }
+            if (EntityUtil.isHostileMob(entity) && hostile) {
+                return true;
+            }
+            if (EntityUtil.isNeutralMob(entity) && neutral) {
+                return true;
+            }
+            return EntityUtil.isPassive(entity) && passive;
+        }
+        return false;
+    }
+	
+	public static boolean isValid(Entity entity, double range) {
+        return !EntityUtil.isntValid(entity, range);
+    }
+	
+	public static boolean isHostileMob(Entity entity) {
+        return entity.isCreatureType(EnumCreatureType.MONSTER, false) && !EntityUtil.isNeutralMob(entity);
+    }
+	
+	public static boolean isNeutralMob(Entity entity) {
+        return entity instanceof EntityPigZombie || entity instanceof EntityWolf || entity instanceof EntityEnderman;
+    }
+	
+	public static boolean isPassive(Entity entity) {
+        if (entity instanceof EntityWolf && ((EntityWolf)entity).isAngry()) {
+            return false;
+        }
+        if (entity instanceof EntityAgeable || entity instanceof EntityAmbientCreature || entity instanceof EntitySquid) {
+            return true;
+        }
+        return entity instanceof EntityIronGolem && ((EntityIronGolem)entity).getRevengeTarget() == null;
     }
 }
