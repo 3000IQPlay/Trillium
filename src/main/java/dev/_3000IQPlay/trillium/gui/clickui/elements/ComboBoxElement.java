@@ -67,7 +67,6 @@ public class ComboBoxElement extends AbstractElement {
 		if (Drawable.isHovered(mouseX, mouseY, x, y, width, wheight)) {
 			if (button == 0) {
 				setting2.increaseEnum();
-				Command.sendMessage("clicked");
 			} else
 				open = !open;
 		}

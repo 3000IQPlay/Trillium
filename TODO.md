@@ -10,3 +10,4 @@ Advence the GUI little bit
 + Added GlowESP
 + Added Main Menu
 - Removed AutoCity (Done)
++ Added ObiClutch Mode to AntiVoid (Done)
