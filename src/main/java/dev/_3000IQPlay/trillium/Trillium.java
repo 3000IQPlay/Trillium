@@ -35,7 +35,6 @@ public class Trillium {
     public static final String MODID = "trillium";
 	public static final String MODNAME = "Trillium";
     public static final String MODVER = "b1.4.5";
-	public static final String HWIDS_LIST = "https://pastebin.com/raw/QUDYSAZZ";
     public static boolean isOpenAuthGui;
     public static CommandManager commandManager;
     public static FriendManager friendManager;
