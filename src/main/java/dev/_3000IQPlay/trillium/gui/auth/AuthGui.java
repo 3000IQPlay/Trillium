@@ -8,7 +8,7 @@ import net.minecraft.client.gui.*;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
-import java.io.IOException;
+import java.io.*;
 
 public class AuthGui extends GuiScreen {
     private GuiTextField keyField;
@@ -60,6 +60,7 @@ public class AuthGui extends GuiScreen {
         KeyAuthApp.keyAuth.init();
         Keyboard.enableRepeatEvents(true);
         keyField = new GuiTextField(2, Minecraft.getMinecraft().fontRenderer, width / 2 - 70, height / 4 + 50, 140, 22);
+		key = loadKey();
         if(key != null && !key.isEmpty()) keyField.setText(key);
         buttonList.add(new GuiButton(0, width - 25, 5, 20, 20, "X"));
         buttonList.add(new GuiButton(1, width / 2 - 50, height / 4 + 100, 100, 21, "Login"));
@@ -76,9 +77,33 @@ public class AuthGui extends GuiScreen {
                 if(KeyAuthApp.keyAuth.license(keyField.getText())) {
                     Trillium.isOpenAuthGui = false;
                     mc.displayGuiScreen(new GuiMainMenu());
+					saveKey(keyField.getText());
                 }
                 statusTime = 50;
                 break;
         }
+    }
+	
+	private void saveKey(String key) {
+        try {
+            FileWriter writer = new FileWriter("Trillium/key.txt");
+            writer.write(key);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	private String loadKey() {
+        try {
+            FileReader reader = new FileReader("Trillium/key.txt");
+            BufferedReader br = new BufferedReader(reader);
+            key = br.readLine();
+            br.close();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return key;
     }
 }
