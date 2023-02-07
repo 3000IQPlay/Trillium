@@ -1,7 +1,9 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
-
+import dev._3000IQPlay.trillium.gui.viaforge.gui.GuiProtocolSlider;
+import dev._3000IQPlay.trillium.mixin.mixins.IGuiScreen;
 import dev._3000IQPlay.trillium.modules.client.MultiConnect;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,14 +12,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.io.File;
 import java.util.List;
 
 @Mixin(GuiMultiplayer.class)
 public abstract class MixinGuiMultiplayer extends GuiScreen {
-
-
-
-
+	@Inject(method={"createButtons"}, at=@At(value="HEAD"), cancellable=true)
+    public void addAllButtons(CallbackInfo ci) {
+        IGuiScreen screen = (IGuiScreen) this;
+        List<GuiButton> buttonList = screen.getButtonList();
+        if (!new File(Minecraft.getMinecraft().gameDir, "novia").exists()) {
+            buttonList.add(new GuiProtocolSlider(1200, this.width / 2 + 4 + 76 + 76, this.height - 28, 105, 20));
+            screen.setButtonList(buttonList);
+        }
+    }
 
     //.connectToServer(this.selectedServer);
     @Inject(method = "createButtons", at = @At("HEAD"))

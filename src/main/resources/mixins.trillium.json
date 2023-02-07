@@ -45,6 +45,7 @@
     "MixinModelPlayer",
     "MixinNetHandlerPlayClient",
     "MixinNetworkManager",
+	"MixinNetworkManagerChInit",
     "MixinPlayerControllerMP",
     "MixinRenderItem",
     "MixinRenderLivingBase",

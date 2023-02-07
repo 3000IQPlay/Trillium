@@ -58,7 +58,9 @@ repositories {
     }
     maven { url 'https://repo.opencollab.dev/maven-snapshots/' }
     maven { url 'https://repo.opencollab.dev/maven-releases/' }
-
+	maven {
+	    url = "https://repo.viaversion.com"
+	}
     maven {
         name = "jitpack.io"
         url = "https://jitpack.io"
@@ -78,6 +80,9 @@ dependencies {
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
+	compile ('com.viaversion:viaversion:4.0.2-SNAPSHOT'){
+        exclude module: 'mcmod-info'
+    }
 	compile 'org.apache.httpcomponents:httpasyncclient:4.1.4'
     compile 'org.apache.httpcomponents:httpclient:4.5.13'
     compile 'org.apache.httpcomponents:httpcore:4.4.14'
@@ -86,6 +91,9 @@ dependencies {
 	compile 'org.json:json:20210307'
     compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'club.minnced:java-discord-rpc:2.0.2'
+	compile 'com.viaversion:viaversion:4.2.2-SNAPSHOT'
+    compile 'com.viaversion:viabackwards:4.2.1-SNAPSHOT'
+    compile 'org.yaml:snakeyaml:1.29'
     implementation configurations.jarLibs
 }
 
@@ -121,9 +129,22 @@ shadowJar {
         include(dependency('org.apache.httpcomponents:httpcore'))
         include(dependency('org.apache.httpcomponents:httpcore-nio'))
         include(dependency('org.apache.httpcomponents:httpmime'))
+		include(dependency('com.viaversion:viabackwards:4.0.2-SNAPSHOT'))
+        include(dependency('org.yaml:snakeyaml:1.29'))
+		include(dependency('com.viaversion:viaversion'))
+        include(dependency('com.viaversion:viabackwards'))
     }
     exclude 'dummyThing'
     exclude 'LICENSE.txt'
+	exclude 'fabric.mod.json'
+	exclude 'velocity-plugin.json'
+	exclude '*.yml'
+	exclude 'META-INF/versions/**'
+	exclude '**/*.RSA'
+	exclude '**/*.SF'
+	exclude '**/module-info.class'
+	exclude '**/LICENSE'
+	exclude '**/*.txt'
     classifier = 'release'
 }
 

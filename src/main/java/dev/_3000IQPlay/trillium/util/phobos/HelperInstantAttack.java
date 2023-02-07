@@ -1,4 +1,5 @@
 package dev._3000IQPlay.trillium.util.phobos;
+
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.mixin.ducks.ISPacketSpawnObject;
