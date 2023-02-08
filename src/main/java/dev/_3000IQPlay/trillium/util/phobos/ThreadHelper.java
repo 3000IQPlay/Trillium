@@ -1,7 +1,6 @@
 package dev._3000IQPlay.trillium.util.phobos;
 
 import dev._3000IQPlay.trillium.Trillium;
-import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Feature;
 import dev._3000IQPlay.trillium.modules.combat.AutoCrystal;
@@ -13,8 +12,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static dev._3000IQPlay.trillium.util.Util.mc;
 
 
 public class ThreadHelper extends Feature
@@ -155,7 +152,7 @@ public class ThreadHelper extends Feature
         return currentCalc;
     }
 
-    public void reset()
+    public void resetThreadHelper()
     {
         currentCalc = null;
     }

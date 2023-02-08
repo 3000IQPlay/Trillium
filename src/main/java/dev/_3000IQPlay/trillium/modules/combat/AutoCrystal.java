@@ -4,9 +4,9 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.*;
-import dev._3000IQPlay.trillium.gui.hud.TargetHud;
+import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.mixin.ducks.ISPacketSpawnObject;
-import dev._3000IQPlay.trillium.mixin.mixins.ICPacketUseEntity;
+import dev._3000IQPlay.trillium.mixin.mixins.IEntityRenderer;
 import dev._3000IQPlay.trillium.mixin.mixins.ISPacketEntity;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
@@ -14,13 +14,13 @@ import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.SubBind;
 import dev._3000IQPlay.trillium.util.*;
 import dev._3000IQPlay.trillium.util.Timer;
+import dev._3000IQPlay.trillium.util.MathUtil;
 import dev._3000IQPlay.trillium.util.phobos.*;
 import dev._3000IQPlay.trillium.util.phobos.RenderUtil;
 import dev._3000IQPlay.trillium.util.phobos.RotationUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -30,7 +30,6 @@ import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.server.*;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemPickaxe;
@@ -39,12 +38,14 @@ import net.minecraft.util.MouseFilter;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.*;
@@ -55,12 +56,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 import static dev._3000IQPlay.trillium.modules.render.Trajectories.*;
+import static dev._3000IQPlay.trillium.util.EntityUtil.interpolateEntity;
 import static dev._3000IQPlay.trillium.util.RotationUtil.getRotationPlayer;
-import static dev._3000IQPlay.trillium.util.phobos.HelperRotation.acquire;
 import static dev._3000IQPlay.trillium.util.phobos.RotationUtil.getAngle;
+import static dev._3000IQPlay.trillium.util.phobos.RotationUtil.inFov;
 import static dev._3000IQPlay.trillium.util.phobos.ServerTimeHelper.*;
 
 import static net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting;
@@ -69,9 +70,9 @@ import static net.minecraft.util.EnumFacing.HORIZONTALS;
 
 public class AutoCrystal extends Module {
     public AutoCrystal() {
-        super("AutoCrystal", "Auto places and breaks crystals", Category.COMBAT, true, false, false);
+        super("AutoCrystal", "AutoCrystal", Module.Category.COMBAT, true, false, false);
     }
-
+	
     public static final PositionHistoryHelper POSITION_HISTORY = new PositionHistoryHelper();
 
     static {
@@ -81,357 +82,327 @@ public class AutoCrystal extends Module {
     private static final ScheduledExecutorService EXECUTOR = ThreadUtil.newDaemonScheduledExecutor("AutoCrystal");
     private static final AtomicBoolean ATOMIC_STARTED = new AtomicBoolean();
     private static boolean started;
-
-
-    public Setting<settingtypeEn> settingType = register(new Setting<>("Settings", settingtypeEn.Noob));
-
-    public enum settingtypeEn {
-        Noob,
-        Pro,
-        Hacker,
-    }
-    
-    public Setting<pages> page = register(new Setting<>("Page", pages.Place));
-
-    public enum pages{
-        Place,
-        Break,
-        Rotations,
-        Misc,
-        FacePlace,
-        SwitchNSwing,
-        Render,
-        Predict,
-        Dev,
-        SetDead,
-        Obsidian,
-        Liquid,
-        AntiTotem,
-        DamageSync,
-        Extrapolation,
-        Efficiency,
-        MultiThreading
-    }
-
+	
+	public Setting<pages> page = register(new Setting<>("Page", pages.Place));
 
     /* ---------------- Place Settings -------------- */
     public Setting<Boolean> place = register(new Setting<Boolean>("Place", true,v->page.getValue()== pages.Place ));
-    public Setting<Target> targetMode = register(new Setting<>("Target", Target.Closest,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Target> targetMode = register(new Setting<>("Target", Target.Closest,v->page.getValue()== pages.Place));;
     public Setting<Float> placeRange = register(new Setting<>("PlaceRange", 6.0f, 0.0f, 6.0f,v->page.getValue()== pages.Place));
 
 
-    public Setting<Float> placeTrace = register(new Setting<>("PlaceTrace", 6.0f, 0.0f, 6.0f,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Float> placeTrace = register(new Setting<>("PlaceTrace", 6.0f, 0.0f, 6.0f,v->page.getValue()== pages.Place));
     public  Setting<Float> minDamage = register(new Setting<>("MinDamage", 6.0f, 0.1f, 20.0f,v->page.getValue()== pages.Place));
     public Setting<Integer> placeDelay = register(new Setting<>("PlaceDelay", 25, 0, 500,v->page.getValue()== pages.Place));
-    public Setting<Float> maxSelfPlace = register(new Setting<>("MaxSelfPlace", 9.0f, 0.0f, 20.0f,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> multiPlace = register(new Setting<>("MultiPlace", 1, 1, 5,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> slowPlaceDmg = register(new Setting<>("SlowPlace", 4.0f, 0.1f, 20.0f,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> slowPlaceDelay = register(new Setting<>("SlowPlaceDelay", 500, 0, 500,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> override = register(new Setting<Boolean>("OverridePlace", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> newVer = register(new Setting<Boolean>("1.13+", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> newVerEntities = register(new Setting<Boolean>("1.13-Entities", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
-    public  Setting<SwingTime> placeSwing = register(new Setting<>("PlaceSwing", SwingTime.Post,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> smartTrace = register(new Setting<Boolean>("Smart-Trace", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> placeRangeEyes = register(new Setting<Boolean>("PlaceRangeEyes", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> placeRangeCenter = register(new Setting<Boolean>("PlaceRangeCenter", true,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Double> traceWidth = register(new Setting<>("TraceWidth", -1.0, -1.0, 1.0,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> fallbackTrace = register(new Setting<Boolean>("Fallback-Trace", true,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> rayTraceBypass = register(new Setting<Boolean>("RayTraceBypass", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> forceBypass = register(new Setting<Boolean>("ForceBypass", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> rayBypassFacePlace = register(new Setting<Boolean>("RayBypassFacePlace", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> rayBypassFallback = register(new Setting<Boolean>("RayBypassFallback", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> bypassTicks = register(new Setting<>("BypassTicks", 10, 0, 20,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> rbYaw = register(new Setting<>("RB-Yaw", 180.0f, 0.0f, 180.0f,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> rbPitch = register(new Setting<>("RB-Pitch", 90.0f, 0.0f, 90.0f,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> bypassRotationTime = register(new Setting<>("RayBypassRotationTime", 500, 0, 1000,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> ignoreNonFull = register(new Setting<Boolean>("IgnoreNonFull", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> efficientPlacements = register(new Setting<Boolean>("EfficientPlacements", false,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> simulatePlace = register(new Setting<>("Simulate-Place", 0, 0, 10,v->page.getValue()== pages.Place&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Float> maxSelfPlace = register(new Setting<>("MaxSelfPlace", 9.0f, 0.0f, 20.0f,v->page.getValue()== pages.Place));;
+    public Setting<Integer> multiPlace = register(new Setting<>("MultiPlace", 1, 1, 5,v->page.getValue()== pages.Place));;
+    public Setting<Float> slowPlaceDmg = register(new Setting<>("SlowPlace", 4.0f, 0.1f, 20.0f,v->page.getValue()== pages.Place));;
+    public Setting<Integer> slowPlaceDelay = register(new Setting<>("SlowPlaceDelay", 500, 0, 500,v->page.getValue()== pages.Place));;
+    public Setting<Boolean> override = register(new Setting<Boolean>("OverridePlace", false,v->page.getValue()== pages.Place));
+    public Setting<Boolean> newVer = register(new Setting<Boolean>("1.13+", false,v->page.getValue()== pages.Place));;
+    public Setting<Boolean> newVerEntities = register(new Setting<Boolean>("1.13-Entities", false,v->page.getValue()== pages.Place));;
+    public  Setting<SwingTime> placeSwing = register(new Setting<>("PlaceSwing", SwingTime.Post,v->page.getValue()== pages.Place));
+    public Setting<Boolean> smartTrace = register(new Setting<Boolean>("Smart-Trace", false,v->page.getValue()== pages.Place));
+    public Setting<Boolean> placeRangeEyes = register(new Setting<Boolean>("PlaceRangeEyes", false,v->page.getValue()== pages.Place));
+    public Setting<Boolean> placeRangeCenter = register(new Setting<Boolean>("PlaceRangeCenter", true,v->page.getValue()== pages.Place));
+    public Setting<Double> traceWidth = register(new Setting<>("TraceWidth", -1.0, -1.0, 1.0,v->page.getValue()== pages.Place));
+    public Setting<Boolean> fallbackTrace = register(new Setting<Boolean>("Fallback-Trace", true,v->page.getValue()== pages.Place));
+    public Setting<Boolean> rayTraceBypass = register(new Setting<Boolean>("RayTraceBypass", false,v->page.getValue()== pages.Place));;
+    public Setting<Boolean> forceBypass = register(new Setting<Boolean>("ForceBypass", false,v->page.getValue()== pages.Place));;
+    public Setting<Boolean> rayBypassFacePlace = register(new Setting<Boolean>("RayBypassFacePlace", false,v->page.getValue()== pages.Place));
+    public Setting<Boolean> rayBypassFallback = register(new Setting<Boolean>("RayBypassFallback", false,v->page.getValue()== pages.Place));
+    public Setting<Integer> bypassTicks = register(new Setting<>("BypassTicks", 10, 0, 20,v->page.getValue()== pages.Place));
+    public Setting<Float> rbYaw = register(new Setting<>("RB-Yaw", 180.0f, 0.0f, 180.0f,v->page.getValue()== pages.Place));
+    public Setting<Float> rbPitch = register(new Setting<>("RB-Pitch", 90.0f, 0.0f, 90.0f,v->page.getValue()== pages.Place));
+    public Setting<Integer> bypassRotationTime = register(new Setting<>("RayBypassRotationTime", 500, 0, 1000,v->page.getValue()== pages.Place));
+    public Setting<Boolean> ignoreNonFull = register(new Setting<Boolean>("IgnoreNonFull", false,v->page.getValue()== pages.Place));
+    public Setting<Boolean> efficientPlacements = register(new Setting<Boolean>("EfficientPlacements", false,v->page.getValue()== pages.Place));
+    public Setting<Integer> simulatePlace = register(new Setting<>("Simulate-Place", 0, 0, 10,v->page.getValue()== pages.Place));;
 
     /* ---------------- Break Settings -------------- */
     public Setting<Attack2> attackMode = register(new Setting<>("Attack", Attack2.Crystal,v->page.getValue()== pages.Break));
     public Setting<Boolean> attack = register(new Setting<Boolean>("Break", true,v->page.getValue()== pages.Break));
     public Setting<Float> breakRange = register(new Setting<>("BreakRange", 6.0f, 0.0f, 6.0f,v->page.getValue()== pages.Break));
     public Setting<Integer> breakDelay = register(new Setting<>("BreakDelay", 25, 0, 500,v->page.getValue()== pages.Break));
-    public Setting<Float> breakTrace = register(new Setting<>("BreakTrace", 3.0f, 0.0f, 6.0f,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> minBreakDamage = register(new Setting<>("MinBreakDmg", 0.5f, 0.0f, 20.0f,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> maxSelfBreak = register(new Setting<>("MaxSelfBreak", 10.0f, 0.0f, 20.0f,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> slowBreakDamage = register(new Setting<>("SlowBreak", 3.0f, 0.1f, 20.0f,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> slowBreakDelay = register(new Setting<>("SlowBreakDelay", 500, 0, 500,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Float> breakTrace = register(new Setting<>("BreakTrace", 3.0f, 0.0f, 6.0f,v->page.getValue()== pages.Break));;
+    public Setting<Float> minBreakDamage = register(new Setting<>("MinBreakDmg", 0.5f, 0.0f, 20.0f,v->page.getValue()== pages.Break));;
+    public Setting<Float> maxSelfBreak = register(new Setting<>("MaxSelfBreak", 10.0f, 0.0f, 20.0f,v->page.getValue()== pages.Break));;
+    public Setting<Float> slowBreakDamage = register(new Setting<>("SlowBreak", 3.0f, 0.1f, 20.0f,v->page.getValue()== pages.Break));;
+    public Setting<Integer> slowBreakDelay = register(new Setting<>("SlowBreakDelay", 500, 0, 500,v->page.getValue()== pages.Break));;
     public Setting<Boolean> instant = register(new Setting<Boolean>("Instant", false,v->page.getValue()== pages.Break));
-    public Setting<Boolean> asyncCalc = register(new Setting<Boolean>("Async-Calc", false,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> alwaysCalc = register(new Setting<Boolean>("Always-Calc", false,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Boolean> asyncCalc = register(new Setting<Boolean>("Async-Calc", false,v->page.getValue()== pages.Break));;
+    public Setting<Boolean> alwaysCalc = register(new Setting<Boolean>("Always-Calc", false,v->page.getValue()== pages.Break));;
 
-    public Setting<Boolean> ncpRange = register(new Setting<Boolean>("NCP-Range", false,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<SmartRange> placeBreakRange = register(new Setting<>("SmartRange", SmartRange.None,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> smartTicks = register(new Setting<>("SmartRange-Ticks", 0, 0, 20,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> negativeTicks = register(new Setting<>("Negative-Ticks", 0, 0, 20,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> smartBreakTrace = register(new Setting<Boolean>("SmartBreakTrace", true,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> negativeBreakTrace = register(new Setting<Boolean>("NegativeBreakTrace", true,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> ncpRange = register(new Setting<Boolean>("NCP-Range", false,v->page.getValue()== pages.Break));;
+    public Setting<SmartRange> placeBreakRange = register(new Setting<>("SmartRange", SmartRange.None,v->page.getValue()== pages.Break));;
+    public Setting<Integer> smartTicks = register(new Setting<>("SmartRange-Ticks", 0, 0, 20,v->page.getValue()== pages.Break));;
+    public Setting<Integer> negativeTicks = register(new Setting<>("Negative-Ticks", 0, 0, 20,v->page.getValue()== pages.Break));
+    public Setting<Boolean> smartBreakTrace = register(new Setting<Boolean>("SmartBreakTrace", true,v->page.getValue()== pages.Break));;
+    public Setting<Boolean> negativeBreakTrace = register(new Setting<Boolean>("NegativeBreakTrace", true,v->page.getValue()== pages.Break));
 
-    public Setting<Integer> packets = register(new Setting<>("Packets", 1, 1, 5,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> overrideBreak = register(new Setting<Boolean>("OverrideBreak", false,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<AntiWeakness> antiWeakness = register(new Setting<>("AntiWeakness", AntiWeakness.None,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> instantAntiWeak = register(new Setting<Boolean>("AW-Instant", true,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> efficient = register(new Setting<Boolean>("Efficient", true,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> manually = register(new Setting<Boolean>("Manually", true,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> manualDelay = register(new Setting<>("ManualDelay", 500, 0, 500,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<SwingTime> breakSwing = register(new Setting<>("BreakSwing", SwingTime.Post,v->page.getValue()== pages.Break&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Integer> packets = register(new Setting<>("Packets", 1, 1, 5,v->page.getValue()== pages.Break));
+    public Setting<Boolean> overrideBreak = register(new Setting<Boolean>("OverrideBreak", false,v->page.getValue()== pages.Break));
+    public Setting<AntiWeakness> antiWeakness = register(new Setting<>("AntiWeakness", AntiWeakness.None,v->page.getValue()== pages.Break));;
+    public Setting<Boolean> instantAntiWeak = register(new Setting<Boolean>("AW-Instant", true,v->page.getValue()== pages.Break));;
+    public Setting<Boolean> efficient = register(new Setting<Boolean>("Efficient", true,v->page.getValue()== pages.Break));
+    public Setting<Boolean> manually = register(new Setting<Boolean>("Manually", true,v->page.getValue()== pages.Break));
+    public Setting<Integer> manualDelay = register(new Setting<>("ManualDelay", 500, 0, 500,v->page.getValue()== pages.Break));
+    public Setting<SwingTime> breakSwing = register(new Setting<>("BreakSwing", SwingTime.Post,v->page.getValue()== pages.Break));
 
     /* --------------- Rotations -------------- */
     public Setting<ACRotate> rotate = register(new Setting<>("Rotate", ACRotate.None,v->page.getValue()== pages.Rotations));
-    public Setting<RotateMode> rotateMode = register(new Setting<>("Rotate-Mode", RotateMode.Normal,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> smoothSpeed = register(new Setting<>("Smooth-Speed", 0.5f, 0.1f, 2.0f,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> endRotations = register(new Setting<>("End-Rotations", 250, 0, 1000,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> angle = register(new Setting<>("Break-Angle", 180.0f, 0.1f, 180.0f,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> placeAngle = register(new Setting<>("Place-Angle", 180.0f, 0.1f, 180.0f,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> height = register(new Setting<>("Height", 0.05f, 0.0f, 1.0f,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Double> placeHeight = register(new Setting<>("Place-Height", 1.0, 0.0, 1.0,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> rotationTicks = register(new Setting<>("Rotations-Existed", 0, 0, 500,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> focusRotations = register(new Setting<Boolean>("Focus-Rotations", false,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> focusAngleCalc = register(new Setting<Boolean>("FocusRotationCompare", false,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Double> focusExponent = register(new Setting<>("FocusExponent", 0.0, 0.0, 10.0,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Double> focusDiff = register(new Setting<>("FocusDiff", 0.0, 0.0, 180.0,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Double> rotationExponent = register(new Setting<>("RotationExponent", 0.0, 0.0, 10.0,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Double> minRotDiff = register(new Setting<>("MinRotationDiff", 0.0, 0.0, 180.0,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> existed = register(new Setting<>("Existed", 0, 0, 500,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> pingExisted = register(new Setting<Boolean>("Ping-Existed", false,v->page.getValue()== pages.Rotations&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<RotateMode> rotateMode = register(new Setting<>("Rotate-Mode", RotateMode.Normal,v->page.getValue()== pages.Rotations));;
+    public Setting<Float> smoothSpeed = register(new Setting<>("Smooth-Speed", 0.5f, 0.1f, 2.0f,v->page.getValue()== pages.Rotations));;
+    public Setting<Integer> endRotations = register(new Setting<>("End-Rotations", 250, 0, 1000,v->page.getValue()== pages.Rotations));
+    public Setting<Float> angle = register(new Setting<>("Break-Angle", 180.0f, 0.1f, 180.0f,v->page.getValue()== pages.Rotations));;
+    public Setting<Float> placeAngle = register(new Setting<>("Place-Angle", 180.0f, 0.1f, 180.0f,v->page.getValue()== pages.Rotations));;
+    public Setting<Float> height = register(new Setting<>("Height", 0.05f, 0.0f, 1.0f,v->page.getValue()== pages.Rotations));
+    public Setting<Double> placeHeight = register(new Setting<>("Place-Height", 1.0, 0.0, 1.0,v->page.getValue()== pages.Rotations));
+    public Setting<Integer> rotationTicks = register(new Setting<>("Rotations-Existed", 0, 0, 500,v->page.getValue()== pages.Rotations));;
+    public Setting<Boolean> focusRotations = register(new Setting<Boolean>("Focus-Rotations", false,v->page.getValue()== pages.Rotations));
+    public Setting<Boolean> focusAngleCalc = register(new Setting<Boolean>("FocusRotationCompare", false,v->page.getValue()== pages.Rotations));
+    public Setting<Double> focusExponent = register(new Setting<>("FocusExponent", 0.0, 0.0, 10.0,v->page.getValue()== pages.Rotations));
+    public Setting<Double> focusDiff = register(new Setting<>("FocusDiff", 0.0, 0.0, 180.0,v->page.getValue()== pages.Rotations));
+    public Setting<Double> rotationExponent = register(new Setting<>("RotationExponent", 0.0, 0.0, 10.0,v->page.getValue()== pages.Rotations));
+    public Setting<Double> minRotDiff = register(new Setting<>("MinRotationDiff", 0.0, 0.0, 180.0,v->page.getValue()== pages.Rotations));
+    public Setting<Integer> existed = register(new Setting<>("Existed", 0, 0, 500,v->page.getValue()== pages.Rotations));;
+    public Setting<Boolean> pingExisted = register(new Setting<Boolean>("Ping-Existed", false,v->page.getValue()== pages.Rotations));;
 
     /* ---------------- Misc Settings -------------- */
     public Setting<Float> targetRange = register(new Setting<>("TargetRange", 20.0f, 0.1f, 20.0f,v->page.getValue()== pages.Misc));
-    public Setting<Float> pbTrace = register(new Setting<>("CombinedTrace", 3.0f, 0.0f, 6.0f,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Float> pbTrace = register(new Setting<>("CombinedTrace", 3.0f, 0.0f, 6.0f,v->page.getValue()== pages.Misc));;
     public Setting<Float> range = register(new Setting<>("Range", 12.0f, 0.1f, 20.0f,v->page.getValue()== pages.Misc));
     public Setting<Boolean> suicide = register(new Setting<Boolean>("Suicide", false,v->page.getValue()== pages.Misc));
-    public Setting<Boolean> shield = register(new Setting<Boolean>("Shield", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> shieldCount = register(new Setting<>("ShieldCount", 1, 1, 5,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> shieldMinDamage = register(new Setting<>("ShieldMinDamage", 6.0f, 0.0f, 20.0f,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> shieldSelfDamage = register(new Setting<>("ShieldSelfDamage", 2.0f, 0.0f, 20.0f,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> shieldDelay = register(new Setting<>("ShieldPlaceDelay", 50, 0, 5000,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> shieldRange = register(new Setting<>("ShieldRange", 10.0f, 0.0f, 20.0f,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> shieldPrioritizeHealth = register(new Setting<Boolean>("Shield-PrioritizeHealth", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> multiTask = register(new Setting<Boolean>("MultiTask", true,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> multiPlaceCalc = register(new Setting<Boolean>("MultiPlace-Calc", true,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> multiPlaceMinDmg = register(new Setting<Boolean>("MultiPlace-MinDmg", true,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> countDeadCrystals = register(new Setting<Boolean>("CountDeadCrystals", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> countDeathTime = register(new Setting<Boolean>("CountWithinDeathTime", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> yCalc = register(new Setting<Boolean>("Y-Calc", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> dangerSpeed = register(new Setting<Boolean>("Danger-Speed", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> dangerHealth = register(new Setting<>("Danger-Health", 0.0f, 0.0f, 36.0f,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Boolean> shield = register(new Setting<Boolean>("Shield", false,v->page.getValue()== pages.Misc));
+    public Setting<Integer> shieldCount = register(new Setting<>("ShieldCount", 1, 1, 5,v->page.getValue()== pages.Misc));
+    public Setting<Float> shieldMinDamage = register(new Setting<>("ShieldMinDamage", 6.0f, 0.0f, 20.0f,v->page.getValue()== pages.Misc));
+    public Setting<Float> shieldSelfDamage = register(new Setting<>("ShieldSelfDamage", 2.0f, 0.0f, 20.0f,v->page.getValue()== pages.Misc));
+    public Setting<Integer> shieldDelay = register(new Setting<>("ShieldPlaceDelay", 50, 0, 5000,v->page.getValue()== pages.Misc));
+    public Setting<Float> shieldRange = register(new Setting<>("ShieldRange", 10.0f, 0.0f, 20.0f,v->page.getValue()== pages.Misc));
+    public Setting<Boolean> shieldPrioritizeHealth = register(new Setting<Boolean>("Shield-PrioritizeHealth", false,v->page.getValue()== pages.Misc));
+    public Setting<Boolean> multiTask = register(new Setting<Boolean>("MultiTask", true,v->page.getValue()== pages.Misc));;
+    public Setting<Boolean> multiPlaceCalc = register(new Setting<Boolean>("MultiPlace-Calc", true,v->page.getValue()== pages.Misc));
+    public Setting<Boolean> multiPlaceMinDmg = register(new Setting<Boolean>("MultiPlace-MinDmg", true,v->page.getValue()== pages.Misc));
+    public Setting<Boolean> countDeadCrystals = register(new Setting<Boolean>("CountDeadCrystals", false,v->page.getValue()== pages.Misc));
+    public Setting<Boolean> countDeathTime = register(new Setting<Boolean>("CountWithinDeathTime", false,v->page.getValue()== pages.Misc));
+    public Setting<Boolean> yCalc = register(new Setting<Boolean>("Y-Calc", false,v->page.getValue()== pages.Misc));
+    public Setting<Boolean> dangerSpeed = register(new Setting<Boolean>("Danger-Speed", false,v->page.getValue()== pages.Misc));;
+    public Setting<Float> dangerHealth = register(new Setting<>("Danger-Health", 0.0f, 0.0f, 36.0f,v->page.getValue()== pages.Misc));;
     public Setting<Integer> cooldown = register(new Setting<>("CoolDown", 500, 0, 10000,v->page.getValue()== pages.Misc));
-    public Setting<Integer> placeCoolDown = register(new Setting<>("PlaceCooldown", 0, 0, 10000,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Integer> placeCoolDown = register(new Setting<>("PlaceCooldown", 0, 0, 10000,v->page.getValue()== pages.Misc));;
     public Setting<AntiFriendPop> antiFriendPop = register(new Setting<>("AntiFriendPop", AntiFriendPop.None,v->page.getValue()== pages.Misc));
-    public Setting<Boolean> antiFeetPlace = register(new Setting<Boolean>("AntiFeetPlace", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> feetBuffer =register(new Setting<>("FeetBuffer", 5, 0, 50,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> antiFeetPlace = register(new Setting<Boolean>("AntiFeetPlace", false,v->page.getValue()== pages.Misc));
+    public Setting<Integer> feetBuffer =register(new Setting<>("FeetBuffer", 5, 0, 50,v->page.getValue()== pages.Misc));
     public Setting<Boolean> stopWhenEating = register(new Setting<Boolean>("StopWhenEating", false,v->page.getValue()== pages.Misc));
     public Setting<Boolean> stopWhenMining = register(new Setting<Boolean>("StopWhenMining", false,v->page.getValue()== pages.Misc));
-    public Setting<Boolean> dangerFacePlace = register(new Setting<Boolean>("Danger-FacePlace", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> motionCalc =register(new Setting<Boolean>("Motion-Calc", false,v->page.getValue()== pages.Misc&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> dangerFacePlace = register(new Setting<Boolean>("Danger-FacePlace", false,v->page.getValue()== pages.Misc));;
+    public Setting<Boolean> motionCalc =register(new Setting<Boolean>("Motion-Calc", false,v->page.getValue()== pages.Misc));
 
     /* ---------------- FacePlace and ArmorPlace -------------- */
     public Setting<Boolean> holdFacePlace = register(new Setting<Boolean>("HoldFacePlace", false,v->page.getValue()== pages.FacePlace));
     public Setting<Float> facePlace = register(new Setting<>("FacePlace", 10.0f, 0.0f, 36.0f,v->page.getValue()== pages.FacePlace));
-    public Setting<Float> minFaceDmg = register(new Setting<>("Min-FP", 2.0f, 0.0f, 5.0f,v->page.getValue()== pages.FacePlace&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> armorPlace = register(new Setting<>("ArmorPlace", 5.0f, 0.0f, 100.0f,v->page.getValue()== pages.FacePlace&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> pickAxeHold = register(new Setting<Boolean>("PickAxe-Hold", false,v->page.getValue()== pages.FacePlace&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> antiNaked = register(new Setting<Boolean>("AntiNaked", false,v->page.getValue()== pages.FacePlace&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> fallBack = register(new Setting<Boolean>("FallBack", true,v->page.getValue()== pages.FacePlace&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> fallBackDiff = register(new Setting<>("Fallback-Difference", 10.0f, 0.0f, 16.0f,v->page.getValue()== pages.FacePlace&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> fallBackDmg = register(new Setting<>("FallBackDmg", 3.0f, 0.0f, 6.0f,v->page.getValue()== pages.FacePlace&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Float> minFaceDmg = register(new Setting<>("Min-FP", 2.0f, 0.0f, 5.0f,v->page.getValue()== pages.FacePlace));;
+    public Setting<Float> armorPlace = register(new Setting<>("ArmorPlace", 5.0f, 0.0f, 100.0f,v->page.getValue()== pages.FacePlace));;
+    public Setting<Boolean> pickAxeHold = register(new Setting<Boolean>("PickAxe-Hold", false,v->page.getValue()== pages.FacePlace));;
+    public Setting<Boolean> antiNaked = register(new Setting<Boolean>("AntiNaked", false,v->page.getValue()== pages.FacePlace));;
+    public Setting<Boolean> fallBack = register(new Setting<Boolean>("FallBack", true,v->page.getValue()== pages.FacePlace));
+    public Setting<Float> fallBackDiff = register(new Setting<>("Fallback-Difference", 10.0f, 0.0f, 16.0f,v->page.getValue()== pages.FacePlace));
+    public Setting<Float> fallBackDmg = register(new Setting<>("FallBackDmg", 3.0f, 0.0f, 6.0f,v->page.getValue()== pages.FacePlace));
 
     /* ---------------- Switch, Swing -------------- */
     public Setting<AutoSwitch> autoSwitch = register(new Setting<>("AutoSwitch", AutoSwitch.Bind,v->page.getValue()== pages.SwitchNSwing));
     public Setting<Boolean> mainHand = register(new Setting<Boolean>("MainHand", false,v->page.getValue()== pages.SwitchNSwing));
     public Setting<SubBind> switchBind = this.register(new Setting<>("SwitchBind", new SubBind(Keyboard.KEY_NONE),v->page.getValue()== pages.SwitchNSwing));
     public Setting<Boolean> switchBack = register(new Setting<Boolean>("SwitchBack", true,v->page.getValue()== pages.SwitchNSwing));
-    public Setting<Boolean> useAsOffhand = register(new Setting<Boolean>("UseAsOffHandBind", false,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> instantOffhand = register(new Setting<Boolean>("Instant-Offhand", true,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> switchMessage = register(new Setting<Boolean>("Switch-Message", false,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<SwingType> swing = register(new Setting<>("BreakHand", SwingType.MainHand,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<SwingType> placeHand = register(new Setting<>("PlaceHand", SwingType.MainHand,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<CooldownBypass2> cooldownBypass = register(new Setting<>("CooldownBypass", CooldownBypass2.None,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<CooldownBypass2> obsidianBypass = register(new Setting<>("ObsidianBypass", CooldownBypass2.None,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<CooldownBypass2> antiWeaknessBypass = register(new Setting<>("AntiWeaknessBypass", CooldownBypass2.None,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<CooldownBypass2> mineBypass = register(new Setting<>("MineBypass", CooldownBypass2.None,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<SwingType> obbyHand = register(new Setting<>("ObbyHand", SwingType.MainHand,v->page.getValue()== pages.SwitchNSwing&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> useAsOffhand = register(new Setting<Boolean>("UseAsOffHandBind", false,v->page.getValue()== pages.SwitchNSwing));;
+    public Setting<Boolean> instantOffhand = register(new Setting<Boolean>("Instant-Offhand", true,v->page.getValue()== pages.SwitchNSwing));
+    public Setting<Boolean> switchMessage = register(new Setting<Boolean>("Switch-Message", false,v->page.getValue()== pages.SwitchNSwing));
+    public Setting<SwingType> swing = register(new Setting<>("BreakHand", SwingType.MainHand,v->page.getValue()== pages.SwitchNSwing));
+    public Setting<SwingType> placeHand = register(new Setting<>("PlaceHand", SwingType.MainHand,v->page.getValue()== pages.SwitchNSwing));
+    public Setting<CooldownBypass2> cooldownBypass = register(new Setting<>("CooldownBypass", CooldownBypass2.None,v->page.getValue()== pages.SwitchNSwing));;
+    public Setting<CooldownBypass2> obsidianBypass = register(new Setting<>("ObsidianBypass", CooldownBypass2.None,v->page.getValue()== pages.SwitchNSwing));;
+    public Setting<CooldownBypass2> antiWeaknessBypass = register(new Setting<>("AntiWeaknessBypass", CooldownBypass2.None,v->page.getValue()== pages.SwitchNSwing));;
+    public Setting<CooldownBypass2> mineBypass = register(new Setting<>("MineBypass", CooldownBypass2.None,v->page.getValue()== pages.SwitchNSwing));;
+    public Setting<SwingType> obbyHand = register(new Setting<>("ObbyHand", SwingType.MainHand,v->page.getValue()== pages.SwitchNSwing));
 
     /* ---------------- Render Settings -------------- */
-    public Setting<Boolean> render = register(new Setting<Boolean>("Render", true,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> renderTime = register(new Setting<>("Render-Time", 600, 0, 5000,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> box = register(new Setting<Boolean>("Draw-Box", true,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> fade = register(new Setting<Boolean>("Fade", true,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> fadeComp = register(new Setting<Boolean>("Fade-Compatibility", false,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> fadeTime = register(new Setting<>("Fade-Time", 1000, 0, 5000,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> realtime = register(new Setting<Boolean>("Realtime", false,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> slide = register(new Setting<Boolean>("Slide", false,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> smoothSlide = register(new Setting<Boolean>("SmoothenSlide", false,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> slideTime = register(new Setting<>("Slide-Time", 250, 1, 1000,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> zoom = register(new Setting<Boolean>("Zoom", false,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Double> zoomTime = register(new Setting<>("Zoom-Time", 100.0, 1.0, 1000.0,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Double> zoomOffset = register(new Setting<>("Zoom-Offset", -0.5, -1.0, 1.0,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> multiZoom = register(new Setting<Boolean>("Multi-Zoom", false,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> renderExtrapolation = register(new Setting<Boolean>("RenderExtrapolation", false,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<RenderDamagePos> renderDamage = register(new Setting<>("DamageRender", RenderDamagePos.None,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<RenderDamage> renderMode = register(new Setting<>("DamageMode", RenderDamage.Normal,v->page.getValue()== pages.Render&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Boolean> render = register(new Setting<Boolean>("Render", true,v->page.getValue()== pages.Render));;
+    public Setting<Integer> renderTime = register(new Setting<>("Render-Time", 600, 0, 5000,v->page.getValue()== pages.Render));;
+    public Setting<Boolean> box = register(new Setting<Boolean>("Draw-Box", true,v->page.getValue()== pages.Render));;
+    public Setting<Boolean> fade = register(new Setting<Boolean>("Fade", true,v->page.getValue()== pages.Render));;
+    public Setting<Boolean> fadeComp = register(new Setting<Boolean>("Fade-Compatibility", false,v->page.getValue()== pages.Render));
+    public Setting<Integer> fadeTime = register(new Setting<>("Fade-Time", 1000, 0, 5000,v->page.getValue()== pages.Render));;
+    public Setting<Boolean> realtime = register(new Setting<Boolean>("Realtime", false,v->page.getValue()== pages.Render));
+    public Setting<Boolean> slide = register(new Setting<Boolean>("Slide", false,v->page.getValue()== pages.Render));;
+    public Setting<Boolean> smoothSlide = register(new Setting<Boolean>("SmoothenSlide", false,v->page.getValue()== pages.Render));;
+    public Setting<Integer> slideTime = register(new Setting<>("Slide-Time", 250, 1, 1000,v->page.getValue()== pages.Render));
+    public Setting<Boolean> zoom = register(new Setting<Boolean>("Zoom", false,v->page.getValue()== pages.Render));;
+    public Setting<Double> zoomTime = register(new Setting<>("Zoom-Time", 100.0, 1.0, 1000.0,v->page.getValue()== pages.Render));;
+    public Setting<Double> zoomOffset = register(new Setting<>("Zoom-Offset", -0.5, -1.0, 1.0,v->page.getValue()== pages.Render));;
+    public Setting<Boolean> multiZoom = register(new Setting<Boolean>("Multi-Zoom", false,v->page.getValue()== pages.Render));;
+    public Setting<Boolean> renderExtrapolation = register(new Setting<Boolean>("RenderExtrapolation", false,v->page.getValue()== pages.Render));
+    public Setting<RenderDamagePos> renderDamage = register(new Setting<>("DamageRender", RenderDamagePos.None,v->page.getValue()== pages.Render));;
+    public Setting<RenderDamage> renderMode = register(new Setting<>("DamageMode", RenderDamage.Normal,v->page.getValue()== pages.Render));;
 
     /* ---------------- SetDead Settings -------------- */
     public Setting<Boolean> setDead = register(new Setting<Boolean>("SetDead", false,v->page.getValue()== pages.SetDead));
-    public Setting<Boolean> instantSetDead =register(new Setting<Boolean>("Instant-Dead", false,v->page.getValue()== pages.SetDead&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> pseudoSetDead =register(new Setting<Boolean>("Pseudo-Dead", true,v->page.getValue()== pages.SetDead&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> simulateExplosion = register(new Setting<Boolean>("SimulateExplosion", false,v->page.getValue()== pages.SetDead&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> soundRemove = register(new Setting<Boolean>("SoundRemove", true,v->page.getValue()== pages.SetDead&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> useSafeDeathTime =register(new Setting<Boolean>("UseSafeDeathTime", false,v->page.getValue()== pages.SetDead&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> safeDeathTime = register(new Setting<>("Safe-Death-Time", 0, 0, 500,v->page.getValue()== pages.SetDead&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> deathTime = register(new Setting<>("Death-Time", 0, 0, 500,v->page.getValue()== pages.SetDead&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Boolean> instantSetDead =register(new Setting<Boolean>("Instant-Dead", false,v->page.getValue()== pages.SetDead));;
+    public Setting<Boolean> pseudoSetDead =register(new Setting<Boolean>("Pseudo-Dead", true,v->page.getValue()== pages.SetDead));;
+    public Setting<Boolean> simulateExplosion = register(new Setting<Boolean>("SimulateExplosion", false,v->page.getValue()== pages.SetDead));
+    public Setting<Boolean> soundRemove = register(new Setting<Boolean>("SoundRemove", true,v->page.getValue()== pages.SetDead));;
+    public Setting<Boolean> useSafeDeathTime =register(new Setting<Boolean>("UseSafeDeathTime", false,v->page.getValue()== pages.SetDead));
+    public Setting<Integer> safeDeathTime = register(new Setting<>("Safe-Death-Time", 0, 0, 500,v->page.getValue()== pages.SetDead));
+    public Setting<Integer> deathTime = register(new Setting<>("Death-Time", 0, 0, 500,v->page.getValue()== pages.SetDead));;
 
     /* ---------------- Obsidian Settings -------------- */
     public Setting<Boolean> obsidian = register(new Setting<Boolean>("Obsidian", false,v->page.getValue()== pages.Obsidian));
-    public Setting<Boolean> basePlaceOnly = register(new Setting<Boolean>("BasePlaceOnly", false,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> obbySwitch = register(new Setting<Boolean>("Obby-Switch", false,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> obbyDelay = register(new Setting<>("ObbyDelay", 500, 0, 5000,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> obbyCalc = register(new Setting<>("ObbyCalc", 500, 0, 5000,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> helpingBlocks = register(new Setting<>("HelpingBlocks", 1, 0, 5,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Boolean> basePlaceOnly = register(new Setting<Boolean>("BasePlaceOnly", false,v->page.getValue()== pages.Obsidian));;
+    public Setting<Boolean> obbySwitch = register(new Setting<Boolean>("Obby-Switch", false,v->page.getValue()== pages.Obsidian));;
+    public Setting<Integer> obbyDelay = register(new Setting<>("ObbyDelay", 500, 0, 5000,v->page.getValue()== pages.Obsidian));;
+    public Setting<Integer> obbyCalc = register(new Setting<>("ObbyCalc", 500, 0, 5000,v->page.getValue()== pages.Obsidian));;
+    public Setting<Integer> helpingBlocks = register(new Setting<>("HelpingBlocks", 1, 0, 5,v->page.getValue()== pages.Obsidian));;
     public Setting<Float> obbyMinDmg = register(new Setting<>("Obby-MinDamage", 7.0f, 0.1f, 36.0f,v->page.getValue()== pages.Obsidian));
     public Setting<Boolean> terrainCalc = register(new Setting<Boolean>("TerrainCalc", true,v->page.getValue()== pages.Obsidian));
-    public Setting<Boolean> obbySafety = register(new Setting<Boolean>("ObbySafety", false,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<RayTraceMode> obbyTrace =register(new Setting<>("Obby-Raytrace", RayTraceMode.Fast,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> obbyTerrain = register(new Setting<Boolean>("Obby-Terrain", true,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> obbyPreSelf = register(new Setting<Boolean>("Obby-PreSelf", true,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> fastObby = register(new Setting<>("Fast-Obby", 0, 0, 3,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> maxDiff = register(new Setting<>("Max-Difference", 1, 0, 5,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Double> maxDmgDiff = register(new Setting<>("Max-DamageDiff", 0.0, 0.0, 10.0,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> setState = register(new Setting<Boolean>("Client-Blocks", false,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<PlaceSwing> obbySwing = register(new Setting<>("Obby-Swing", PlaceSwing.Once,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> obbyFallback = register(new Setting<Boolean>("Obby-Fallback", false,v->page.getValue()== pages.Obsidian&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> obbySafety = register(new Setting<Boolean>("ObbySafety", false,v->page.getValue()== pages.Obsidian));
+    public Setting<RayTraceMode> obbyTrace =register(new Setting<>("Obby-Raytrace", RayTraceMode.Fast,v->page.getValue()== pages.Obsidian));;
+    public Setting<Boolean> obbyTerrain = register(new Setting<Boolean>("Obby-Terrain", true,v->page.getValue()== pages.Obsidian));;
+    public Setting<Boolean> obbyPreSelf = register(new Setting<Boolean>("Obby-PreSelf", true,v->page.getValue()== pages.Obsidian));;
+    public Setting<Integer> fastObby = register(new Setting<>("Fast-Obby", 0, 0, 3,v->page.getValue()== pages.Obsidian));;
+    public Setting<Integer> maxDiff = register(new Setting<>("Max-Difference", 1, 0, 5,v->page.getValue()== pages.Obsidian));
+    public Setting<Double> maxDmgDiff = register(new Setting<>("Max-DamageDiff", 0.0, 0.0, 10.0,v->page.getValue()== pages.Obsidian));
+    public Setting<Boolean> setState = register(new Setting<Boolean>("Client-Blocks", false,v->page.getValue()== pages.Obsidian));
+    public Setting<PlaceSwing> obbySwing = register(new Setting<>("Obby-Swing", PlaceSwing.Once,v->page.getValue()== pages.Obsidian));
+    public Setting<Boolean> obbyFallback = register(new Setting<Boolean>("Obby-Fallback", false,v->page.getValue()== pages.Obsidian));
     public Setting<Rotate> obbyRotate = register(new Setting<>("Obby-Rotate", Rotate.None,v->page.getValue()== pages.Obsidian));
 
     /* ---------------- Liquids Settings -------------- */
-    public Setting<Boolean> interact = register(new Setting<Boolean>("Interact", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> inside = register(new Setting<Boolean>("Inside", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> lava = register(new Setting<Boolean>("Lava", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> water = register(new Setting<Boolean>("Water", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> liquidObby = register(new Setting<Boolean>("LiquidObby", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> liquidRayTrace = register(new Setting<Boolean>("LiquidRayTrace", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> liqDelay = register(new Setting<>("LiquidDelay", 500, 0, 1000,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Rotate> liqRotate = register(new Setting<>("LiquidRotate", Rotate.None,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> pickaxeOnly = register(new Setting<Boolean>("PickaxeOnly", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> interruptSpeedmine = register(new Setting<Boolean>("InterruptSpeedmine", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> setAir = register(new Setting<Boolean>("SetAir", true,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> absorb = register(new Setting<Boolean>("Absorb", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> requireOnGround = register(new Setting<Boolean>("RequireOnGround", true,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> ignoreLavaItems =register(new Setting<Boolean>("IgnoreLavaItems", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> sponges = register(new Setting<Boolean>("Sponges", false,v->page.getValue()== pages.Liquid&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> interact = register(new Setting<Boolean>("Interact", false,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> inside = register(new Setting<Boolean>("Inside", false,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> lava = register(new Setting<Boolean>("Lava", false,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> water = register(new Setting<Boolean>("Water", false,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> liquidObby = register(new Setting<Boolean>("LiquidObby", false,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> liquidRayTrace = register(new Setting<Boolean>("LiquidRayTrace", false,v->page.getValue()== pages.Liquid));
+    public Setting<Integer> liqDelay = register(new Setting<>("LiquidDelay", 500, 0, 1000,v->page.getValue()== pages.Liquid));;
+    public Setting<Rotate> liqRotate = register(new Setting<>("LiquidRotate", Rotate.None,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> pickaxeOnly = register(new Setting<Boolean>("PickaxeOnly", false,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> interruptSpeedmine = register(new Setting<Boolean>("InterruptSpeedmine", false,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> setAir = register(new Setting<Boolean>("SetAir", true,v->page.getValue()== pages.Liquid));;
+    public Setting<Boolean> absorb = register(new Setting<Boolean>("Absorb", false,v->page.getValue()== pages.Liquid));
+    public Setting<Boolean> requireOnGround = register(new Setting<Boolean>("RequireOnGround", true,v->page.getValue()== pages.Liquid));
+    public Setting<Boolean> ignoreLavaItems =register(new Setting<Boolean>("IgnoreLavaItems", false,v->page.getValue()== pages.Liquid));
+    public Setting<Boolean> sponges = register(new Setting<Boolean>("Sponges", false,v->page.getValue()== pages.Liquid));
 
     /* ---------------- AntiTotem Settings -------------- */
-    public Setting<Boolean> antiTotem = register(new Setting<Boolean>("AntiTotem", false,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Float> totemHealth = register(new Setting<>("Totem-Health", 1.5f, 0.0f, 10.0f,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> minTotemOffset = register(new Setting<>("Min-Offset", 0.5f, 0.0f, 5.0f,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> maxTotemOffset = register(new Setting<>("Max-Offset", 2.0f, 0.0f, 5.0f,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> popDamage = register(new Setting<>("Pop-Damage", 12.0f, 10.0f, 20.0f,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> totemSync = register(new Setting<Boolean>("TotemSync", true,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> forceAntiTotem =register(new Setting<Boolean>("Force-AntiTotem", false,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> forceSlow = register(new Setting<Boolean>("Force-Slow", false,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> syncForce = register(new Setting<Boolean>("Sync-Force", true,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> dangerForce = register(new Setting<Boolean>("Danger-Force", false,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> forcePlaceConfirm = register(new Setting<>("Force-Place", 100, 0, 500,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> forceBreakConfirm = register(new Setting<>("Force-Break", 100, 0, 500,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> attempts = register(new Setting<>("Attempts", 500, 0, 10000,v->page.getValue()== pages.AntiTotem&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> antiTotem = register(new Setting<Boolean>("AntiTotem", false,v->page.getValue()== pages.AntiTotem));;
+    public Setting<Float> totemHealth = register(new Setting<>("Totem-Health", 1.5f, 0.0f, 10.0f,v->page.getValue()== pages.AntiTotem));
+    public Setting<Float> minTotemOffset = register(new Setting<>("Min-Offset", 0.5f, 0.0f, 5.0f,v->page.getValue()== pages.AntiTotem));
+    public Setting<Float> maxTotemOffset = register(new Setting<>("Max-Offset", 2.0f, 0.0f, 5.0f,v->page.getValue()== pages.AntiTotem));
+    public Setting<Float> popDamage = register(new Setting<>("Pop-Damage", 12.0f, 10.0f, 20.0f,v->page.getValue()== pages.AntiTotem));
+    public Setting<Boolean> totemSync = register(new Setting<Boolean>("TotemSync", true,v->page.getValue()== pages.AntiTotem));
+    public Setting<Boolean> forceAntiTotem =register(new Setting<Boolean>("Force-AntiTotem", false,v->page.getValue()== pages.AntiTotem));
+    public Setting<Boolean> forceSlow = register(new Setting<Boolean>("Force-Slow", false,v->page.getValue()== pages.AntiTotem));
+    public Setting<Boolean> syncForce = register(new Setting<Boolean>("Sync-Force", true,v->page.getValue()== pages.AntiTotem));
+    public Setting<Boolean> dangerForce = register(new Setting<Boolean>("Danger-Force", false,v->page.getValue()== pages.AntiTotem));
+    public Setting<Integer> forcePlaceConfirm = register(new Setting<>("Force-Place", 100, 0, 500,v->page.getValue()== pages.AntiTotem));
+    public Setting<Integer> forceBreakConfirm = register(new Setting<>("Force-Break", 100, 0, 500,v->page.getValue()== pages.AntiTotem));
+    public Setting<Integer> attempts = register(new Setting<>("Attempts", 500, 0, 10000,v->page.getValue()== pages.AntiTotem));
 
     /* ---------------- Damage Sync -------------- */
-    public Setting<Boolean> damageSync = register(new Setting<Boolean>("DamageSync", false,v->page.getValue()== pages.DamageSync&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> preSynCheck = register(new Setting<Boolean>("Pre-SyncCheck", false,v->page.getValue()== pages.DamageSync&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> discreteSync = register(new Setting<Boolean>("Discrete-Sync", false,v->page.getValue()== pages.DamageSync&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> dangerSync = register(new Setting<Boolean>("Danger-Sync", false,v->page.getValue()== pages.DamageSync&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> placeConfirm = register(new Setting<>("Place-Confirm", 250, 0, 500,v->page.getValue()== pages.DamageSync&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> breakConfirm = register(new Setting<>("Break-Confirm", 250, 0, 500,v->page.getValue()== pages.DamageSync&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> syncDelay = register(new Setting<>("SyncDelay", 500, 0, 500,v->page.getValue()== pages.DamageSync&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> surroundSync = register(new Setting<Boolean>("SurroundSync", true,v->page.getValue()== pages.DamageSync&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> damageSync = register(new Setting<Boolean>("DamageSync", false,v->page.getValue()== pages.DamageSync));;
+    public Setting<Boolean> preSynCheck = register(new Setting<Boolean>("Pre-SyncCheck", false,v->page.getValue()== pages.DamageSync));
+    public Setting<Boolean> discreteSync = register(new Setting<Boolean>("Discrete-Sync", false,v->page.getValue()== pages.DamageSync));
+    public Setting<Boolean> dangerSync = register(new Setting<Boolean>("Danger-Sync", false,v->page.getValue()== pages.DamageSync));;
+    public Setting<Integer> placeConfirm = register(new Setting<>("Place-Confirm", 250, 0, 500,v->page.getValue()== pages.DamageSync));
+    public Setting<Integer> breakConfirm = register(new Setting<>("Break-Confirm", 250, 0, 500,v->page.getValue()== pages.DamageSync));
+    public Setting<Integer> syncDelay = register(new Setting<>("SyncDelay", 500, 0, 500,v->page.getValue()== pages.DamageSync));;
+    public Setting<Boolean> surroundSync = register(new Setting<Boolean>("SurroundSync", true,v->page.getValue()== pages.DamageSync));
 
     /* ---------------- Extrapolation Settings -------------- */
-    public final Setting<Integer> extrapol = register(new Setting<>("Extrapolation", 0, 0, 50,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Pro));;
-    public final Setting<Integer> bExtrapol = register(new Setting<>("Break-Extrapolation", 0, 0, 50,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Pro));;
-    public final Setting<Integer> blockExtrapol = register(new Setting<>("Block-Extrapolation", 0, 0, 50,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Pro));;
-    public final Setting<BlockExtrapolationMode> blockExtraMode = register(new Setting<>("BlockExtraMode", BlockExtrapolationMode.Pessimistic,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Boolean> doubleExtraCheck = register(new Setting<Boolean>("DoubleExtraCheck", true,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Hacker));
+    public final Setting<Integer> extrapol = register(new Setting<>("Extrapolation", 0, 0, 50,v->page.getValue()== pages.Extrapolation));;
+    public final Setting<Integer> bExtrapol = register(new Setting<>("Break-Extrapolation", 0, 0, 50,v->page.getValue()== pages.Extrapolation));;
+    public final Setting<Integer> blockExtrapol = register(new Setting<>("Block-Extrapolation", 0, 0, 50,v->page.getValue()== pages.Extrapolation));;
+    public final Setting<BlockExtrapolationMode> blockExtraMode = register(new Setting<>("BlockExtraMode", BlockExtrapolationMode.Pessimistic,v->page.getValue()== pages.Extrapolation));
+    public final Setting<Boolean> doubleExtraCheck = register(new Setting<Boolean>("DoubleExtraCheck", true,v->page.getValue()== pages.Extrapolation));
 
-    public final Setting<Boolean> avgPlaceDamage = register(new Setting<Boolean>("AvgPlaceExtra", false,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Double> placeExtraWeight = register(new Setting<>("P-Extra-Weight", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Pro));;
-    public final Setting<Double> placeNormalWeight = register(new Setting<>("P-Norm-Weight", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Pro));;
-    public final Setting<Boolean> avgBreakExtra = register(new Setting<Boolean>("AvgBreakExtra", false,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Double> breakExtraWeight = register(new Setting<>("B-Extra-Weight", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Pro));;
-    public final Setting<Double> breakNormalWeight = register(new Setting<>("B-Norm-Weight", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Pro));;
-    public final Setting<Boolean> gravityExtrapolation = register(new Setting<Boolean>("Extra-Gravity", true,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Double> gravityFactor =register(new Setting<>("Gravity-Factor", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Double> yPlusFactor = register(new Setting<>("Y-Plus-Factor", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Double> yMinusFactor = register(new Setting<>("Y-Minus-Factor", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Boolean> selfExtrapolation = register(new Setting<Boolean>("SelfExtrapolation", false,v->page.getValue()== pages.Extrapolation&& settingType.getValue() == settingtypeEn.Pro));;
+    public final Setting<Boolean> avgPlaceDamage = register(new Setting<Boolean>("AvgPlaceExtra", false,v->page.getValue()== pages.Extrapolation));
+    public final Setting<Double> placeExtraWeight = register(new Setting<>("P-Extra-Weight", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation));;
+    public final Setting<Double> placeNormalWeight = register(new Setting<>("P-Norm-Weight", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation));;
+    public final Setting<Boolean> avgBreakExtra = register(new Setting<Boolean>("AvgBreakExtra", false,v->page.getValue()== pages.Extrapolation));
+    public final Setting<Double> breakExtraWeight = register(new Setting<>("B-Extra-Weight", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation));;
+    public final Setting<Double> breakNormalWeight = register(new Setting<>("B-Norm-Weight", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation));;
+    public final Setting<Boolean> gravityExtrapolation = register(new Setting<Boolean>("Extra-Gravity", true,v->page.getValue()== pages.Extrapolation));
+    public final Setting<Double> gravityFactor =register(new Setting<>("Gravity-Factor", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation));
+    public final Setting<Double> yPlusFactor = register(new Setting<>("Y-Plus-Factor", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation));
+    public final Setting<Double> yMinusFactor = register(new Setting<>("Y-Minus-Factor", 1.0, 0.0, 5.0,v->page.getValue()== pages.Extrapolation));
+    public final Setting<Boolean> selfExtrapolation = register(new Setting<Boolean>("SelfExtrapolation", false,v->page.getValue()== pages.Extrapolation));;
 
     /* ---------------- Predict Settings -------------- */
-    public Setting<Boolean> idPredict = register(new Setting<Boolean>("ID-Predict", false,v->page.getValue()== pages.Predict&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> idOffset = register(new Setting<>("ID-Offset", 1, 1, 10,v->page.getValue()== pages.Predict&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> idDelay = register(new Setting<>("ID-Delay", 0, 0, 500,v->page.getValue()== pages.Predict&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> idPackets = register(new Setting<>("ID-Packets", 1, 1, 10,v->page.getValue()== pages.Predict&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> godAntiTotem = register(new Setting<Boolean>("God-AntiTotem", false,v->page.getValue()== pages.Predict&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> holdingCheck = register(new Setting<Boolean>("Holding-Check", true,v->page.getValue()== pages.Predict&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> toolCheck = register(new Setting<Boolean>("Tool-Check", true,v->page.getValue()== pages.Predict&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<PlaceSwing> godSwing = register(new Setting<>("God-Swing", PlaceSwing.Once,v->page.getValue()== pages.Predict&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> idPredict = register(new Setting<Boolean>("ID-Predict", false,v->page.getValue()== pages.Predict));;
+    public Setting<Integer> idOffset = register(new Setting<>("ID-Offset", 1, 1, 10,v->page.getValue()== pages.Predict));
+    public Setting<Integer> idDelay = register(new Setting<>("ID-Delay", 0, 0, 500,v->page.getValue()== pages.Predict));
+    public Setting<Integer> idPackets = register(new Setting<>("ID-Packets", 1, 1, 10,v->page.getValue()== pages.Predict));
+    public Setting<Boolean> godAntiTotem = register(new Setting<Boolean>("God-AntiTotem", false,v->page.getValue()== pages.Predict));
+    public Setting<Boolean> holdingCheck = register(new Setting<Boolean>("Holding-Check", true,v->page.getValue()== pages.Predict));
+    public Setting<Boolean> toolCheck = register(new Setting<Boolean>("Tool-Check", true,v->page.getValue()== pages.Predict));
+    public Setting<PlaceSwing> godSwing = register(new Setting<>("God-Swing", PlaceSwing.Once,v->page.getValue()== pages.Predict));
 
     /* ---------------- Efficiency -------------- */
-    public Setting<PreCalc> preCalc = register(new Setting<>("Pre-Calc", PreCalc.None,v->page.getValue()== pages.Efficiency&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<ExtrapolationType> preCalcExtra =register(new Setting<>("PreCalcExtra", ExtrapolationType.Place,v->page.getValue()== pages.Efficiency&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> preCalcDamage = register(new Setting<>("Pre-CalcDamage", 15.0f, 0.0f, 36.0f,v->page.getValue()== pages.Efficiency&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<PreCalc> preCalc = register(new Setting<>("Pre-Calc", PreCalc.None,v->page.getValue()== pages.Efficiency));
+    public Setting<ExtrapolationType> preCalcExtra =register(new Setting<>("PreCalcExtra", ExtrapolationType.Place,v->page.getValue()== pages.Efficiency));
+    public Setting<Float> preCalcDamage = register(new Setting<>("Pre-CalcDamage", 15.0f, 0.0f, 36.0f,v->page.getValue()== pages.Efficiency));
 
     /* ---------------- MultiThreading -------------- */
-    public Setting<Boolean> multiThread = register(new Setting<Boolean>("MultiThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> smartPost = register(new Setting<Boolean>("Smart-Post", true,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> mainThreadThreads = register(new Setting<Boolean>("MainThreadThreads", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<RotationThread> rotationThread = register(new Setting<>("RotationThread", RotationThread.Predict,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Float> partial = register(new Setting<>("Partial", 0.8f, 0.0f, 1.0f,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> maxCancel = register(new Setting<>("MaxCancel", 10, 1, 50,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> timeOut = register(new Setting<>("Wait", 2, 1, 10,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> blockDestroyThread = register(new Setting<Boolean>("BlockDestroyThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> threadDelay = register(new Setting<>("ThreadDelay", 25, 0, 100,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Integer> tickThreshold = register(new Setting<>("TickThreshold", 5, 1, 20,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> preSpawn = register(new Setting<>("PreSpawn", 3, 1, 20,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> maxEarlyThread = register(new Setting<>("MaxEarlyThread", 8, 1, 20,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> pullBasedDelay = register(new Setting<>("PullBasedDelay", 0, 0, 1000,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> explosionThread = register(new Setting<Boolean>("ExplosionThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> soundThread = register(new Setting<Boolean>("SoundThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> entityThread = register(new Setting<Boolean>("EntityThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> spawnThread = register(new Setting<Boolean>("SpawnThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> spawnThreadWhenAttacked = register(new Setting<Boolean>("SpawnThreadWhenAttacked", true,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> destroyThread = register(new Setting<Boolean>("DestroyThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> serverThread = register(new Setting<Boolean>("ServerThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> gameloop = register(new Setting<Boolean>("Gameloop", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> asyncServerThread = register(new Setting<Boolean>("AsyncServerThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> earlyFeetThread = register(new Setting<Boolean>("EarlyFeetThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> lateBreakThread = register(new Setting<Boolean>("LateBreakThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> motionThread = register(new Setting<Boolean>("MotionThread", true,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
-    public Setting<Boolean> blockChangeThread =register(new Setting<Boolean>("BlockChangeThread", false,v->page.getValue()== pages.MultiThreading&& settingType.getValue() == settingtypeEn.Pro));;
+    public Setting<Boolean> multiThread = register(new Setting<Boolean>("MultiThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> smartPost = register(new Setting<Boolean>("Smart-Post", true,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> mainThreadThreads = register(new Setting<Boolean>("MainThreadThreads", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<RotationThread> rotationThread = register(new Setting<>("RotationThread", RotationThread.Predict,v->page.getValue()== pages.MultiThreading));
+    public Setting<Float> partial = register(new Setting<>("Partial", 0.8f, 0.0f, 1.0f,v->page.getValue()== pages.MultiThreading));
+    public Setting<Integer> maxCancel = register(new Setting<>("MaxCancel", 10, 1, 50,v->page.getValue()== pages.MultiThreading));
+    public Setting<Integer> timeOut = register(new Setting<>("Wait", 2, 1, 10,v->page.getValue()== pages.MultiThreading));
+    public Setting<Boolean> blockDestroyThread = register(new Setting<Boolean>("BlockDestroyThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Integer> threadDelay = register(new Setting<>("ThreadDelay", 25, 0, 100,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Integer> tickThreshold = register(new Setting<>("TickThreshold", 5, 1, 20,v->page.getValue()== pages.MultiThreading));
+    public Setting<Integer> preSpawn = register(new Setting<>("PreSpawn", 3, 1, 20,v->page.getValue()== pages.MultiThreading));
+    public Setting<Integer> maxEarlyThread = register(new Setting<>("MaxEarlyThread", 8, 1, 20,v->page.getValue()== pages.MultiThreading));
+    public Setting<Integer> pullBasedDelay = register(new Setting<>("PullBasedDelay", 0, 0, 1000,v->page.getValue()== pages.MultiThreading));
+    public Setting<Boolean> explosionThread = register(new Setting<Boolean>("ExplosionThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> soundThread = register(new Setting<Boolean>("SoundThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> entityThread = register(new Setting<Boolean>("EntityThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> spawnThread = register(new Setting<Boolean>("SpawnThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> spawnThreadWhenAttacked = register(new Setting<Boolean>("SpawnThreadWhenAttacked", true,v->page.getValue()== pages.MultiThreading));
+    public Setting<Boolean> destroyThread = register(new Setting<Boolean>("DestroyThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> serverThread = register(new Setting<Boolean>("ServerThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> gameloop = register(new Setting<Boolean>("Gameloop", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> asyncServerThread = register(new Setting<Boolean>("AsyncServerThread", false,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> earlyFeetThread = register(new Setting<Boolean>("EarlyFeetThread", false,v->page.getValue()== pages.MultiThreading));
+    public Setting<Boolean> lateBreakThread = register(new Setting<Boolean>("LateBreakThread", false,v->page.getValue()== pages.MultiThreading));
+    public Setting<Boolean> motionThread = register(new Setting<Boolean>("MotionThread", true,v->page.getValue()== pages.MultiThreading));;
+    public Setting<Boolean> blockChangeThread =register(new Setting<Boolean>("BlockChangeThread", false,v->page.getValue()== pages.MultiThreading));;
 
     /* ---------------- Dev and Debugging -------------- */
-    public Setting<Integer> priority = register(new Setting<>("Priority", 1500, Integer.MIN_VALUE, Integer.MAX_VALUE,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> spectator =register(new Setting<Boolean>("Spectator", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> clearPost = register(new Setting<Boolean>("ClearPost", true,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> sequential = register(new Setting<Boolean>("Sequential", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> seqTime = register(new Setting<>("Seq-Time", 250, 0, 1000,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> endSequenceOnSpawn = register(new Setting<Boolean>("EndSequenceOnSpawn", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> endSequenceOnBreak = register(new Setting<Boolean>("EndSequenceOnBreak", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> endSequenceOnExplosion = register(new Setting<Boolean>("EndSequenceOnExplosion", true,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Boolean> antiPlaceFail = register(new Setting<Boolean>("AntiPlaceFail", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Integer> priority = register(new Setting<>("Priority", 1500, Integer.MIN_VALUE, Integer.MAX_VALUE,v->page.getValue()== pages.Dev));
+    public Setting<Boolean> spectator =register(new Setting<Boolean>("Spectator", false,v->page.getValue()== pages.Dev));
+    public Setting<Boolean> clearPost = register(new Setting<Boolean>("ClearPost", true,v->page.getValue()== pages.Dev));
+    public Setting<Boolean> sequential = register(new Setting<Boolean>("Sequential", false,v->page.getValue()== pages.Dev));
+    public Setting<Integer> seqTime = register(new Setting<>("Seq-Time", 250, 0, 1000,v->page.getValue()== pages.Dev));
+    public Setting<Boolean> endSequenceOnSpawn = register(new Setting<Boolean>("EndSequenceOnSpawn", false,v->page.getValue()== pages.Dev));
+    public Setting<Boolean> endSequenceOnBreak = register(new Setting<Boolean>("EndSequenceOnBreak", false,v->page.getValue()== pages.Dev));
+    public Setting<Boolean> endSequenceOnExplosion = register(new Setting<Boolean>("EndSequenceOnExplosion", true,v->page.getValue()== pages.Dev));
+    public Setting<Boolean> antiPlaceFail = register(new Setting<Boolean>("AntiPlaceFail", false,v->page.getValue()== pages.Dev));
     public Setting<Boolean> debugAntiPlaceFail =register(new Setting<Boolean>("DebugAntiPlaceFail", false,v->page.getValue()== pages.Dev)); //DEV
-    public Setting<Boolean> alwaysBomb = register(new Setting<Boolean>("Always-Bomb", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Boolean> useSafetyFactor = register(new Setting<Boolean>("UseSafetyFactor", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Double> selfFactor = register(new Setting<>("SelfFactor", 1.0, 0.0, 10.0,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Double> safetyFactor = register(new Setting<>("SafetyFactor", 1.0, 0.0, 10.0,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Double> compareDiff = register(new Setting<>("CompareDiff", 1.0, 0.0, 10.0,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public final Setting<Boolean> facePlaceCompare = register(new Setting<Boolean>("FacePlaceCompare", false,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
-    public Setting<Integer> removeTime = register(new Setting<>("Remove-Time", 1000, 0, 2500,v->page.getValue()== pages.Dev&& settingType.getValue() == settingtypeEn.Hacker));
+    public Setting<Boolean> alwaysBomb = register(new Setting<Boolean>("Always-Bomb", false,v->page.getValue()== pages.Dev));
+    public final Setting<Boolean> useSafetyFactor = register(new Setting<Boolean>("UseSafetyFactor", false,v->page.getValue()== pages.Dev));
+    public final Setting<Double> selfFactor = register(new Setting<>("SelfFactor", 1.0, 0.0, 10.0,v->page.getValue()== pages.Dev));
+    public final Setting<Double> safetyFactor = register(new Setting<>("SafetyFactor", 1.0, 0.0, 10.0,v->page.getValue()== pages.Dev));
+    public final Setting<Double> compareDiff = register(new Setting<>("CompareDiff", 1.0, 0.0, 10.0,v->page.getValue()== pages.Dev));
+    public final Setting<Boolean> facePlaceCompare = register(new Setting<Boolean>("FacePlaceCompare", false,v->page.getValue()== pages.Dev));
+    public Setting<Integer> removeTime = register(new Setting<>("Remove-Time", 1000, 0, 2500,v->page.getValue()== pages.Dev));
 
 
     /* ----------------  BLYA ---------------*/
-    public final Setting<ColorSetting> boxColor = this.register(new Setting<>("Box", new ColorSetting(0x50bf40bf),v->page.getValue()== pages.Render));
-    public final Setting<ColorSetting> outLine = this.register(new Setting<>("Outline", new ColorSetting(0x50bf40bf),v->page.getValue()== pages.Render));
-    public final Setting<ColorSetting> indicatorColor = this.register(new Setting<>("IndicatorColor", new ColorSetting(0x50bf40bf),v->page.getValue()== pages.Render));
+    public final Setting<ColorSetting> boxColor = this.register(new Setting<>("Box", new ColorSetting(0x50bf40bf), v -> this.page.getValue() == pages.Render));
+    public final Setting<ColorSetting> outLine = this.register(new Setting<>("Outline", new ColorSetting(0x50bf40bf), v -> this.page.getValue() == pages.Render));
+    public final Setting<ColorSetting> indicatorColor = this.register(new Setting<>("IndicatorColor", new ColorSetting(0x50bf40bf), v -> this.page.getValue() == pages.Render));
     /* ---------------- Fields -------------- */
     public final Map<BlockPos, CrystalTimeStamp> placed = new ConcurrentHashMap<>();
     public ListenerSound soundObserver = new ListenerSound(this);
@@ -498,14 +469,14 @@ public class AutoCrystal extends Module {
 
     @Override
     public void onEnable() {
-        reset();
+        resetModule();
         Trillium.setDeadManager.addObserver(this.soundObserver);
     }
 
     @Override
     public void onDisable() {
         Trillium.setDeadManager.removeObserver(this.soundObserver);
-        reset();
+        resetModule();
     }
 
     @Override
@@ -629,7 +600,7 @@ public class AutoCrystal extends Module {
     /**
      * Resets all fields and helpers.
      */
-    public void reset()
+    public void resetModule()
     {
         target = null;
         crystal = null;
@@ -644,7 +615,7 @@ public class AutoCrystal extends Module {
         try
         {
             placed.clear();
-            threadHelper.reset();
+            threadHelper.resetThreadHelper();
             rotationCanceller.reset();
             antiTotemHelper.setTarget(null);
             antiTotemHelper.setTargetPos(null);
@@ -1034,13 +1005,11 @@ public class AutoCrystal extends Module {
     }
     /*
     public enum CooldownBypass {
-
         None() {
             @Override
             public void switchTo(int slot) {
                 InventoryUtil.switchTo(slot);
             }
-
             @Override
             public void switchBack(int lastSlot, int from) {
                 this.switchTo(lastSlot);
@@ -1062,16 +1031,11 @@ public class AutoCrystal extends Module {
                 InventoryUtil.bypassSwitch(slot);
             }
         };
-
         public abstract void switchTo(int slot);
-
-
         public void switchBack(int lastSlot, int from) {
             this.switchTo(from);
         }
-
     }
-
      */
 
     public enum CooldownBypass2 {
@@ -1081,106 +1045,7 @@ public class AutoCrystal extends Module {
         Slot
     }
 
-    /*
 
-    public void switchTo78(int slot){
-        switch (cooldownBypass.getValue()){
-            case None:
-                InventoryUtil.switchTo(slot);
-                break;
-            case Pick:
-                InventoryUtil.bypassSwitch(slot);
-                break;
-            case Slot:
-                InventoryUtil.switchToBypass(InventoryUtil.hotbarToInventory(slot));
-                break;
-            case Swap:
-                InventoryUtil.switchToBypassAlt(InventoryUtil.hotbarToInventory(slot));
-                break;
-        }
-    }
-
-    public void switchBack78(int lastSlot, int from) {
-        switch (cooldownBypass.getValue()){
-            case None:
-                InventoryUtil.switchTo(from);
-                break;
-        }
-    }
-
-    public void switchTo782(int slot){
-        switch (antiWeaknessBypass.getValue()){
-            case None:
-                InventoryUtil.switchTo(slot);
-                break;
-            case Pick:
-                InventoryUtil.bypassSwitch(slot);
-                break;
-            case Slot:
-                InventoryUtil.switchToBypass(InventoryUtil.hotbarToInventory(slot));
-                break;
-            case Swap:
-                InventoryUtil.switchToBypassAlt(InventoryUtil.hotbarToInventory(slot));
-                break;
-        }
-    }
-
-    public void switchBack782(int lastSlot, int from) {
-        switch (antiWeaknessBypass.getValue()){
-            case None:
-                InventoryUtil.switchTo(from);
-                break;
-        }
-    }
-
-    public void switchTo7824(int slot){
-        switch (obsidianBypass.getValue()){
-            case None:
-                InventoryUtil.switchTo(slot);
-                break;
-            case Pick:
-                InventoryUtil.bypassSwitch(slot);
-                break;
-            case Slot:
-                InventoryUtil.switchToBypass(InventoryUtil.hotbarToInventory(slot));
-                break;
-            case Swap:
-                InventoryUtil.switchToBypassAlt(InventoryUtil.hotbarToInventory(slot));
-                break;
-        }
-    }
-    public void switchBack7824(int lastSlot, int from) {
-        switch (obsidianBypass.getValue()){
-            case None:
-                InventoryUtil.switchTo(from);
-                break;
-        }
-    }
-
-    public void switchTo78245(int slot){
-        switch (mineBypass.getValue()){
-            case None:
-                InventoryUtil.switchTo(slot);
-                break;
-            case Pick:
-                InventoryUtil.bypassSwitch(slot);
-                break;
-            case Slot:
-                InventoryUtil.switchToBypass(InventoryUtil.hotbarToInventory(slot));
-                break;
-            case Swap:
-                InventoryUtil.switchToBypassAlt(InventoryUtil.hotbarToInventory(slot));
-                break;
-        }
-    }
-    public void switchBack78245(int lastSlot, int from) {
-        switch (mineBypass.getValue()){
-            case None:
-                InventoryUtil.switchTo(from);
-                break;
-        }
-    }
-    */
 
 
     public enum RayTraceMode
@@ -1207,9 +1072,13 @@ public class AutoCrystal extends Module {
     public void onBoobs(UpdateEntitiesEvent e){
         ExtrapolationHelper.onUpdateEntity(e);
     }
-    @SubscribeEvent
-    public void onConnect(ConnectionEvent e){
-        this.reset();
+
+
+
+  //  @SubscribeEvent
+    @Override
+    public void onLogin(){
+        resetModule(); // TODO
     }
 
     @SubscribeEvent
@@ -1397,7 +1266,6 @@ public class AutoCrystal extends Module {
     public void onDestroyBlock(DestroyBlockEvent event)
     {
         if (blockDestroyThread.getValue()
-                && event.getStage() == 0
                 && multiThread.getValue()
                 && !event.isCanceled()
                 && HelperUtil.validChange(event.getBlockPos(), mc.world.playerEntities)) //TODO проверить
@@ -1480,8 +1348,6 @@ public class AutoCrystal extends Module {
                                 o.setMode(OffhandMode.CRYSTAL));
                     }
                 }
-
-
                  */
                 switching = false;
             }
@@ -1633,7 +1499,6 @@ public class AutoCrystal extends Module {
                 < MathUtil.square(targetRange.getValue())
                 && !Trillium.friendManager.isFriend(player))
         {
-            boolean enemied = Trillium.enemyManager.isEnemy(player);
             // Scheduling is required since this event might get cancelled.
             Scheduler.getInstance().scheduleAsynchronously(() ->
             {
@@ -1643,15 +1508,10 @@ public class AutoCrystal extends Module {
                 }
 
                 List<EntityPlayer> enemies;
-                if (enemied)
-                {
-                    enemies = new ArrayList<>(1);
-                    enemies.add(player);
-                }
-                else
-                {
-                    enemies = Collections.emptyList();
-                }
+
+
+                enemies = Collections.emptyList();
+
 
                 EntityPlayer target = getTTRG(mc.world.playerEntities, enemies, targetRange.getValue());
 
@@ -1950,7 +1810,6 @@ public class AutoCrystal extends Module {
     }
 
     /*
-
     private void attack(SPacketSpawnObject packet, PacketEvent.Receive event, EntityEnderCrystal entityIn, boolean slow)
     {
         CPacketUseEntity p = new CPacketUseEntity(entityIn);
@@ -1962,7 +1821,6 @@ public class AutoCrystal extends Module {
                 return;
             }
         }
-
         int lastSlot = mc.player.inventory.currentItem;
         Runnable runnable = () ->
         {
@@ -1970,25 +1828,20 @@ public class AutoCrystal extends Module {
             {
                 switchTo782(w.getSlot());
             }
-
             if (this.breakSwing.getValue() == SwingTime.Pre)
             {
                 Swing.Packet.swing(EnumHand.MAIN_HAND);
             }
-
             mc.player.connection.sendPacket(p);
-
             if (this.breakSwing.getValue() == SwingTime.Post)
             {
                 Swing.Packet.swing(EnumHand.MAIN_HAND);
             }
-
             if (w.getSlot() != -1)
             {
                 switchBack782(lastSlot, w.getSlot());
             }
         };
-
         if (w.getSlot() != -1)
         {
           acquire(runnable);
@@ -1997,11 +1850,9 @@ public class AutoCrystal extends Module {
         {
             runnable.run();
         }
-
         this.breakTimer.reset(slow
                 ? this.slowBreakDelay.getValue()
                 : this.breakDelay.getValue());
-
         event.addPostEvent(() ->
         {
             Entity entity = mc.world.getEntityByID(packet.getEntityID());
@@ -2010,12 +1861,10 @@ public class AutoCrystal extends Module {
                 this.setCrystal(entity);
             }
         });
-
         if (this.simulateExplosion.getValue())
         {
             HelperUtil.simulateExplosion(this, packet.getX(), packet.getY(), packet.getZ());
         }
-
         if (pseudoSetDead.getValue() || psdead)
         {
             event.addPostEvent(() ->
@@ -2026,10 +1875,8 @@ public class AutoCrystal extends Module {
                     ((IEntity) entity).setPseudoDead(true);
                 }
             });
-
             return;
         }
-
         if (this.instantSetDead.getValue())
         {
             event.setCanceled(true);
@@ -2040,18 +1887,15 @@ public class AutoCrystal extends Module {
                 {
                     this.crystalRender.onSpawn((EntityEnderCrystal) entity);
                 }
-
                 if (!event.isCanceled())
                 {
                     return;
                 }
-
                 EntityTracker.updateServerPosition(entityIn, packet.getX(), packet.getY(), packet.getZ());
                 Trillium.setDeadManager.setDead(entityIn);
             });
         }
     }
-
      */
 
 
@@ -2118,8 +1962,6 @@ public class AutoCrystal extends Module {
 
     @SubscribeEvent
     public void onRender3D(Render3DEvent event) {
-        RenderDamagePos mode = this.renderDamage.getValue();
-
         if (this.render.getValue() && this.box.getValue() && this.fade.getValue())
         {
             for (Map.Entry<BlockPos, Long> set : fadeList.entrySet()) {
@@ -2148,15 +1990,11 @@ public class AutoCrystal extends Module {
 
         BlockPos pos;
         if (this.render.getValue() && (pos = this.getRenderPos()) != null) {
-
-
             if (!this.fade.getValue()) {
-
                 if (this.box.getValue())
                     RenderUtil.renderBox(interpolatePos(pos, 1.0f), this.boxColor.getValue().getColorObject(), this.outLine.getValue().getColorObject(), 1.5f);
             }
-
-            if (mode != RenderDamagePos.None)
+            if (renderDamage.getValue() != RenderDamagePos.None)
                 renderDamage(pos);
 
             if (this.fade.getValue())
@@ -2167,7 +2005,7 @@ public class AutoCrystal extends Module {
                 e.getValue() + this.fadeTime.getValue()
                         < System.currentTimeMillis());
 
-        /*
+
         if (this.renderExtrapolation.getValue())
         {
             for (EntityPlayer player : mc.world.playerEntities)
@@ -2176,7 +2014,7 @@ public class AutoCrystal extends Module {
                 if (player == null
                         || EntityUtil.isDead(player)
                         || RenderUtil.getEntity().getDistanceSq(player) > 200
-                        || !RenderUtil.isInFrustum(player.getEntityBoundingBox())
+                        || !inFov(player)
                         || player.equals(mc.player)
                         || (tracker = this.extrapolationHelper
                         .getTrackerFromEntity(player)) == null
@@ -2185,10 +2023,10 @@ public class AutoCrystal extends Module {
                     continue;
                 }
 
-                Vec3d interpolation = interpolateEntity(player);
-                double x = interpolation.x;
-                double y = interpolation.y;
-                double z = interpolation.z;
+                Vec3d interpolation = interpolateEntity(player,mc.getRenderPartialTicks());
+                double x = interpolation.x - getRenderPosX();
+                double y = interpolation.y - getRenderPosY();
+                double z = interpolation.z - getRenderPosZ();
 
                 double tX = tracker.posX - getRenderPosX();
                 double tY = tracker.posY - getRenderPosY();
@@ -2200,7 +2038,7 @@ public class AutoCrystal extends Module {
                 GlStateManager.pushMatrix();
                 GlStateManager.loadIdentity();
 
-                if (Managers.FRIENDS.contains(player))
+                if (Trillium.friendManager.isFriend(player))
                 {
                     GL11.glColor4f(0.33333334f, 0.78431374f, 0.78431374f, 0.55f);
                 }
@@ -2211,8 +2049,7 @@ public class AutoCrystal extends Module {
 
                 boolean viewBobbing = mc.gameSettings.viewBobbing;
                 mc.gameSettings.viewBobbing = false;
-                ((IEntityRenderer) mc.entityRenderer)
-                        .invokeOrientCamera(event.getPartialTicks());
+                ((IEntityRenderer) mc.entityRenderer).orientCam(event.getPartialTicks());
                 mc.gameSettings.viewBobbing = viewBobbing;
 
                 GL11.glLineWidth(1.5f);
@@ -2228,7 +2065,7 @@ public class AutoCrystal extends Module {
             }
         }
 
-         */
+
     }
 
     private void renderDamage(BlockPos pos) {
@@ -2239,7 +2076,6 @@ public class AutoCrystal extends Module {
         GlStateManager.doPolygonOffset(1.0f, -1500000.0f);
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
-
         double x = pos.getX() + 0.5;
         double y = pos.getY() + (this.renderDamage.getValue() == RenderDamagePos.OnTop ? 1.35 : 0.5);
         double z = pos.getZ() + 0.5;
@@ -2269,19 +2105,9 @@ public class AutoCrystal extends Module {
         }
 
         GlStateManager.scale(scaleD, scaleD, scaleD);
-        GlStateManager.translate(-(mc.fontRenderer.getStringWidth(text) / 2.0), 0, 0);
-        if (this.renderMode.getValue() == RenderDamage.Indicator) {
-            Color clr = this.indicatorColor.getValue().getColorObject();
-           // Render2DUtil.drawUnfilledCircle(m.getStringWidth(text) / 2.0f, 0, 22.f, new Color(5, 5, 5, clr.getAlpha()).getRGB(), 5.f);
-           // Render2DUtil.drawCircle(m.getStringWidth(text) / 2.0f, 0, 22.f, clr.getRGB());
-            mc.fontRenderer.drawString(text, 0, 6, new Color(255, 255, 255).getRGB());
-          //  Minecraft.getMinecraft().getTextureManager().bindTexture(CRYSTAL_LOCATION);
-           // Gui.drawScaledCustomSizeModalRect((int) (m.getStringWidth(text) / 2.0f) - 10, -17, 0, 0, 12, 12, 22, 22, 12, 12);
-        } else {
-            mc.fontRenderer.drawStringWithShadow(text, 0, 0, new Color(255, 255, 255).getRGB());
-        }
+        GlStateManager.translate(-(FontRender.getStringWidth6(text) / 2.0), 0, 0);
+        FontRender.drawString6(text, 0, 0,-1,false);
         GlStateManager.enableDepth();
-        GlStateManager.disableBlend();
         GlStateManager.disablePolygonOffset();
         GlStateManager.doPolygonOffset(1.0f, 1500000.0f);
         GlStateManager.popMatrix();
@@ -2297,6 +2123,26 @@ public class AutoCrystal extends Module {
         {
             this.crystalRender.render(event.getPartialTicks());
         }
+    }
+
+    public enum pages{
+        Place,
+        Break,
+        Rotations,
+        Misc,
+        FacePlace,
+        SwitchNSwing,
+        Render,
+        Predict,
+        Dev,
+        SetDead,
+        Obsidian,
+        Liquid,
+        AntiTotem,
+        DamageSync,
+        Extrapolation,
+        Efficiency,
+        MultiThreading
     }
 
 }
