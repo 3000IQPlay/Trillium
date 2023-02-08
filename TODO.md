@@ -12,3 +12,5 @@ Advence the GUI little bit
 + Added Auto Key Fill (Done)
 - Removed AutoCity (Done)
 + Added ObiClutch Mode to AntiVoid (Done)
+* AutoCrystal fixes (Done)
+- Removed Setting Mods in AutoCrystal (Done)
