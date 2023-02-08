@@ -5,7 +5,7 @@ Advence the GUI little bit
 **Trillium b1.4.5 Changes**
 + Advenced Security (Done)
 + Added Secondary CA
-* Fixed HoleESP
+* Fixed HoleESP (Done)
 + Added Working PopChams
 + Added GlowESP
 + Added Main Menu
