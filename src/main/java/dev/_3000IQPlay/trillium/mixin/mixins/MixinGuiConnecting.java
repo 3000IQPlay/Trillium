@@ -1,7 +1,7 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
-
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.gui.viaforge.ViaForge;
 import dev._3000IQPlay.trillium.event.events.ConnectToServerEvent;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,5 +23,9 @@ public class MixinGuiConnecting extends MixinGuiScreen {
         ConnectToServerEvent event = new ConnectToServerEvent(ip);
         MinecraftForge.EVENT_BUS.post(event);
     }
-
+	
+	@Inject(method = "connect", at = @At("HEAD"))
+    public void injectConnect(String ip, int port, CallbackInfo ci) {
+        ViaForge.getInstance().setLastServer(ip + ":" + port);
+    }
 }
