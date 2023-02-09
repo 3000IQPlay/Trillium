@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.gui.auth;
 
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.protect.keyauth.KeyAuthApp;
 import net.minecraft.client.Minecraft;
@@ -14,16 +15,16 @@ public class AuthGui extends GuiScreen {
     private GuiTextField keyField;
     private String key = "";
     private int statusTime;
-
+	
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         RenderUtil.draw2DGradientRect(0, 0, width, height,
-			new Color(0, 255, 255, 255).getRGB(),
-	        new Color(135, 0, 255, 255).getRGB(),
-			new Color(0, 255, 125, 255).getRGB(),
-	        new Color(0, 135, 255, 255).getRGB()
+			new Color(0, 0, 0, 255).getRGB(),
+	        new Color(70, 70, 70, 255).getRGB(),
+			new Color(0, 0, 0, 255).getRGB(),
+	        new Color(100, 100, 100, 255).getRGB()
 		);
-        drawCenteredStringWithShadow("Once you will enter the key and log in we will receive your IP, HWID and Last Login Date", width / 2, height / 4 + 6, new Color(255, 255, 255, 255).getRGB());
+        drawCenteredStringWithShadow("Once u log in, I receive your IP and HWID (Are you sure u want to continue?)", width / 2, height / 4 + 6, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();
 

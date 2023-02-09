@@ -9,7 +9,6 @@ import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 
-import dev._3000IQPlay.trillium.util.DrawHelper;
 import dev._3000IQPlay.trillium.util.PaletteHelper;
 import dev._3000IQPlay.trillium.util.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -27,7 +26,7 @@ import java.awt.*;
 public class ArrayList extends Module {
     private static ArrayList INSTANCE = new ArrayList();
     public ArrayList() {
-        super("ArrayList", "Autopot", Module.Category.HUD,true,false,false);
+        super("ArrayList", "Autopot", Module.Category.HUD, true, false, false);
         setInstance();
     }
     public final Setting<ColorSetting> color = register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
@@ -35,9 +34,6 @@ public class ArrayList extends Module {
     private   Setting<Boolean> shadoiw = register(new Setting<>("shadow", true));
 
 
-    private enum bMode {
-        Flat, Shader
-    }
     public static ArrayList getInstance() {
         if (INSTANCE == null)
             INSTANCE = new ArrayList();
@@ -46,21 +42,12 @@ public class ArrayList extends Module {
 
     private void setInstance() {
         INSTANCE = this;
-
     }
-
-
-
-
 
     public Setting<Float> rainbowSpeed = register(new Setting("Speed", 10.0f, 1.0f, 20.0f));
     public Setting<Float> saturation = register(new Setting("Saturation", 0.5f, 0.1f, 1.0f));
     public Setting<Integer> gste = register(new Setting("GS", 30, 10, 50));
-
-
-
     private final Setting<PositionSetting> pos = register(new Setting<>("Position", new PositionSetting(0.5f,0.5f)));
-
     private Setting<cMode> cmode = register(new Setting<>("ColorMode", cMode.Rainbow));
     private enum cMode {
         Rainbow, Custom
@@ -78,15 +65,14 @@ public class ArrayList extends Module {
     @SubscribeEvent
     public void onRender2D(Render2DEvent e){
         int stringWidth;
-        ScaledResolution rs = new ScaledResolution(mc);
-        int width = calc(rs.getScaledWidth());
-        int height = calc(rs.getScaledHeight());
 
-        y1 = rs.getScaledHeight() * pos.getValue().getY();
-        x1 = rs.getScaledWidth() * pos.getValue().getX();
+        int width = calc(e.scaledResolution.getScaledWidth());
+        int height = calc(e.scaledResolution.getScaledHeight());
+
+        y1 = e.scaledResolution.getScaledHeight() * pos.getValue().getY();
+        x1 = e.scaledResolution.getScaledWidth() * pos.getValue().getX();
 
         reverse = x1 > (float)(width / 2);
-        boolean reverseY = y1 > (float)(height / 2);
         int offset = 0;
         int yTotal = 0;
         for (int i = 0; i < Trillium.moduleManager.sortedModules.size(); ++i) {
@@ -130,8 +116,8 @@ public class ArrayList extends Module {
         if(mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof HudEditorGui){
             if(isHovering()){
                 if(Mouse.isButtonDown(0) && mousestate){
-                    pos.getValue().setX( (float) (normaliseX() - dragX) /  rs.getScaledWidth());
-                    pos.getValue().setY( (float) (normaliseY() - dragY) / rs.getScaledHeight());
+                    pos.getValue().setX( (float) (normaliseX() - dragX) /  e.scaledResolution.getScaledWidth());
+                    pos.getValue().setY( (float) (normaliseY() - dragY) / e.scaledResolution.getScaledHeight());
                 }
 
             }
@@ -139,8 +125,8 @@ public class ArrayList extends Module {
 
         if(Mouse.isButtonDown(0) && isHovering()){
             if(!mousestate){
-                dragX = (int) (normaliseX() - (pos.getValue().getX() * rs.getScaledWidth()));
-                dragY = (int) (normaliseY() - (pos.getValue().getY() * rs.getScaledHeight()));
+                dragX = (int) (normaliseX() - (pos.getValue().getX() * e.scaledResolution.getScaledWidth()));
+                dragY = (int) (normaliseY() - (pos.getValue().getY() * e.scaledResolution.getScaledHeight()));
             }
             mousestate = true;
         } else {

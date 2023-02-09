@@ -14,3 +14,5 @@ Advence the GUI little bit
 + Added ObiClutch Mode to AntiVoid (Done)
 * AutoCrystal fixes (Done)
 - Removed Setting Mods in AutoCrystal (Done)
+* Small AuthGUI changes (Done)
+* Rewrote Some HUD Module (Done)
