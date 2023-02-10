@@ -16,3 +16,4 @@ Advence the GUI little bit
 - Removed Setting Mods in AutoCrystal (Done)
 * Small AuthGUI changes (Done)
 * Rewrote Some HUD Module (Done)
+- Removed PyroRadar (Done)

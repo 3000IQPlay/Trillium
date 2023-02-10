@@ -1,4 +1,4 @@
-package dev._3000IQPlay.trillium.modules.render;
+package dev._3000IQPlay.trillium.util.phobos;
 
 public class Rotation{
     public float yaw;

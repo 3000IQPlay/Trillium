@@ -146,7 +146,6 @@ public class ModuleManager
         this.modules.add(new HudEditor());
         this.modules.add(new Animations());
         this.modules.add(new AutoEZ());
-        this.modules.add(new PyroRadar());
         this.modules.add(new JumpCircle());
         this.modules.add(new KeyBinds());
 		this.modules.add(new EntityDesync());
