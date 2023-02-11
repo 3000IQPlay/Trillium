@@ -1,7 +1,7 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
+
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.RenderItemEvent;
-import dev._3000IQPlay.trillium.modules.render.Animations;
 import dev._3000IQPlay.trillium.modules.render.NoRender;
 import dev._3000IQPlay.trillium.modules.render.ViewModel;
 import dev._3000IQPlay.trillium.util.RenderUtil;
@@ -211,130 +211,16 @@ class MixinItemRenderer {
 
                 }
             } else {
-
-                float f = -0.4F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * 3.1415927F);
+				float f = -0.4F * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * 3.1415927F);
                 float f1 = 0.2f * MathHelper.sin(MathHelper.sqrt(p_187457_5_) * 6.2831855f);
                 float f2 = -0.2f * MathHelper.sin(p_187457_5_ * 3.1415927f);
                 int i = flag1 ? 1 : -1;
-                float equipProgress = 1.0F - (prevEquippedProgressMainHand + (equippedProgressMainHand - prevEquippedProgressMainHand) * p_187457_2_);
-                float swingprogress = Animations.getInstance().shitfix;
-
-
-                Animations.rmode mode = Trillium.moduleManager.getModuleByClass(Animations.class).rMode.getValue();
-                if (Trillium.moduleManager.getModuleByClass(Animations.class).isEnabled()  ) {
-                    if (Trillium.moduleManager.getModuleByClass(Animations.class).isEnabled()) {
-                        if (enumhandside != EnumHandSide.LEFT) {
-
-
-
-
-                            if (mode == Animations.rmode.Rich) {
-                                transformFirstPersonItem(equipProgress / 3.0f, swingprogress);
-                                //translate();
-                                float var3 = MathHelper.sin(0.0f);
-                                float var4 = MathHelper.sin(MathHelper.sqrt(0.0f) * 3.1415927f);
-                                GlStateManager.rotate(var3 * -20.0f, 0.0f, 1.0f, 0.0f);
-                                GlStateManager.rotate(var4 * -20.0f, 0.0f, 0.0f, 1.0f);
-                                GlStateManager.rotate(var4 * -80.0f, 1.0f, 0.0f, 0.0f);
-                            } else if (mode == Animations.rmode.Swipe) {
-                                transformFirstPersonItem(equipProgress / 3.0f, swingprogress);
-                                // translate();
-
-                                float var3 = MathHelper.sin(swingprogress * swingprogress * 3.1415927f);
-                                float var4 = MathHelper.sin(MathHelper.sqrt(swingprogress) *  3.1415927f);
-                                GlStateManager.rotate(var3 * -20.0f, 0.0f, 1.0f, 0.0f);
-                                GlStateManager.rotate(var4 * -20.0f, 0.0f, 0.0f, 2.0f);
-                                GlStateManager.rotate(var4 * -75.0f, 1.0f, 0.0f, 0.0f);
-                            } else if (mode == Animations.rmode.Spin) {
-                                transformFirstPersonItem(0.0f, 0.0f);
-                                //  translate();
-                                GlStateManager.rotate(spin * Trillium.moduleManager.getModuleByClass(Animations.class).spinSpeed.getValue(), spin, 0.0f, spin);
-                                spin += 1.0f;
-                            } else if (mode == Animations.rmode.Fap) {
-
-                                GlStateManager.translate(0.96f, -0.02f, -0.71999997f);
-                                GlStateManager.translate(0.0f, -0.0f, 0.0f);
-                                GlStateManager.rotate(45.0f, 0.0f, 1.0f, 0.0f);
-                                float var3 = MathHelper.sin(0.0f);
-                                float var4 = MathHelper.sin(MathHelper.sqrt(0.0f) * 3.1415927f);
-                                GlStateManager.rotate(var3 * -20.0f, 0.0f, 1.0f, 0.0f);
-                                GlStateManager.rotate(var4 * -20.0f, 0.0f, 0.0f, 1.0f);
-                                GlStateManager.rotate(var4 * -80.0f, 1.0f, 0.0f, 0.0f);
-                                GlStateManager.translate(-0.5f, 0.2f, 0.0f);
-                                GlStateManager.rotate(30.0f, 0.0f, 1.0f, 0.0f);
-                                GlStateManager.rotate(-80.0f, 1.0f, 0.0f, 0.0f);
-                                GlStateManager.rotate(60.0f, 0.0f, 1.0f, 0.0f);
-
-
-
-                                int alpha = (int) Math.min(255L, (System.currentTimeMillis() % 255L > 127L ? Math.abs(Math.abs(System.currentTimeMillis()) % 255L - 255L) : System.currentTimeMillis() % 255L) * 2L);
-
-
-                                f5 = (double) f1 > 0.5 ? 1.0f - f1 : f1;
-
-
-                                GlStateManager.translate(0.3f, -0.0f, 0.4f);
-                                GlStateManager.rotate(0.0f, 0.0f, 0.0f, 1.0f);
-                                GlStateManager.translate(0.0f, 0.5f, 0.0f);
-                                GlStateManager.rotate(90.0f, 1.0f, 0.0f, -1.0f);
-                                GlStateManager.translate(0.6f, 0.5f, 0.0f);
-                                GlStateManager.rotate(-90.0f, 1.0f, 0.0f, -1.0f);
-                                GlStateManager.rotate(-10.0f, 1.0f, 0.0f, -1.0f);
-                                GlStateManager.rotate((-f5) * 10.0f, 10.0f, 10.0f, -9.0f);
-                                GlStateManager.rotate(10.0f, -1.0f, 0.0f, 0.0f);
-                                GlStateManager.translate(0.0, 0.0, -0.5);
-                                GlStateManager.rotate(Trillium.moduleManager.getModuleByClass(Animations.class).abobka228 ? (float) (-alpha) / Trillium.moduleManager.getModuleByClass(Animations.class).fapSmooth.getValue() : 1.0f, 1.0f, -0.0f, 1.0f);
-                                GlStateManager.translate(0.0, 0.0, 0.5);
-
-
-
-
-                            } else if (mode == Animations.rmode.Astolfo) {
-                                GlStateManager.rotate((float) (System.currentTimeMillis() / 16L * (long) ((int) Trillium.moduleManager.getModuleByClass(Animations.class).spinSpeed.getValue()) % 360L), 0.0f, 0.0f, -0.1f);
-                                transformFirstPersonItem(0.0f, 0.0f);
-                                //       translate();
-                            } else if (mode == Animations.rmode.Big) {
-                                GlStateManager.translate(0.6f, -0.3f, -0.91999997f);
-                                GlStateManager.translate(0.0f, 0.0f, 0.0f);
-                                GlStateManager.rotate(45.0f, 0.0f, 1.0f, 0.0f);
-                                float sin1 = MathHelper.sin(swingprogress * swingprogress * 3.1415927f);
-                                float sin2 = MathHelper.sin(MathHelper.sqrt(swingprogress) * 3.1415927f);
-                                GlStateManager.rotate(sin1 * -20.0f, 0.0f, 1.0f, 0.0f);
-                                GlStateManager.rotate(sin2 * -20.0f, 0.0f, 0.0f, 1.0f);
-                                GlStateManager.rotate(sin2 * -40.0f, 1.0f, 0.0f, 0.0f);
-                                GlStateManager.scale(0.8f, 0.8f, 0.8f);
-                                GlStateManager.translate(-0.5f, 0.2f, 0.0f);
-                                GlStateManager.rotate(30.0f, 0.0f, 1.0f, 0.0f);
-                                GlStateManager.rotate(-80.0f, 1.0f, 0.0f, 0.0f);
-                                GlStateManager.rotate(60.0f, 0.0f, 1.0f, 0.0f);
-                            } else if (mode == Animations.rmode.Glide) {
-                                transformFirstPersonItem(swingprogress, 0);
-                                //       translate();
-                            }
-                        } else {
-                            GlStateManager.translate((float) i * f, f1, f2);
-                            transformSideFirstPerson(enumhandside, p_187457_7_);
-                            transformFirstPerson(enumhandside, p_187457_5_);
-                        }
-
-
-
-
-
-                    } else {
-                        transformSideFirstPerson(enumhandside, p_187457_7_);
-                        transformFirstPerson(enumhandside, p_187457_5_);
-                    }
-                } else {
-                    GlStateManager.translate((float) i * f, f1, f2);
-                    transformSideFirstPerson(enumhandside, p_187457_7_);
-                    transformFirstPerson(enumhandside, p_187457_5_);
-                }
+                GlStateManager.translate((float) i * f, f1, f2);
+                transformSideFirstPerson(enumhandside, p_187457_7_);
+                transformFirstPerson(enumhandside, p_187457_5_);
             }
-
-            renderItemSide(player, stack, flag1 ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND : ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, !flag1);
+			renderItemSide(player, stack, flag1 ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND : ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, !flag1);
         }
-
         GlStateManager.popMatrix();
     }
 
@@ -364,10 +250,6 @@ class MixinItemRenderer {
         GlStateManager.rotate(-80.0f, 1.0f, 0.0f, 0.0f);
         GlStateManager.rotate(20.0f, 0.0f, 1.0f, 0.0f);
     }
-
-    /**
-     * @author totzhe
-     */
 
     @Overwrite
     private void transformFirstPerson(EnumHandSide p_187453_1_, float p_187453_2_) {

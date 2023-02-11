@@ -1,1 +1,1 @@
-cmd /k "gradlew build & exit"
+cmd /k "gradlew build"

@@ -1,5 +1,7 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
+
 import dev._3000IQPlay.trillium.event.events.*;
+import dev._3000IQPlay.trillium.modules.render.Animations;
 import dev._3000IQPlay.trillium.util.phobos.IEntityLivingBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +23,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.minecraft.entity.EntityLivingBase.SWIM_SPEED;
 
@@ -61,11 +64,6 @@ public abstract class MixinEntityLivingBase
     protected float lowestDura = Float.MAX_VALUE;
 
     @Override
-    @Invoker(value = "getArmSwingAnimationEnd")
-    public abstract int armSwingAnimationEnd();
-
-
-    @Override
     public void setLowestDura(float lowest)
     {
         this.lowestDura = lowest;
@@ -89,6 +87,13 @@ public abstract class MixinEntityLivingBase
             ci.cancel();
         }
     }
+	
+	@Inject(method={"getArmSwingAnimationEnd"}, at={@At(value="HEAD")}, cancellable=true)
+    private void getArmSwingAnimationEnd(CallbackInfoReturnable<Integer> info) {
+        if (Animations.getInstance().isEnabled() && Animations.getInstance().changeSwing.getValue().booleanValue()) {
+            info.setReturnValue((int)Animations.getInstance().swingDelay.getValue());
+        }
+    }
 
     @Inject(method={"handleJumpWater"}, at={@At(value="HEAD")}, cancellable=true)
     private void handleJumpWater(CallbackInfo ci) {
@@ -105,12 +110,6 @@ public abstract class MixinEntityLivingBase
             ci.cancel();
         }
     }
-
-    /**
-    * @author pan4ur
-    * @reason ho4u roteity
-    */
-
 
     @Overwrite
     public void moveRelative(float strafe, float up, float forward, float friction) {

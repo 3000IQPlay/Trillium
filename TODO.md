@@ -17,3 +17,4 @@ Advence the GUI little bit
 * Small AuthGUI changes (Done)
 * Rewrote Some HUD Module (Done)
 - Removed PyroRadar (Done)
++ New Animation Module

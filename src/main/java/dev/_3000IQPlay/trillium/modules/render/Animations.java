@@ -1,21 +1,27 @@
 package dev._3000IQPlay.trillium.modules.render;
 
-
-import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.entity.player.EntityPlayer;
 
-public
-class Animations extends Module {
+public class Animations
+        extends Module {
+    private static Animations INSTANCE = new Animations();
+    public Setting<AnimationVersion> swingAnimationVersion = this.register(new Setting<AnimationVersion>("Version", AnimationVersion.OneDotEight));
+    public Setting<Boolean> playersDisableAnimations = this.register(new Setting<Boolean>("Disable Animations", false));
+    public Setting<Boolean> changeMainhand = this.register(new Setting<Boolean>("Change Mainhand", true));
+    public Setting<Float> mainhand = this.register(new Setting<Float>("Mainhand", Float.valueOf(Float.intBitsToFloat(Float.floatToIntBits(4.7509747f) ^ 0x7F1807FC)), Float.valueOf(Float.intBitsToFloat(Float.floatToIntBits(1.63819E38f) ^ 0x7EF67CC9)), Float.valueOf(Float.intBitsToFloat(Float.floatToIntBits(30.789412f) ^ 0x7E7650B7))));
+    public Setting<Boolean> changeOffhand = this.register(new Setting<Boolean>("Change Offhand", true));
+    public Setting<Float> offhand = this.register(new Setting<Float>("Offhand", Float.valueOf(Float.intBitsToFloat(Float.floatToIntBits(15.8065405f) ^ 0x7EFCE797)), Float.valueOf(Float.intBitsToFloat(Float.floatToIntBits(3.3688825E38f) ^ 0x7F7D7251)), Float.valueOf(Float.intBitsToFloat(Float.floatToIntBits(7.3325067f) ^ 0x7F6AA3E5))));
+    public Setting<Boolean> changeSwing = this.register(new Setting<Boolean>("CustomSwing Speed", false));
+    public Setting<Integer> swingDelay = this.register(new Setting<Integer>("Swing Speed", 6, 1, 20, v -> this.changeSwing.getValue()));
 
-
-    public Animations ( ) {
-        super ( "Animations" , "Animation" , Module.Category.RENDER , true , false , false );
-        this.setInstance();
+    public Animations() {
+        super("Animations", "Allows you to change animations in your hand", Module.Category.RENDER, true, false, false);
+		this.setInstance();
     }
-
-    public static Animations getInstance() {
+	
+	public static Animations getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Animations();
         }
@@ -26,76 +32,31 @@ class Animations extends Module {
         INSTANCE = this;
     }
 
-    private static Animations INSTANCE = new Animations();
-
-
-
-
-   // public static BooleanSetting itemAnimation = new BooleanSetting("Item Animation", false, () -> true);
-   // smallItem = new BooleanSetting("Mini Item", false, () -> true);
-/*
-
-    public  Setting<Float> x = this.register(new Setting<Float>("X", 0f, -1f, 1f));
-    public  Setting<Float> y = this.register(new Setting<Float>("Y", 0f, -1f, 1f));
-    public  Setting<Float> z = this.register(new Setting<Float>("Z", 0f, -1f, 1f));
-
-    public Setting <Integer> spinSpeed = this.register ( new Setting <> ( "Spin Speed", 4, 1, 10 ) );
-    public Setting <Integer> speed = this.register ( new Setting <> ( "Smooth Attack", 8, 1, 20 ) );
-    public Setting <Integer> smooth = this.register ( new Setting <> ( "Smooth", 3, -10, 10 ) );
-    public Setting <Integer> scale = this.register ( new Setting <> ( "Scale", 1, -10, 10 ) );
-
-    public Setting <Integer> angle = this.register ( new Setting <> ( "Angle", 0, -50, 100 ) );
-    public Setting <Integer> rotate3 = this.register ( new Setting <> ( "Rotate3", 0, -360, 360 ) );
-    public Setting <Integer> rotate2 = this.register ( new Setting <> ( "Rotate2", 0, -360, 360 ) );
-    public Setting <Integer> rotate = this.register ( new Setting <> ( "Rotate", 360, -360, 360 ) );
-
-   // public Setting <Integer> slowamplifier = this.register ( new Setting <> ( "Slow Amplifier", 2, 0, 50 ) );
-   // public Setting <Integer> slowamplifier = this.register ( new Setting <> ( "Slow Amplifier", 2, 0, 50 ) );
-   // public Setting <Integer> slowamplifier = this.register ( new Setting <> ( "Slow Amplifier", 2, 0, 50 ) );
-
-    public Setting<Boolean> animation = register(new Setting("BlockAnim", Boolean.valueOf(true)));
-    public Setting<Boolean> itemAnimation = register(new Setting("Item Animation", Boolean.valueOf(true)));
-
-*/
-    public Setting<Boolean> ed = register(new Setting("EquipDisable", Boolean.valueOf(true)));
-    public Setting<Boolean> auraOnly = register(new Setting("auraOnly", Boolean.valueOf(false)));
-     public Setting <Integer> spinSpeed = this.register ( new Setting <> ( "SpinSpeed", 4, 1, 20 ) );
-    public  Setting<Float> fapSmooth = this.register(new Setting<Float>("fapSmooth", 4f, 0.5f, 15f));
-
-
-
-    public Setting<rmode> rMode = register(new Setting("SwordMode", rmode.Astolfo));
-    public enum rmode {
-        Astolfo, Swipe, Rich, Spin, Fap, Big, Glide
-    }
-
-  //  public Setting<rmode2> rMode2 = register(new Setting("ItemMode", rmode2.ALL));
-   // public enum rmode2 {
-  //      Spin, ALL;
-  //  }
-
-
-    public float shitfix = 1;
-
-    @SubscribeEvent
-    public void onRender2D(Render2DEvent e){
-        if(mc.world!= null && mc.player != null) {
-            shitfix = mc.player.getSwingProgress(mc.getRenderPartialTicks());
-        }
-    }
-
-    public boolean abobka228 = false;
-
+    @Override
     public void onUpdate() {
-        if (nullCheck()) {
-            return;
+        if (playersDisableAnimations.getValue().booleanValue()) {
+            for (EntityPlayer player : Animations.mc.world.playerEntities) {
+                player.limbSwing = Float.intBitsToFloat(Float.floatToIntBits(1.8755627E38f) ^ 0x7F0D1A06);
+                player.limbSwingAmount = Float.intBitsToFloat(Float.floatToIntBits(6.103741E37f) ^ 0x7E37AD83);
+                player.prevLimbSwingAmount = Float.intBitsToFloat(Float.floatToIntBits(4.8253957E37f) ^ 0x7E11357F);
+            }
         }
-        abobka228 = mc.itemRenderer.equippedProgressMainHand < 1f;
-
-        if (ed.getValue() && Animations.mc.entityRenderer.itemRenderer.prevEquippedProgressMainHand >= 0.9) {
+        if (changeMainhand.getValue().booleanValue() && Animations.mc.entityRenderer.itemRenderer.equippedProgressMainHand != mainhand.getValue().floatValue()) {
+            Animations.mc.entityRenderer.itemRenderer.equippedProgressMainHand = mainhand.getValue().floatValue();
+            Animations.mc.entityRenderer.itemRenderer.itemStackMainHand = Animations.mc.player.getHeldItemMainhand();
+        }
+        if (changeOffhand.getValue().booleanValue() && Animations.mc.entityRenderer.itemRenderer.equippedProgressOffHand != offhand.getValue().floatValue()) {
+            Animations.mc.entityRenderer.itemRenderer.equippedProgressOffHand = offhand.getValue().floatValue();
+            Animations.mc.entityRenderer.itemRenderer.itemStackOffHand = Animations.mc.player.getHeldItemOffhand();
+        }
+        if (swingAnimationVersion.getValue() == AnimationVersion.OneDotEight && (double)Animations.mc.entityRenderer.itemRenderer.prevEquippedProgressMainHand >= 0.9) {
             Animations.mc.entityRenderer.itemRenderer.equippedProgressMainHand = 1.0f;
             Animations.mc.entityRenderer.itemRenderer.itemStackMainHand = Animations.mc.player.getHeldItemMainhand();
         }
     }
 
+    public static enum AnimationVersion {
+        OneDotEight,
+        OneDotTwelve;
+    }
 }
