@@ -1,11 +1,13 @@
 package dev._3000IQPlay.trillium.gui.hud;
 
+import dev._3000IQPlay.trillium.gui.clickui.ColorUtil;
+import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.util.MathUtil;
-import dev._3000IQPlay.trillium.util.ColorUtil;
 import dev._3000IQPlay.trillium.util.RenderUtil;
+import dev._3000IQPlay.trillium.util.Drawable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,17 +23,29 @@ import java.util.Objects;
 
 public class WaterMark
         extends Module {
+	private static WaterMark INSTANCE = new WaterMark();
 	public Setting<Double> barPosY = this.register(new Setting<Double>("BarPosY", 0.0, -2.0, 15.0));
 	public Setting<Double> textPosY = this.register(new Setting<Double>("TextPosY", 0.0, -6.0, 3.0));
+	public Setting<Integer> colorSpeed = this.register(new Setting<Integer>("ColorSpeed", 18, 2, 25));
 	public Setting<ColorSetting> bgC = register(new Setting<ColorSetting>("BackgroundColor", new ColorSetting(-15461356)));
 	public Setting<ColorSetting> bC = register(new Setting<ColorSetting>("BorderColor", new ColorSetting(-519435766)));
-	public Setting<ColorSetting> fC = this.register(new Setting<ColorSetting>("FirstLineColor", new ColorSetting(-8453889)));
-    public Setting<ColorSetting> sC = this.register(new Setting<ColorSetting>("SecondLineColor", new ColorSetting(-16711681)));
-	public Setting<ColorSetting> tC = this.register(new Setting<ColorSetting>("ThirdLineColor", new ColorSetting(-16711808)));
-    public Setting<ColorSetting> foC = this.register(new Setting<ColorSetting>("FourthLineColor", new ColorSetting(-14024449)));
+	public Setting<ColorSetting> color1 = this.register(new Setting<ColorSetting>("Color1", new ColorSetting(-16711681)));
+    public Setting<ColorSetting> color2 = this.register(new Setting<ColorSetting>("Color2", new ColorSetting(-65536)));
 	
     public WaterMark() {
         super("CSGOWaterMark", "Hot csgo watermark", Module.Category.HUD, true, false, false);
+		this.setInstance();
+    }
+	
+	public static WaterMark getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new WaterMark();
+        }
+        return INSTANCE;
+    }
+	
+	private void setInstance() {
+        INSTANCE = this;
     }
 
     @SubscribeEvent
@@ -56,11 +70,16 @@ public class WaterMark
             RenderUtil.drawRectangleCorrectly(posX - 4, posY - 4, (int)(width + 11.0f), height + 7, ColorUtil.toRGBA(this.bC.getValue().getRed(), this.bC.getValue().getGreen(), this.bC.getValue().getBlue(), this.bC.getValue().getAlpha()));
             WaterMark.drawRect(posX, posY, (float)posX + width + 2.0f, posY + height, new Color(this.bgC.getValue().getRed(), this.bgC.getValue().getGreen(), this.bgC.getValue().getBlue(), this.bgC.getValue().getAlpha()).getRGB());
             WaterMark.drawRect((double)posX + 2.5, (double)posY + 2.5, (double)((float)posX + width) - 0.5, (double)posY + 4.5, new Color(this.bgC.getValue().getRed(), this.bgC.getValue().getGreen(), this.bgC.getValue().getBlue(), this.bgC.getValue().getAlpha()).getRGB());
-            WaterMark.drawGradientSideways(4.0, (posY + barPosY) + 3, 4.0f + width / 3.0f, (posY + barPosY) + 4, new Color(this.fC.getValue().getRed(), this.fC.getValue().getGreen(), this.fC.getValue().getBlue(), this.fC.getValue().getAlpha()).getRGB(), new Color(this.sC.getValue().getRed(), this.sC.getValue().getGreen(), this.sC.getValue().getBlue(), this.sC.getValue().getAlpha()).getRGB());
-            WaterMark.drawGradientSideways(4.0f + width / 3.0f, (posY + barPosY) + 3, 4.0f + width / 3.0f * 2.0f, (posY + barPosY) + 4, new Color(this.sC.getValue().getRed(), this.sC.getValue().getGreen(), this.sC.getValue().getBlue(), this.sC.getValue().getAlpha()).getRGB(), new Color(this.tC.getValue().getRed(), this.tC.getValue().getGreen(), this.tC.getValue().getBlue(), this.tC.getValue().getAlpha()).getRGB());
-            WaterMark.drawGradientSideways(4.0f + width / 3.0f * 2.0f, (posY + barPosY) + 3, width / 3.0f * 3.0f + 1.0f, (posY + barPosY) + 4, new Color(this.tC.getValue().getRed(), this.tC.getValue().getGreen(), this.tC.getValue().getBlue(), this.tC.getValue().getAlpha()).getRGB(), new Color(this.foC.getValue().getRed(), this.foC.getValue().getGreen(), this.foC.getValue().getBlue(), this.foC.getValue().getAlpha()).getRGB());
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, (float)(4 + posX), (float)(8 + (posY + textPosY)), -1);
+            Drawable.horizontalGradient(4.0, (posY + barPosY) + 3, width, (posY + barPosY) + 4, ColorUtil.applyOpacity(WaterMark.getInstance().getColor(200), 0.7f).getRGB(), ColorUtil.applyOpacity(WaterMark.getInstance().getColor(0), 0.7f).getRGB());
+			Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, (float)(4 + posX), (float)(8 + (posY + textPosY)), -1);
         }
+    }
+	
+	public Color getColor(int count) {
+        int index = (int) (count);
+        int val = 1;
+        Color analogous = ColorUtil.getAnalogousColor(this.color2.getValue().getColorObject())[val];
+        return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index, this.color1.getValue().getColorObject(), analogous, true);
     }
 
     public static void drawRect(double left, double top, double right, double bottom, int color) {
@@ -93,35 +112,7 @@ public class WaterMark
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
     }
-
-    public static void drawGradientSideways(double left, double top, double right, double bottom, int col1, int col2) {
-        float f = (float)(col1 >> 24 & 0xFF) / 255.0f;
-        float f1 = (float)(col1 >> 16 & 0xFF) / 255.0f;
-        float f2 = (float)(col1 >> 8 & 0xFF) / 255.0f;
-        float f3 = (float)(col1 & 0xFF) / 255.0f;
-        float f4 = (float)(col2 >> 24 & 0xFF) / 255.0f;
-        float f5 = (float)(col2 >> 16 & 0xFF) / 255.0f;
-        float f6 = (float)(col2 >> 8 & 0xFF) / 255.0f;
-        float f7 = (float)(col2 & 0xFF) / 255.0f;
-        GL11.glEnable((int)3042);
-        GL11.glDisable((int)3553);
-		GL11.glBlendFunc((int) 770, (int) 771);
-        GL11.glEnable((int)2848);
-        GL11.glShadeModel((int)7425);
-        GL11.glPushMatrix();
-        GL11.glBegin((int)7);
-        GL11.glColor4f((float)f1, (float)f2, (float)f3, (float)f);
-        GL11.glVertex2d((double)left, (double)top);
-        GL11.glVertex2d((double)left, (double)bottom);
-        GL11.glColor4f((float)f5, (float)f6, (float)f7, (float)f4);
-        GL11.glVertex2d((double)right, (double)bottom);
-        GL11.glVertex2d((double)right, (double)top);
-        GL11.glEnd();
-        GL11.glPopMatrix();
-        GL11.glEnable((int)3553);
-        GL11.glDisable((int)3042);
-    }
-
+	
     private int getPing(EntityPlayer player) {
         int ping = 0;
         try {

@@ -18,8 +18,18 @@ public class ColorUtil {
         float progress = health / maxHealth;
         return blendColors(fractions, colors, progress).brighter();
     }
+	
+	public static int toARGB(int r, int g, int b, int a) {
+        return new Color(r, g, b, a).getRGB();
+    }
 
+    public static int toRGBA(int r, int g, int b) {
+        return ColorUtil.toRGBA(r, g, b, 255);
+    }
 
+    public static int toRGBA(int r, int g, int b, int a) {
+        return (r << 16) + (g << 8) + b + (a << 24);
+    }
 
     public static int fade(Color color, int delay) {
         float[] hsb = new float[3];
