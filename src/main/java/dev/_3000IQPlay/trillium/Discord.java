@@ -34,7 +34,7 @@ public class Discord {
             Discord.presence.startTimestamp = (System.currentTimeMillis() / 1000L);
             Discord.presence.details = Util.mc.currentScreen instanceof GuiMainMenu ? "In the main menu" : "Playing " + (Minecraft.getMinecraft().currentServerData != null ? (RPC.INSTANCE.showIP.getValue() ? Minecraft.getMinecraft().currentServerData.serverIP.equals("localhost") ? "on " + "2bt2.org via 2bored2wait" : "on " + Minecraft.getMinecraft().currentServerData.serverIP : " Multiplayer") : " Singleplayer");
             Discord.presence.state = RPC.INSTANCE.state.getValue();
-            Discord.presence.largeImageText = "b1.5.9";
+            Discord.presence.largeImageText = "Trillium INC.";
             rpc.Discord_UpdatePresence(presence);
             thread = new Thread(() -> {
                 while (!Thread.currentThread().isInterrupted()) {
@@ -51,7 +51,7 @@ public class Discord {
 
 
                     if (RPC.INSTANCE.nickname.getValue()) {
-                        Discord.presence.smallImageText = "Logged as - " + mc.session.getUsername();
+                        Discord.presence.smallImageText = "User: " + mc.session.getUsername();
                         Discord.presence.smallImageKey = "https://minotar.net/helm/" + mc.session.getUsername() + "/100.png";
                     }
                     Discord.presence.largeImageKey = "trilliumlogo";

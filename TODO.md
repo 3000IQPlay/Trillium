@@ -8,3 +8,5 @@ Advence the GUI little bit
 + Added GlowESP
 + Added Main Menu
 * Rewrote GUI
+* Small DiscordRPC Changes (Done)
++ Added SlotSwap Mode to Speedmine (Done)
