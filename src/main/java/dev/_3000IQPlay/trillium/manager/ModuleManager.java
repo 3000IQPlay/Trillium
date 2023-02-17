@@ -55,7 +55,6 @@ public class ModuleManager
         this.modules.add(new Ambience());
         this.modules.add(new Ghost());
         this.modules.add(new BowAim());
-        this.modules.add(new Interactions());
         this.modules.add(new SolidBlock());
         this.modules.add(new Sprint());
         this.modules.add(new TargetHud());
@@ -175,6 +174,7 @@ public class ModuleManager
 		this.modules.add(new Aspect());
 		this.modules.add(new KeyPearl());
 	    this.modules.add(new DiscordEmbeds());
+		this.modules.add(new ChinaHat());
     }
 
     public Module getModuleByName(String name) {

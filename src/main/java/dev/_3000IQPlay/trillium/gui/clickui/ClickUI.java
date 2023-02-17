@@ -1,9 +1,5 @@
 package dev._3000IQPlay.trillium.gui.clickui;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.List;
-
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.gui.clickui.base.AbstractWindow;
 import dev._3000IQPlay.trillium.gui.clickui.window.ModuleWindow;
@@ -20,6 +16,9 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import java.awt.Color;
+import java.io.IOException;
+import java.util.List;
 
 import com.google.common.collect.Lists;
 

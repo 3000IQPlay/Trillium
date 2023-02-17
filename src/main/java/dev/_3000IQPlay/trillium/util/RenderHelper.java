@@ -105,6 +105,61 @@ public class RenderHelper{
         float blue = color.getBlue() / 255F;
         GlStateManager.color(red, green, blue, alpha);
     }
+	
+	public static void color(float red, float green, float blue, float alpha) {
+        GlStateManager.color(red, green, blue, alpha);
+    }
+
+    public static void color(float red, float green, float blue) {
+        RenderHelper.color(red, green, blue, 1.0f);
+    }
+
+    public static void color(Color color) {
+        if (color == null) {
+            color = Color.white;
+        }
+        RenderHelper.color((float)color.getRed() / 255.0f, (float)color.getGreen() / 255.0f, (float)color.getBlue() / 255.0f, (float)color.getAlpha() / 255.0f);
+    }
+
+    public static void color(int hexColor) {
+        float red = (float)(hexColor >> 16 & 0xFF) / 255.0f;
+        float green = (float)(hexColor >> 8 & 0xFF) / 255.0f;
+        float blue = (float)(hexColor & 0xFF) / 255.0f;
+        float alpha = (float)(hexColor >> 24 & 0xFF) / 255.0f;
+        GlStateManager.color(red, green, blue, alpha);
+    }
+	
+	public static void drawCone(float radius, float height, int segments, boolean flag) {
+        int i;
+        GL11.glPushMatrix();
+        GL11.glDisable(3553);
+        GL11.glDisable(2884);
+        if (!flag) {
+            GL11.glEnable(2884);
+        }
+        float[][] verteces = new float[segments][3];
+        float[] topVertex = new float[]{0.0f, 0.0f, 0.0f};
+        for (i = 0; i < segments; ++i) {
+            verteces[i][0] = (float)Math.cos(Math.PI * 2 / (double)segments * (double)i) * radius;
+            verteces[i][1] = -height;
+            verteces[i][2] = (float)Math.sin(Math.PI * 2 / (double)segments * (double)i) * radius;
+        }
+        GL11.glBegin(9);
+        for (i = 0; i < segments; ++i) {
+            GL11.glVertex3f(verteces[i][0], verteces[i][1], verteces[i][2]);
+        }
+        GL11.glEnd();
+        for (i = 0; i < segments; ++i) {
+            GL11.glBegin(4);
+            GL11.glVertex3f(verteces[i][0], verteces[i][1], verteces[i][2]);
+            GL11.glVertex3f(topVertex[0], topVertex[1], topVertex[2]);
+            GL11.glVertex3f(verteces[(i + 1) % segments][0], verteces[(i + 1) % segments][1], verteces[(i + 1) % segments][2]);
+            GL11.glEnd();
+        }
+        GL11.glEnable(3553);
+        GL11.glEnable(2884);
+        GL11.glPopMatrix();
+    }
 
     public static void drawCircle3D(Entity entity, double radius, float partialTicks, int points, float width, int color) {
         GL11.glPushMatrix();
