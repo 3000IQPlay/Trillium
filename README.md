@@ -1,5 +1,5 @@
 # Trillium (Experium+)
-**Client based on ThunderHack+
+**Client based on ThunderHack+**
 
 **Client made because i got bored developing Experium ong :skull:**
 
