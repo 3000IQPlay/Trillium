@@ -40,8 +40,6 @@ public class NameTags extends Module
     private final Setting<Boolean> gamemode;
     private final Setting<Boolean> entityID;
     private final Setting<Boolean> rect;
-
-    private final Setting<Boolean> group;
     private final Setting<Boolean> outline;
     private final Setting<Integer> redSetting;
     private final Setting<Integer> greenSetting;
@@ -78,10 +76,6 @@ public class NameTags extends Module
         this.heldStackName = (Setting<Boolean>)this.register(new Setting("StackName", false));
         this.whiter = (Setting<Boolean>)this.register(new Setting("White", false));
         this.onlyFov = (Setting<Boolean>)this.register(new Setting("OnlyFov", false));
-
-
-        this.group = (Setting<Boolean>)this.register(new Setting("Group", false));
-
 
         this.scaleing = (Setting<Boolean>)this.register(new Setting("Scale", false));
         this.factor = (Setting<Float>)this.register(new Setting("Factor", 0.3f, 0.1f, 1.0f,  v -> this.scaleing.getValue()));
@@ -390,97 +384,8 @@ public class NameTags extends Module
         if (this.gamemode.getValue()) {
             gameModeStr = (player.isCreative() ? (gameModeStr + "[C] ") : ((player.isSpectator() || player.isInvisible()) ? (gameModeStr + "[I] ") : (gameModeStr + "[S] ")));
         }
-        String groupStr = "";
-        if (this.group.getValue()) {
-            groupStr = (isKamsard(player) ? (groupStr + "[Kamsard] ") : isMoonshine(player) ? (groupStr + "[MoonShine] ") : isRage(player) ? (groupStr + "[RAGE] ") :(groupStr + ""));
-        }
         name = ((Math.floor(health) == health) ? (name + color + " " + ((health > 0.0f) ? Integer.valueOf((int)Math.floor(health)) : "dead")) : (name + color + " " + ((health > 0.0f) ? Integer.valueOf((int)health) : "dead")));
-        return groupStr + pingStr + idString + gameModeStr + name + popStr;
-    }
-
-    public boolean isKamsard(final EntityPlayer player){
-            String name = player.getDisplayName().getFormattedText();
-            if(name.contains("MrZak34")){
-                return true;
-            }
-            if(name.contains("MrZak")){
-                return true;
-            }
-            if(name.contains("uxokpro1234")){
-                    return true;
-            }
-            if(name.contains("mapcrash")){
-                return true;
-            }
-            if(name.contains("MrZak2b2t")){
-                 return true;
-            }
-            if(name.contains("Cattyn")){
-                return true;
-            }
-            if(name.contains("pan4ur")){
-                 return true;
-            }
-            if(name.contains("Ebatte_Sratte")){
-                 return true;
-            }
-        return name.contains("nocum1");
-    }
-
-    public boolean isRage(final EntityPlayer player){
-        String name = player.getDisplayName().getFormattedText();
-        if(name.contains("SevaPosik")){
-            return true;
-        }
-        if(name.contains("Ken")){
-            return true;
-        }
-        if(name.contains("hohohohoho")){
-            return true;
-        }
-        if(name.contains("Dm_Kristina")){
-            return true;
-        }
-        if(name.contains("qwesxzas111")){
-            return true;
-        }
-        if(name.contains("XxX_Lite_XxX")){
-            return true;
-        }
-        if(name.contains("your_weakness")){
-            return true;
-        }
-        return name.contains("arsik2005");
-    }
-
-
-    public boolean isMoonshine(final EntityPlayer player){
-        String name = player.getDisplayName().getFormattedText();
-        if(name.contains("cumermen")){
-            return true;
-        }
-        if(name.contains("Aviasales")){
-            return true;
-        }
-        if(name.contains("Aviaplanes")){
-            return true;
-        }
-        if(name.contains("1Ahr")){
-            return true;
-        }
-        if(name.contains("BIKMUNNI")){
-            return true;
-        }
-        if(name.contains("KorshunInc")){
-            return true;
-        }
-        if(name.contains("POCKYBOI")){
-            return true;
-        }
-        if(name.contains("Aguzok")){
-            return true;
-        }
-        return name.contains("2b2tdupealt");
+        return pingStr + idString + gameModeStr + name + popStr;
     }
 
     private int getDisplayColour(final EntityPlayer player) {
@@ -508,8 +413,7 @@ public class NameTags extends Module
         NameTags.INSTANCE = new NameTags();
     }
 
-    public enum Mode
-    {
+    public enum Mode {
         FULL,
         MINIMAL,
         NONE;

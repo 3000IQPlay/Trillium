@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
-import dev._3000IQPlay.trillium.modules.misc.DiscordEmbeds;
 import dev._3000IQPlay.trillium.modules.misc.ToolTips;
 import dev._3000IQPlay.trillium.modules.render.NoRender;
 import net.minecraft.client.gui.Gui;
@@ -28,14 +27,6 @@ public class MixinGuiScreen
     public void drawDefaultBackground(CallbackInfo info) {
         if (NoRender.getInstance().isOn() && NoRender.getInstance().containerBackground.getValue().booleanValue()){
             info.cancel();
-        }
-    }
-	
-	private void handleComponentHoverHook(ITextComponent component, int x, int y, CallbackInfo info) {
-        if (component != null ){
-            DiscordEmbeds.saveDickPick(component.getStyle().getHoverEvent().getValue().getUnformattedText(),"png");
-            DiscordEmbeds.nado = true;
-            DiscordEmbeds.timer.reset();
         }
     }
 }

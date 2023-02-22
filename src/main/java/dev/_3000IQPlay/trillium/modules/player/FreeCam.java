@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.player;
 
-import dev._3000IQPlay.trillium.event.events.FreecamEntityEvent;
 import dev._3000IQPlay.trillium.event.events.FreecamEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.event.events.RenderItemOverlayEvent;
@@ -10,7 +9,6 @@ import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.SubBind;
 import dev._3000IQPlay.trillium.util.FreecamCamera;
 import dev._3000IQPlay.trillium.util.PlayerUtils;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MovementInput;
@@ -20,13 +18,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
 public class FreeCam extends Module{
-
-    private static FreeCam INSTANCE = new FreeCam();
+	private static FreeCam INSTANCE = new FreeCam();
+	public Setting<SubBind> movePlayer = this.register(new Setting<>("Control", new SubBind(Keyboard.KEY_LMENU)));
+    private Setting<Float> hSpeed = this.register(new Setting<>("HSpeed", 1.0f, 0.2f, 2.0f));
+    private Setting<Float> vSpeed = this.register(new Setting<>("VSpeed", 1.0f, 0.2f, 2.0f));
+    private Setting<Boolean> follow = register(new Setting<>("Follow", false));
+    private Setting<Boolean> copyInventory = register(new Setting<>("CopyInv", false));
+    private Entity cachedActiveEntity = null;
+    private int lastActiveTick = -1;
+    private Entity oldRenderEntity = null;
+    private FreecamCamera camera = null;
 
     public FreeCam() {
-        super("FreeCam", "Client sided fly fr", Category.PLAYER,true,false,false);
+        super("FreeCam", "Client Sided fly fr", Module.Category.PLAYER, true, false, false);
         this.setInstance();
-
     }
 
     public static FreeCam getInstance() {
@@ -39,24 +44,6 @@ public class FreeCam extends Module{
     private void setInstance() {
         INSTANCE = this;
     }
-
-    public Setting<SubBind> movePlayer = this.register(new Setting<>("Control", new SubBind(Keyboard.KEY_LMENU)));
-
-
-
-    private Setting<Float> hSpeed = this.register(new Setting<>("HSpeed", 1.0f, 0.2f, 2.0f));
-    private Setting<Float> vSpeed = this.register(new Setting<>("VSpeed", 1.0f, 0.2f, 2.0f));
-
-    private Setting<Boolean> follow = register(new Setting<>("Follow", false));
-    private Setting<Boolean> copyInventory = register(new Setting<>("CopyInv", false));
-
-
-    private Entity cachedActiveEntity = null;
-    private int lastActiveTick = -1;
-
-    private Entity oldRenderEntity = null;
-    private FreecamCamera camera = null;
-
 
     private MovementInput cameraMovement = new MovementInputFromOptions(mc.gameSettings) {
         @Override
@@ -93,7 +80,6 @@ public class FreeCam extends Module{
             }
         }
     };
-
 
     public Entity getActiveEntity() {
         if (cachedActiveEntity == null) {
@@ -132,17 +118,8 @@ public class FreeCam extends Module{
     public void onRender2D(Render2DEvent e) {
         ScaledResolution sr = new ScaledResolution(mc);
         String yCoord = "" + (-Math.round(mc.player.posY - getActiveEntity().posY));
-
         String str = ".vclip " + yCoord;
         FontRender.drawString6(str, (float) ((sr.getScaledWidth() - FontRender.getStringWidth6(str)) / 1.98), (float) (sr.getScaledHeight() / 1.8 - 20), -1,false);
-
-    }
-
-    @SubscribeEvent
-    public void onFreecamEntity(FreecamEntityEvent event) {
-        if(getActiveEntity() != null) {
-            event.setEntity((EntityPlayerSP) getActiveEntity());
-        }
     }
 
     @Override
@@ -170,7 +147,6 @@ public class FreeCam extends Module{
     @Override
     public void onDisable() {
         if (mc.player == null) return;
-
         if(camera != null) mc.world.removeEntity(camera);
         camera = null;
         mc.player.movementInput = new MovementInputFromOptions(mc.gameSettings);

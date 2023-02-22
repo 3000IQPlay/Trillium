@@ -44,11 +44,8 @@ public class BlockUtils {
             mc.playerController.processRightClickBlock(mc.player, mc.world, pos, direction, vec, hand);
             mc.player.swingArm(hand);
         }
-        // ((IMinecraft) mc).setRightClickDelayTimer(4); //? // ? // тоже не ебу
+        // ((IMinecraft) mc).setRightClickDelayTimer(4); //? // ?
     }
-
-
-
 
     public static Optional<ClickLocation> generateClickLocation(BlockPos pos) {
         return generateClickLocation(pos, false, false);
