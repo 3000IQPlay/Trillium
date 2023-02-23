@@ -45,17 +45,6 @@ public abstract class MixinEntityPlayerSP
         MinecraftForge.EVENT_BUS.post(chatEvent);
     }
 
-    @Redirect(method = "onUpdateWalkingPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;isCurrentViewEntity()Z"))
-    private boolean redirectIsCurrentViewEntity(EntityPlayerSP entityPlayerSP) {
-        Minecraft mc = Minecraft.getMinecraft();
-        FreecamEvent event = new FreecamEvent();
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.isCanceled()) {
-            return entityPlayerSP == mc.player;
-        }
-        return mc.getRenderViewEntity() == entityPlayerSP;
-    }
-
     @Shadow
     public final NetHandlerPlayClient connection;
 
@@ -63,18 +52,6 @@ public abstract class MixinEntityPlayerSP
     private void updatehook(CallbackInfo info) {
         PlayerUpdateEvent playerUpdateEvent = new PlayerUpdateEvent();
         MinecraftForge.EVENT_BUS.post(playerUpdateEvent);
-    }
-
-    @Redirect(method = "updateEntityActionState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;isCurrentViewEntity()Z"))
-    private boolean redirectIsCurrentViewEntity2(EntityPlayerSP entityPlayerSP) {
-
-        Minecraft mc = Minecraft.getMinecraft();
-        FreecamEvent event = new FreecamEvent();
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.isCanceled()) {
-            return entityPlayerSP == mc.player;
-        }
-        return mc.getRenderViewEntity() == entityPlayerSP;
     }
 
     @Inject(method = { "pushOutOfBlocks" },  at = { @At("HEAD") },  cancellable = true)

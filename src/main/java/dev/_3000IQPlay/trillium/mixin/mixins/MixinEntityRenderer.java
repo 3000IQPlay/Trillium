@@ -229,50 +229,7 @@ public abstract class MixinEntityRenderer
             info.cancel();
         }
     }
-
-    @Redirect(method = "getMouseOver", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getRenderViewEntity()Lnet/minecraft/entity/Entity;"))
-    private Entity redirectMouseOver(Minecraft mc) {
-        FreecamEvent event = new FreecamEvent();
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.isCanceled()) {
-            if (Keyboard.isKeyDown(FreeCam.getInstance().movePlayer.getValue().getKey())) {
-                return mc.player;
-            }
-        }
-        return mc.getRenderViewEntity();
-    }
-
-    @Redirect(method = "updateCameraAndRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;turn(FF)V"))
-    private void redirectTurn(EntityPlayerSP entityPlayerSP, float yaw, float pitch) {
-        try {
-            Minecraft mc = Minecraft.getMinecraft();
-            FreecamEvent event = new FreecamEvent();
-            MinecraftForge.EVENT_BUS.post(event);
-            if (event.isCanceled()) {
-                if (Keyboard.isKeyDown(FreeCam.getInstance().movePlayer.getValue().getKey())) {
-                    mc.player.turn(yaw, pitch);
-                } else {
-                    Objects.requireNonNull(mc.getRenderViewEntity(), "Render Entity").turn(yaw, pitch);
-                }
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        entityPlayerSP.turn(yaw, pitch);
-    }
-
-    @Redirect(method = "renderWorldPass", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;isSpectator()Z"))
-    public boolean redirectIsSpectator(EntityPlayerSP entityPlayerSP) {
-        FreecamEvent event = new FreecamEvent();
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.isCanceled()) return true;
-        if (entityPlayerSP != null) {
-            return entityPlayerSP.isSpectator();
-        }
-        return false;
-    }
+	
     @Inject(method = "renderHand", at = @At("HEAD"), cancellable = true)
     public void renderHandMain(float partialTicks, int pass, CallbackInfo ci) {
         ItemShaders module = Trillium.moduleManager.getModuleByClass(ItemShaders.class);

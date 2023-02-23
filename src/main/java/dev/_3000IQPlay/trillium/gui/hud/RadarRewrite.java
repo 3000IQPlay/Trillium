@@ -26,11 +26,11 @@ import static org.lwjgl.opengl.GL11.*;
 public class RadarRewrite extends Module {
 
     public RadarRewrite() {
-        super("AkrienRadar", "стрелочки", Category.RENDER, true, false, false);
+        super("AkrienRadar", "Radar from russian client", Module.Category.HUD, true, false, false);
     }
 
     private Setting<Float> width = register( new Setting<>("TracerHeight", 2.28f, 0.1f, 5f));
-    private Setting<Float> rad22ius = register(new Setting<>("TracerDown", 3.63f, 0.1F, 20.0F)); //радиус круга компасса ежжи
+    private Setting<Float> rad22ius = register(new Setting<>("TracerDown", 3.63f, 0.1F, 20.0F));
     private Setting<Float> tracerA = register(new Setting<>("TracerWidth", 0.44F, 0.0F, 8.0F));
     private Setting<Integer> xOffset = register(new Setting<>("TracerRadius", 68, 20, 100));
     private Setting<Integer> maxup2 = register(new Setting<>("PitchLock", 42, -90, 90));
@@ -41,7 +41,7 @@ public class RadarRewrite extends Module {
     private Setting<triangleModeEn> triangleMode = register(new Setting<>("TracerCMode", triangleModeEn.Astolfo));
     private Setting<mode2> Mode2 = register(new Setting<>("CircleCMode", mode2.Astolfo));
     private Setting<PositionSetting> pos = this.register(new Setting<>("Position", new PositionSetting(0.5f, 0.78f)));
-    private Setting<Float> CRadius = register(new Setting<>("CompasRadius", 47F, 0.1F, 70.0F)); //радиус круга компасса ежжи
+    private Setting<Float> CRadius = register(new Setting<>("CompasRadius", 47F, 0.1F, 70.0F));
     private Setting<Integer> fsef = register(new Setting<>("Correct", 12, -90, 90));
     private  Setting<ColorSetting> cColor = this.register(new Setting<>("CompassColor", new ColorSetting(0x2250b4b4)));
     private  Setting<ColorSetting> ciColor = this.register(new Setting<>("CircleColor", new ColorSetting(0x2250b4b4)));

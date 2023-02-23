@@ -42,17 +42,10 @@ public class Strafe
         INSTANCE = new Strafe();
         return INSTANCE;
     }
-	
-	@Override
-    public void onUpdate() {
-        if (Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled()) {
-            return;
-        }
-    }
 
     @SubscribeEvent
     public void onUpdateWalkingPlayerEvent(UpdateWalkingPlayerEvent event) {
-        if (event.getStage() == 1 && Strafe.fullNullCheck()) {
+        if (event.getStage() == 1 && Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled()) {
             return;
         }
         this.lastDist = Math.sqrt((mc.player.posX - mc.player.prevPosX) * (mc.player.posX - mc.player.prevPosX) + (mc.player.posZ - mc.player.prevPosZ) * (mc.player.posZ - mc.player.prevPosZ));
@@ -60,7 +53,7 @@ public class Strafe
 
     @SubscribeEvent
     public void onStrafe(EventMove event) {
-        if (Strafe.fullNullCheck()) {
+        if (Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled()) {
             return;
         }
         if (mc.player.isInWater()) {

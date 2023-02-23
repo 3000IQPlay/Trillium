@@ -1,7 +1,6 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
 import dev._3000IQPlay.trillium.Trillium;
-import dev._3000IQPlay.trillium.event.events.FreecamEvent;
 import dev._3000IQPlay.trillium.command.commands.ChangeSkinCommand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -27,16 +26,6 @@ public class MixinRenderPlayer
         if (NameTags.getInstance().isOn()) {
             info.cancel();
         }
-    }
-    @Redirect(method = "doRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/AbstractClientPlayer;isUser()Z"))
-    private boolean isUserRedirect(AbstractClientPlayer abstractClientPlayer) {
-        Minecraft mc = Minecraft.getMinecraft();
-        FreecamEvent event = new FreecamEvent();
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.isCanceled()) {
-            return abstractClientPlayer.isUser() && abstractClientPlayer == mc.getRenderViewEntity();
-        }
-        return abstractClientPlayer.isUser();
     }
 
 /*

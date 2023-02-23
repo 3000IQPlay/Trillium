@@ -8,3 +8,6 @@ Advence the GUI little bit
 - Removed BreakHighLight (Done)
 + Added New Speedmine (Done)
 - Removed DiscordEmbeds (Done)
++ New FreeCam (Done)
+* Better handeling over Strafe Incompatibility issues (Done)
+* Moved AkrienRadar to HUD Category (Done)
