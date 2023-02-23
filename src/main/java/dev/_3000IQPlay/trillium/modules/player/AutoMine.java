@@ -253,7 +253,6 @@ public class AutoMine extends Module {
         if (0 < n) {
             EnumFacing enumFacing = enumFacingArray[n2];
             // missing code?
-            // по крайней мере ни кфр ни фернфловер тут нихуя не нашли
             return enumFacing;
         }
         return EnumFacing.UP;

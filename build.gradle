@@ -15,10 +15,8 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
-
     }
 }
-
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
