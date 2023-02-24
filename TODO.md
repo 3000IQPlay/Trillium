@@ -6,6 +6,7 @@ Advence the GUI little bit
 + New GUI
 + Added CrystalOptimizer (Done)
 + Added DamageParticles (Done)
++ Added SkyColor (Done)
 + Added New Speedmine (Done)
 + New FreeCam (Done)
 

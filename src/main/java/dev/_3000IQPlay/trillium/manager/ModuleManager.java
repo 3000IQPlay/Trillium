@@ -175,6 +175,7 @@ public class ModuleManager
 		this.modules.add(new KeyPearl());
 		this.modules.add(new CrystalOptimizer());
 		this.modules.add(new DamageParticles());
+		this.modules.add(new SkyColor());
     }
 
     public Module getModuleByName(String name) {
