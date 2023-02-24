@@ -1,4 +1,4 @@
-package dev._3000IQPlay.trillium.modules.render;
+package dev._3000IQPlay.trillium.gui.hud;
 
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
@@ -17,7 +17,7 @@ import java.awt.*;
 
 public class PacketCounter extends Module{
     public PacketCounter() {
-        super("PacketCounter", "PacketCounter", Category.HUD, true, false, false);
+        super("PacketCounter", "PacketCounter", Module.Category.HUD, true, false, false);
         this.timer = new Timer();
     }
     private final Timer timer;

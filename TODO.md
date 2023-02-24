@@ -5,6 +5,7 @@ Advence the GUI little bit
 **Trillium b1.5.9 Changes**
 + New GUI
 + Added CrystalOptimizer (Done)
++ Added DamageParticles (Done)
 + Added New Speedmine (Done)
 + New FreeCam (Done)
 

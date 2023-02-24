@@ -174,6 +174,7 @@ public class ModuleManager
 		this.modules.add(new Aspect());
 		this.modules.add(new KeyPearl());
 		this.modules.add(new CrystalOptimizer());
+		this.modules.add(new DamageParticles());
     }
 
     public Module getModuleByName(String name) {
