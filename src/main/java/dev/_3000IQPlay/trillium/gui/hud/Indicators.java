@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Indicators extends Module {
     public Indicators() {
-        super("WexIndicators", "Индикаторы как в вексайде-(из вексайда)", Category.HUD, true, false, false);
+        super("WexIndicators", "Indicator", Category.HUD, true, false, false);
     }
 
 
