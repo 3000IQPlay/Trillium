@@ -176,6 +176,7 @@ public class ModuleManager
 		this.modules.add(new CrystalOptimizer());
 		this.modules.add(new DamageParticles());
 		this.modules.add(new SkyColor());
+		this.modules.add(new EntityControl());
     }
 
     public Module getModuleByName(String name) {

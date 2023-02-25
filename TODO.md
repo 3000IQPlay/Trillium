@@ -6,9 +6,10 @@ Advence the GUI little bit
 + New GUI
 + Added CrystalOptimizer (Done)
 + Added DamageParticles (Done)
++ Added EntityControl (Done)
 + Added SkyColor (Done)
 + Added New Speedmine (Done)
-+ New FreeCam (Done)
++ Added New FreeCam (Done)
 
 - Removed BreakHighLight (Done)
 - Removed DiscordEmbeds (Done)
