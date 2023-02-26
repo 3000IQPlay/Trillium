@@ -153,19 +153,7 @@ public class Shaders extends Module {
     public Setting<Float> quality = register(new Setting("quality", 1F, 0.0F, 20.0F));
     public Setting<Float> radius = register(new Setting("radius", 1F, 0.0F, 5.0F));
 
-
-
-
-
-
-
-
-    public boolean renderTags = true,
-            renderCape = true;
-
-
-
-
+    public boolean renderTags = true, renderCape = true;
 
     @SubscribeEvent
     public void onRenderGameOverlay(RenderGameOverlayEvent event){
@@ -557,11 +545,7 @@ public class Shaders extends Module {
             }).forEach(e -> mc.getRenderManager().renderEntityStatic(e, tick, true));
             mc.world.removeEntityFromWorld(-1000);
         } catch (Exception e){
-
+            // ignore
         }
     }
-
-
-
-
 }
