@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.util;
 
-
 import java.awt.*;
 
 public class PaletteHelper {

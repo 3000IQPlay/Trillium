@@ -72,7 +72,7 @@ public class ClickUI extends GuiScreen {
 			ScaledResolution sr = new ScaledResolution(mc);
 			int i = 0;
 			for (final Module.Category category : Trillium.moduleManager.getCategories()) {
-				if(category.getName().contains("HUD")) continue;
+				if (category.getName().contains("HUD")) continue;
 				ModuleWindow window = new ModuleWindow(category.getName(), Trillium.moduleManager.getModulesByCategory(category), i, x + offset, y, 108, windowHeight);
 				window.setOpen(true);
 				windows.add(window);
