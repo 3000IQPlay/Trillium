@@ -14,12 +14,7 @@ import java.util.List;
 
 @Mixin(GuiMultiplayer.class)
 public abstract class MixinGuiMultiplayer extends GuiScreen {
-
-
-
-
-
-    //.connectToServer(this.selectedServer);
+	
     @Inject(method = "createButtons", at = @At("HEAD"))
     public void dobovlyaemhuiny(CallbackInfo ci) {
         if(MultiConnect.getInstance().isEnabled()) {
@@ -30,7 +25,6 @@ public abstract class MixinGuiMultiplayer extends GuiScreen {
             buttonList.add(new GuiButton(1337339, ((GuiScreen) (Object) this).width / 2 + 4 + 76 + 95, this.height - 28, 98, 20, "Clear Selected"));
             screen.setButtonList(buttonList);
         }
-
     }
 
     @Inject(method = "actionPerformed", at = @At(value = "RETURN"))
@@ -50,9 +44,7 @@ public abstract class MixinGuiMultiplayer extends GuiScreen {
                 }
             }
         }
-
     }
-
 
     @Shadow
     private ServerSelectionList serverListSelector;

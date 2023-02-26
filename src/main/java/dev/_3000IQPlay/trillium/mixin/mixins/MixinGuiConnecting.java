@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
-
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.ConnectToServerEvent;
 import net.minecraft.client.multiplayer.GuiConnecting;
@@ -23,5 +22,4 @@ public class MixinGuiConnecting extends MixinGuiScreen {
         ConnectToServerEvent event = new ConnectToServerEvent(ip);
         MinecraftForge.EVENT_BUS.post(event);
     }
-
 }

@@ -31,8 +31,6 @@ class MixinItemRenderer {
     public Minecraft mc;
     private boolean injection = true;
 
-
-
     @Shadow
     protected abstract void
     renderArmFirstPerson(float p_187456_1_, float p_187456_2_, EnumHandSide p_187456_3_);
@@ -184,14 +182,8 @@ class MixinItemRenderer {
                         GlStateManager.rotate(-13.935F, 1.0F, 0.0F, 0.0F);
                         GlStateManager.rotate((float) j * 35.3F, 0.0F, 1.0F, 0.0F);
                         GlStateManager.rotate((float) j * -9.785F, 0.0F, 0.0F, 1.0F);
-
-                  //      if(CSGOHVH.getInstance().isEnabled() && CSGOHVH.getInstance().nbp.getValue()) {
-                            f5 = 1f;
-                    //    } else {
-                     //       f5 =  0f - ((float) CSGOHVH.getInstance().getitemfix - p_187457_2_ + 1.0F);
-                      //  }
-
-
+						
+                        f5 = 1f;
                         f6 = f5 / 20.0F;
                         f6 = (f6 * f6 + f6 * 2.0F) / 3.0F;
                         if (f6 > 1.0F) {
@@ -224,11 +216,6 @@ class MixinItemRenderer {
         GlStateManager.popMatrix();
     }
 
-
-
-
-
-
     private void transformFirstPersonItem(final float equipProgress, final float swingProgress) {
 
         GlStateManager.translate(0.56f, -0.44F, -0.71999997f);
@@ -243,7 +230,6 @@ class MixinItemRenderer {
 
         GlStateManager.translate(0.4f, 0.2f, 0.2f);
     }
-
 
     private void translate() {
         GlStateManager.rotate(20.0f, 0.0f, 1.0f, 0.0f);
@@ -262,6 +248,4 @@ class MixinItemRenderer {
         GlStateManager.rotate(f1 * -80.0F, 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(i * -45.0f, 0.0F, 1.0F, 0.0F);
     }
-
 }
-

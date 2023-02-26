@@ -5,6 +5,7 @@ Advence the GUI little bit
 **Trillium b1.5.9 Changes**
 + New GUI
 + Added AntiAFK (Done)
++ Added AntiSpam (Done)
 + Added CrystalOptimizer (Done)
 + Added DamageParticles (Done)
 + Added EntityControl (Done)
@@ -13,6 +14,7 @@ Advence the GUI little bit
 + Added New Speedmine (Done)
 + Added New FreeCam (Done)
 
+- Removed AdBlocker (Done)
 - Removed BreakHighLight (Done)
 - Removed DiscordEmbeds (Done)
 

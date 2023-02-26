@@ -26,28 +26,16 @@ import java.awt.*;
 
 public class FastPlace2
         extends Module {
-    public FastPlace2() {
-        super("FastPlace", "Automend + FastPlace in 1", Module.Category.PLAYER, true, false, false);
-    }
-    public static BlockPos target;
-
-
+	public static BlockPos target;
     private  Setting<Integer> threshold = this.register (new Setting<>("Percent", 100, 0, 100));
     public Setting<Integer> waterMarkZ1 = register(new Setting("Y", 10, 0, 524));
     public Setting<Integer> waterMarkZ2 = register(new Setting("X", 20, 0, 862));
     private  Setting<Integer> dlay = this.register (new Setting<>("delay", 100, 0, 100));
     private  Setting<Integer> armdlay = this.register (new Setting<>("ArmorDelay", 100, 0, 1000));
     public Setting<SubBind> aboba = this.register(new Setting<>("Butt", new SubBind(Keyboard.KEY_LMENU)));
-
     public Setting<Boolean> afast = this.register ( new Setting <> ( "AlwaysFast", false));
-
-
-
-
     public static boolean isMending = false;
     private boolean shouldMend = false;
-
-
     private Timer timer = new Timer();
     private Timer timer2 = new Timer();
     int arm1;
@@ -55,12 +43,13 @@ public class FastPlace2
     int arm3;
     int arm4;
     int totalarmor;
-
-
-
-
     private float yawi;
     int startingItem ;
+	
+    public FastPlace2() {
+        super("FastPlace", "Automend + FastPlace in 1", Module.Category.PLAYER, true, false, false);
+    }
+	
     public void setYaw(float yawi) {
         this.yawi = yawi;
         Util.mc.getMinecraft();
@@ -69,6 +58,7 @@ public class FastPlace2
         Util.mc.player.renderYawOffset = yawi;
         Util.mc.player.rotationYawHead = yawi;
     }
+	
     @SubscribeEvent
     public void onUpdateWalkingPlayer(EventPreMotion e) {
         if (mc.player == null || mc.world == null) return;
@@ -78,60 +68,36 @@ public class FastPlace2
                 mc.player.inventory.getStackInSlot(37),
                 mc.player.inventory.getStackInSlot(36)
         };
-
         ItemStack stack2 = armorStacks2[0];
         ItemStack stack3 = armorStacks2[1];
         ItemStack stack4 = armorStacks2[2];
         ItemStack stack5 = armorStacks2[3];
         if (PlayerUtils.isKeyDown(aboba.getValue().getKey()) && (ArmorUtils.calculatePercentage(stack2) < threshold.getValue() || ArmorUtils.calculatePercentage(stack3) < threshold.getValue() || ArmorUtils.calculatePercentage(stack4) < threshold.getValue() || ArmorUtils.calculatePercentage(stack5) < threshold.getValue())) {
-
-
                 int itemSlot = getXpSlot();
                 boolean changeItem = mc.player.inventory.currentItem != itemSlot && itemSlot != -1;
                 startingItem = mc.player.inventory.currentItem;
-
                 if (changeItem) {
                     mc.player.inventory.currentItem = itemSlot;
                     mc.player.connection.sendPacket(new CPacketHeldItemChange(itemSlot));
                 }
         }
-
-
-
-
             if (mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem() == Items.EXPERIENCE_BOTTLE || ( getXpSlot() != -1) && target != null) {
                 if (PlayerUtils.isKeyDown(aboba.getValue().getKey()) && (ArmorUtils.calculatePercentage(stack2) < threshold.getValue() || ArmorUtils.calculatePercentage(stack3) < threshold.getValue() || ArmorUtils.calculatePercentage(stack4) < threshold.getValue() || ArmorUtils.calculatePercentage(stack5) < threshold.getValue())) {
-
-
                     shouldMend = false;
-
-
-
-                   // FastPlace2.mc.player.connection.sendPacket((Packet)new CPacketPlayer.Rotation(0.0f,  90.0f,  true));
                     target = FastPlace2.mc.player.getPosition().add(0.0f,-1.0f,0.0f);
-
-
                     ItemStack[] armorStacks = new ItemStack[]{
                             mc.player.inventory.getStackInSlot(39),
                             mc.player.inventory.getStackInSlot(38),
                             mc.player.inventory.getStackInSlot(37),
                             mc.player.inventory.getStackInSlot(36)
                     };
-
                     for (int i = 0; i < 4; i++) {
-
                         ItemStack stack = armorStacks[i];
-
                         if (!(stack.getItem() instanceof ItemArmor)) continue;
-
                         if (ArmorUtils.calculatePercentage(stack) < threshold.getValue()) continue;
-
                         for (int s = 0; s < 36; s++) {
-
                             ItemStack emptyStack = mc.player.inventory.getStackInSlot(s);
-
                             if (!emptyStack.isEmpty() || !(emptyStack.getItem() == Items.AIR)) continue;
-
                             isMending = true;
                             if(timer2.passedMs(armdlay.getValue())) {
                                 mc.playerController.windowClick(mc.player.inventoryContainer.windowId, i + 5, 0, ClickType.PICKUP, mc.player);
@@ -142,9 +108,7 @@ public class FastPlace2
                                 return;
                             }
                         }
-
                     }
-
                     for (int i = 0; i < 4; i++) {
                         ItemStack stack = armorStacks[i];
 
@@ -154,23 +118,14 @@ public class FastPlace2
 
                         shouldMend = true;
                     }
-
                     if (!shouldMend) {
                         isMending = false;
                     }
-
-
-
                 if (shouldMend) {
-
-
-
                     if (mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemExpBottle && timer.passedMs(dlay.getValue())) {
                         mc.playerController.processRightClick(mc.player, mc.world, EnumHand.MAIN_HAND);
-                       // FastPlace2.mc.player.connection.sendPacket((Packet)new CPacketPlayerTryUseItem(EnumHand.MAIN_HAND));
                         timer.reset();
                     }
-
                 }
             } else {
                 isMending = false;
@@ -184,12 +139,8 @@ public class FastPlace2
         }
     }
 
-
-
-
     private int getXpSlot() {
         ItemStack stack = mc.player.getHeldItemMainhand();
-
         if (!stack.isEmpty() && stack.getItem() instanceof ItemExpBottle) {
             return mc.player.inventory.currentItem;
         } else {
@@ -202,32 +153,17 @@ public class FastPlace2
         }
         return -1;
     }
+	
     @Override
     public void onDisable() {
         isMending = false;
         target = null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
     @Override
     public void onUpdate() {
-        if(afast.getValue())
-            mc.rightClickDelayTimer = 0;
+        if (afast.getValue()) mc.rightClickDelayTimer = 0;
     }
-
-
 
     @SubscribeEvent
     public void onRender2D(Render2DEvent e){
@@ -237,43 +173,25 @@ public class FastPlace2
                 mc.player.inventory.getStackInSlot(37),
                 mc.player.inventory.getStackInSlot(36)
         };
-
         ItemStack stack21 = armorStacks21[0];
         ItemStack stack31 = armorStacks21[1];
         ItemStack stack41 = armorStacks21[2];
         ItemStack stack51 = armorStacks21[3];
         if (PlayerUtils.isKeyDown(aboba.getValue().getKey()) && (ArmorUtils.calculatePercentage(stack21) < threshold.getValue() || ArmorUtils.calculatePercentage(stack31) < threshold.getValue() || ArmorUtils.calculatePercentage(stack41) < threshold.getValue() || ArmorUtils.calculatePercentage(stack51) < threshold.getValue())) {
             ScaledResolution sr = new ScaledResolution(mc);
-            //sr.getScaledWidth() / 2f
-            //sr.getScaledHeight() / 2f
-
             int color;
-
-
-
-
             RenderUtil.drawSmoothRect(waterMarkZ2.getValue(), waterMarkZ1.getValue(), 106 + waterMarkZ2.getValue(), 35 + waterMarkZ1.getValue(), new Color(35, 35, 40, 230).getRGB());
             RenderUtil.drawSmoothRect(waterMarkZ2.getValue() + 3, waterMarkZ1.getValue() + 12, 103 + waterMarkZ2.getValue(), 15 + waterMarkZ1.getValue(), new Color(51, 51, 58, 230).getRGB());
-
-
-
-
             ItemStack[] armorStacks = new ItemStack[]{
                     mc.player.inventory.getStackInSlot(39),
                     mc.player.inventory.getStackInSlot(38),
                     mc.player.inventory.getStackInSlot(37),
                     mc.player.inventory.getStackInSlot(36)
             };
-
-
             ItemStack stack = armorStacks[0];
             ItemStack stack1 = armorStacks[1];
             ItemStack stack2 = armorStacks[2];
             ItemStack stack3 = armorStacks[3];
-
-
-            // Command.sendMessage(String.valueOf(ArmorUtils.calculatePercentage(stack)) + " " + String.valueOf(ArmorUtils.calculatePercentage(stack1)) + " " + String.valueOf(ArmorUtils.calculatePercentage(stack2)) + " " + String.valueOf(ArmorUtils.calculatePercentage(stack3)) );
-
             if (!((int) ArmorUtils.calculatePercentage(stack) < arm1)) {
                 arm1 = (int) ArmorUtils.calculatePercentage(stack);
             }
@@ -286,31 +204,16 @@ public class FastPlace2
             if (!((int) ArmorUtils.calculatePercentage(stack3) < arm4)) {
                 arm4 = (int) ArmorUtils.calculatePercentage(stack3);
             }
-
             totalarmor = (arm1 + arm3 + arm4 + arm2) / 4;
-
             float progress;
             progress = (float) (arm1 + arm3 + arm4 + arm2) / 400;
-
-          //  color = new Color(25, 255, 0, 255);
             color = PaletteHelper.fade(new Color(255, 0, 0, 255).getRGB(),new Color(0, 255, 0, 255).getRGB(), progress);
-
-
-
-
             final int expCount = this.getExpCount();
-
             FastPlace2.mc.renderItem.renderItemIntoGUI(new ItemStack(Items.EXPERIENCE_BOTTLE), (int) (waterMarkZ2.getValue() + offset + 70 +11), waterMarkZ1.getValue() + 17);
             final String s3 = String.valueOf(expCount);
             Util.fr.drawStringWithShadow(s3, waterMarkZ2.getValue() + offset + 85 +11, waterMarkZ1.getValue() + 9 + offset + 17, 16777215);
-
             RenderUtil.drawSmoothRect(waterMarkZ2.getValue() + 3, waterMarkZ1.getValue() + 12, totalarmor + waterMarkZ2.getValue() + 5, 15 + waterMarkZ1.getValue(), color);
-
             Util.fr.drawStringWithShadow("Mending...", waterMarkZ2.getValue() + 3, waterMarkZ1.getValue() + 1, PaletteHelper.astolfo(false, (int) 1).getRGB());
-
-
-
-
             int width = waterMarkZ2.getValue() + -12;
             int height = waterMarkZ1.getValue() + 17;
             GlStateManager.enableTexture2D();
@@ -335,17 +238,9 @@ public class FastPlace2
             }
             GlStateManager.enableDepth();
             GlStateManager.disableLighting();
-
-
-
-
-
-
-
-
-
         }
     }
+	
     private int getExpCount() {
         int expCount = 0;
         for (int i = 0; i < 45; ++i) {
@@ -359,11 +254,7 @@ public class FastPlace2
         return expCount;
     }
 
-
-
-
     public boolean rotate = true;
-
 
     @SubscribeEvent
     public void onUpdateWalkingPlayerEvent(EventPreMotion event) {
@@ -380,6 +271,4 @@ public class FastPlace2
         double dist = MathHelper.sqrt(difX * difX + difZ * difZ);
         return new float[]{(float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0), (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
     }
-
-
 }

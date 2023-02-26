@@ -16,7 +16,6 @@ public class AntiAFK
     private final Random random = new Random();
     private final Setting<Boolean> swing = this.register(new Setting<Boolean>("Swing", true));
     private final Setting<Boolean> turn = this.register(new Setting<Boolean>("Turn", true));
-	private final Setting<Boolean> move = this.register(new Setting<Boolean>("Move", true));
     private final Setting<Boolean> jump = this.register(new Setting<Boolean>("Jump", true));
     private final Setting<Boolean> sneak = this.register(new Setting<Boolean>("Sneak", false));
 	private final Setting<Boolean> itemSwap = this.register(new Setting<Boolean>("ItemSwap", false));
@@ -57,12 +56,6 @@ public class AntiAFK
         }
         if (AntiAFK.mc.player.ticksExisted % 50 == 0 && this.hitBlock.getValue().booleanValue()) {
             AntiAFK.mc.player.connection.sendPacket((Packet)new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, AntiAFK.mc.player.getPosition(), EnumFacing.DOWN));
-        }
-        if (AntiAFK.mc.player.ticksExisted % 150 == 0 && this.move.getValue().booleanValue()) {
-            AntiAFK.mc.gameSettings.keyBindForward.pressed = true;
-            AntiAFK.mc.gameSettings.keyBindBack.pressed = true;
-            AntiAFK.mc.gameSettings.keyBindRight.pressed = true;
-            AntiAFK.mc.gameSettings.keyBindLeft.pressed = true;
         }
     }
 }

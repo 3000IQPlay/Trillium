@@ -138,7 +138,7 @@ public class ModuleManager
         this.modules.add(new TrueDurability());
         this.modules.add(new Potions());
         this.modules.add(new CevBreaker());
-        this.modules.add(new AntiTittle());
+        this.modules.add(new AntiSpam());
         this.modules.add(new CoolCrosshair());
         this.modules.add(new ToolTips());
         this.modules.add(new Macros());

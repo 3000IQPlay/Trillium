@@ -29,8 +29,7 @@ import static net.minecraft.entity.EntityLivingBase.SWIM_SPEED;
 
 @Mixin(value={EntityLivingBase.class})
 public abstract class MixinEntityLivingBase
-        extends Entity implements  IEntityLivingBase
-{
+        extends Entity implements  IEntityLivingBase {
     @Shadow public int recentlyHit;
 
     public MixinEntityLivingBase(World worldIn) {
@@ -40,7 +39,6 @@ public abstract class MixinEntityLivingBase
     protected int armorValue = Integer.MAX_VALUE;
     protected float armorToughness = Float.MAX_VALUE;
     protected int explosionModifier = Integer.MAX_VALUE;
-
 
     @Shadow
     @Final
@@ -64,14 +62,12 @@ public abstract class MixinEntityLivingBase
     protected float lowestDura = Float.MAX_VALUE;
 
     @Override
-    public void setLowestDura(float lowest)
-    {
+    public void setLowestDura(float lowest) {
         this.lowestDura = lowest;
     }
 
     @Override
-    public float getLowestDurability()
-    {
+    public float getLowestDurability() {
         return lowestDura;
     }
 
@@ -141,12 +137,10 @@ public abstract class MixinEntityLivingBase
             this.motionY += (double)up;
             this.motionZ += (double)(forward * f2 + strafe * f1);
         }
-
     }
 
     @Shadow
     public AbstractAttributeMap attributeMap;
-
 
     public AbstractAttributeMap getAttributeMap() {
         if (this.attributeMap == null) {
@@ -168,17 +162,4 @@ public abstract class MixinEntityLivingBase
             ci.cancel();
         }
     }
-
-
-    /*
-    @Overwrite
-    public boolean isChild(){
-        return true;
-    }
-
-     */
-
-
-
-
 }

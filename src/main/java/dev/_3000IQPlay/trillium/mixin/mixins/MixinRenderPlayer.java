@@ -28,24 +28,6 @@ public class MixinRenderPlayer
         }
     }
 
-/*
-    @Redirect(method = "renderRightArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;color(FFF)V"))
-    public void renderRightArmHook(float colorRed, float colorGreen, float colorBlue) {
-        if (HandChams.getInstance().isEnabled() && HandChams.getInstance().Mode.getValue() == HandChams.ChamsMode.Gradient) {
-            GlStateManager.color(1.0f, 1.0f, 1.0f, HandChams.getInstance().coloralpha.getValue() / 255.0f);
-        }
-    }
-
-/*
-    @Redirect(method = "renderLeftArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;color(FFF)V"))
-    public void renderLeftArmHook(float colorRed, float colorGreen, float colorBlue) {
-        if (HandChams.getInstance().isEnabled() && HandChams.getInstance().Mode.getValue() == HandChams.ChamsMode.Gradient) {
-            GlStateManager.color(1.0f, 1.0f, 1.0f, HandChams.getInstance().coloralpha.getValue() / 255.0f);
-        }
-    }
-
- */
-
     private final ResourceLocation amogus = new ResourceLocation("textures/amogus.png");
     private final ResourceLocation demon = new ResourceLocation("textures/demon.png");
     private final ResourceLocation rabbit = new ResourceLocation("textures/rabbit.png");
@@ -53,12 +35,9 @@ public class MixinRenderPlayer
 
     @Overwrite
     public ResourceLocation getEntityTexture(AbstractClientPlayer entity){
-
-        if(Trillium.moduleManager.getModuleByClass(Models.class).isEnabled() && (!Trillium.moduleManager.getModuleByClass(Models.class).onlySelf.getValue() || entity == Minecraft.getMinecraft().player || Trillium.friendManager.isFriend(entity.getName()) && Trillium.moduleManager.getModuleByClass(Models.class).friends.getValue())){
+        if (Trillium.moduleManager.getModuleByClass(Models.class).isEnabled() && (!Trillium.moduleManager.getModuleByClass(Models.class).onlySelf.getValue() || entity == Minecraft.getMinecraft().player || Trillium.friendManager.isFriend(entity.getName()) && Trillium.moduleManager.getModuleByClass(Models.class).friends.getValue())){
             if (Trillium.moduleManager.getModuleByClass(Models.class).Mode.getValue() == Models.mode.Amogus) {
                 return amogus;
-
-                //return new ResourceLocation("assets/minecraft/textures/amogus.png");
             }
 
             if (Trillium.moduleManager.getModuleByClass(Models.class).Mode.getValue() == Models.mode.Rabbit) {
@@ -78,5 +57,4 @@ public class MixinRenderPlayer
         }
         return entity.getLocationSkin();
     }
-
 }

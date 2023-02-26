@@ -25,20 +25,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = {World.class})
 public class MixinWorld {
 
-
-
-/*
-    @Inject(method = { "checkLightFor" },  at = { @At("HEAD") },  cancellable = true)
-    private void updateLightmapHook(final EnumSkyBlock lightType, final BlockPos pos, final CallbackInfoReturnable<Boolean> info) {
-        if (lightType == EnumSkyBlock.SKY && NoRender.getInstance().isOn() && (NoRender.getInstance().skylight.getValue() == NoRender.Skylight.WORLD || NoRender.getInstance().skylight.getValue() == NoRender.Skylight.ALL)) {
-            info.setReturnValue((Boolean) true);
-            info.cancel();
-        }
-    }
-
-
- */
-
     @Shadow
     @Final
     public boolean isRemote;
@@ -95,12 +81,14 @@ public void updateEntitiesHook(CallbackInfo ci)
         MinecraftForge.EVENT_BUS.post(event);
         return entity.isPushedByWater() && !event.isCanceled();
     }
+	
     @Inject(method = { "spawnEntity" }, at = { @At("HEAD") }, cancellable = true)
     public void spawnEntityHook(final Entity entityIn, final CallbackInfoReturnable<Boolean> cir) {
         if (NoRender.getInstance().hooks.getValue() && NoRender.getInstance().isEnabled() && entityIn instanceof EntityFishHook) {
             cir.cancel();
         }
     }
+	
     @Inject(method = { "spawnEntity" }, at = { @At("HEAD") }, cancellable = true)
     public void spawnEntityFireWork(final Entity entityIn, final CallbackInfoReturnable<Boolean> cir) {
         if (NoRender.getInstance().fireworks.getValue() && NoRender.getInstance().isEnabled() && entityIn instanceof EntityFireworkRocket) {
@@ -108,10 +96,7 @@ public void updateEntitiesHook(CallbackInfo ci)
         }
     }
 
-
     double nigga1,nigga2,nigga3;
-
-
 
     @Inject(method = "updateEntityWithOptionalForce", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;onUpdate()V", shift = At.Shift.AFTER))
     public void updateEntityWithOptionalForceHookPost(Entity entityIn, boolean forceUpdate, CallbackInfo ci) {
@@ -128,53 +113,4 @@ public void updateEntitiesHook(CallbackInfo ci)
         nigga2 = entityIn.posY;
         nigga3 = entityIn.posZ;
     }
-
-    /*
-    @Inject(method = "updateEntityWithOptionalForce",
-            at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/World;updateEntityWithOptionalForce(Lnet/minecraft/entity/Entity;Z)V",
-            shift = At.Shift.AFTER))
-    public void updateEntityWithOptionalForceHookPost(Entity entityIn, boolean forceUpdate, CallbackInfo ci) {
-        if (nigga1 != entityIn.posX || nigga2 != entityIn.posY || nigga3 != entityIn.posZ) {
-            EventEntityMove event = new EventEntityMove(entityIn, new Vec3d(nigga1, nigga2, nigga3));
-            MinecraftForge.EVENT_BUS.post(event);
-        }
-    }
-
-     */
-
-/*
-
-
-		if (forceUpdate && entityIn.addedToChunk) {
-			++entityIn.ticksExisted;
-
-			if (entityIn.isRiding()) {
-				entityIn.updateRidden();
-			} else {
-				double prevPosX = entityIn.posX;
-				double prevPosY = entityIn.posY;
-				double prevPosZ = entityIn.posZ;
-				entityIn.onUpdate();
-				if (prevPosX != entityIn.posX || prevPosY != entityIn.posY || prevPosZ != entityIn.posZ) {
-					EventEntityMove eem = new EventEntityMove(entityIn, new Vec3d(prevPosX, prevPosY, prevPosZ));
-					EventManager.call(eem);
-				}
-
-			}
-
-
-
-        if (forceUpdate && entityIn.addedToChunk) {
-            ++entityIn.ticksExisted;
-            if (entityIn.isRiding()) {
-                entityIn.updateRidden();
-            } else if (!entityIn.updateBlocked) {
-                entityIn.onUpdate();
-            }
-        }
-
-
- */
 }
-

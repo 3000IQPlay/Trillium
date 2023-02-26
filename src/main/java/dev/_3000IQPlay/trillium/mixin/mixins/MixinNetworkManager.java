@@ -20,7 +20,6 @@ import static dev._3000IQPlay.trillium.util.ItemUtil.mc;
 @Mixin(value = {NetworkManager.class})
 public class MixinNetworkManager {
 
-
     @Inject(method = {"sendPacket(Lnet/minecraft/network/Packet;)V"}, at = {@At(value = "HEAD")}, cancellable = true)
     private void onSendPacketPre(Packet<?> packet, CallbackInfo info) {
         PacketEvent.Send event = new PacketEvent.Send(0, packet);

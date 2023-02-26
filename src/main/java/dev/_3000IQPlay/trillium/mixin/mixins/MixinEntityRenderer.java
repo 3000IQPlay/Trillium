@@ -78,8 +78,6 @@ public abstract class MixinEntityRenderer
             GlStateManager.enableTexture2D();
             GlStateManager.enableBlend();
             GlStateManager.enableDepth();
-            //GlStateManager.resetColor();
-           // GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
 
@@ -167,8 +165,6 @@ public abstract class MixinEntityRenderer
         }
     }
 
-
-
     private int[] toRGBAArray(int colorBuffer) {
         return new int[] { colorBuffer >> 16 & 0xFF, colorBuffer >> 8 & 0xFF, colorBuffer & 0xFF };
     }
@@ -176,8 +172,6 @@ public abstract class MixinEntityRenderer
     private Vector3f mix(Vector3f first, Vector3f second, float factor) {
         return new Vector3f(first.x * (1.0f - factor) + second.x * factor, first.y * (1.0f - factor) + second.y * factor, first.z * (1.0f - factor) + first.z * factor);
     }
-
-
 
     @Redirect(method = { "setupCameraTransform" },  at = @At(value = "FIELD",  target = "Lnet/minecraft/client/entity/EntityPlayerSP;prevTimeInPortal:F"))
     public float prevTimeInPortalHook(final EntityPlayerSP entityPlayerSP) {
@@ -238,7 +232,6 @@ public abstract class MixinEntityRenderer
             if (!module.cancelItem.getValue()) {
                 doRenderHand(partialTicks, pass, mc);
             }
-
             if (!(module.glowESP.getValue()== ItemShaders.glowESPmode.None) && !(module.fillShader.getValue() == ItemShaders.fillShadermode.None)) {
                 GlStateManager.pushMatrix();
                 RenderHand.PreBoth hand = new RenderHand.PreBoth(partialTicks);
@@ -248,7 +241,6 @@ public abstract class MixinEntityRenderer
                 MinecraftForge.EVENT_BUS.post(hand2);
                 GlStateManager.popMatrix();
             }
-
             if (!(module.glowESP.getValue() == ItemShaders.glowESPmode.None)) {
                 GlStateManager.pushMatrix();
                 RenderHand.PreOutline hand = new RenderHand.PreOutline(partialTicks);
@@ -258,7 +250,6 @@ public abstract class MixinEntityRenderer
                 MinecraftForge.EVENT_BUS.post(hand2);
                 GlStateManager.popMatrix();
             }
-
             if (!(module.fillShader.getValue() == ItemShaders.fillShadermode.None)) {
                 GlStateManager.pushMatrix();
                 RenderHand.PreFill hand = new RenderHand.PreFill(partialTicks);
@@ -268,10 +259,8 @@ public abstract class MixinEntityRenderer
                 MinecraftForge.EVENT_BUS.post(hand2);
                 GlStateManager.popMatrix();
             }
-
             ci.cancel();
         }
-
     }
 
     @Shadow

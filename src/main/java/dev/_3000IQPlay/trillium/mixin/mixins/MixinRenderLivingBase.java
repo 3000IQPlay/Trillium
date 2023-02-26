@@ -1,7 +1,6 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
 import dev._3000IQPlay.trillium.Trillium;
-import dev._3000IQPlay.trillium.modules.misc.AntiTittle;
 import dev._3000IQPlay.trillium.modules.render.NoRender;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
@@ -39,8 +38,6 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
         this.blue = 0.0F;
     }
 
-
-
     @Shadow
     protected abstract boolean isVisible(EntityLivingBase paramEntityLivingBase);
 
@@ -71,24 +68,16 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
     @Shadow
     protected abstract void unsetBrightness();
 
-   // @Shadow
-   // protected abstract void renderModel(T paramT, float paramFloat1, float paramFloat2, float paramFloat3, float paramFloat4, float paramFloat5, float paramFloat6);
-
     @Shadow
     protected abstract void renderLayers(T paramT, float paramFloat1, float paramFloat2, float paramFloat3, float paramFloat4, float paramFloat5, float paramFloat6, float paramFloat7);
 
     @Shadow
     protected abstract boolean setDoRenderBrightness(T paramT, float paramFloat);
 
-
-
     @Inject(method = "doRender", at = @At("HEAD"), cancellable = true)
     private <T extends EntityLivingBase> void injectChamsPre(T entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo callbackInfo) {
-
-        if ((entity instanceof EntityArmorStand) && (NoRender.getInstance().noarmorstands.getValue() || Trillium.moduleManager.getModuleByClass(AntiTittle.class).armorstands.getValue())) {
+        if ((entity instanceof EntityArmorStand) && (NoRender.getInstance().noarmorstands.getValue())) {
             callbackInfo.cancel();
         }
-
     }
-
 }

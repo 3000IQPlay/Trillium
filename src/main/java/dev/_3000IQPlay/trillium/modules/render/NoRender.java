@@ -38,6 +38,7 @@ class NoRender
     public Setting < Boolean > arrows = this.register ( new Setting <> ( "Arrows" , false ) );
 	public Setting < Boolean > maps = this.register ( new Setting <> ( "Maps" , false ) );
     public Setting < Boolean > containerBackground = this.register ( new Setting <> ( "ContainerBG" , false ) );
+	public Setting < Boolean > scoreBoard = this.register ( new Setting <> ( "ScoreBoard" , false ) );
     public Setting < Boolean > SkyLight = this.register ( new Setting <> ( "SkyLight" , false ) );
     public Setting < Boolean > portal = this.register ( new Setting <> ( "portal" , false  ) );
     public Setting < Boolean > totemPops = this.register ( new Setting <> ( "TotemPop" , false  ) );

@@ -29,7 +29,6 @@ public abstract class MixinEntityPlayer extends EntityLivingBase implements IEnt
 
     }
 
-
     @Unique
     private MotionTracker motionTracker;
     @Unique

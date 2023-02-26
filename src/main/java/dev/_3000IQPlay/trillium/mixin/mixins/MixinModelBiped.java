@@ -18,5 +18,4 @@ import static dev._3000IQPlay.trillium.util.Util.mc;
 
 @Mixin(ModelBiped.class)
 public abstract class MixinModelBiped extends ModelBase {
-
 }

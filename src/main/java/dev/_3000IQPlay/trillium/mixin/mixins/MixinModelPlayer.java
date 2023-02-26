@@ -502,20 +502,12 @@ public class MixinModelPlayer extends ModelBiped{
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
     }
-    /**
-     * @author
-     * @reason
-     */
+	
     @Overwrite
-    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
-//        super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-
-        if(left_leg == null){
+    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        if (left_leg == null){
             generatemodel();
         }
-
-
 
         Models customModel = Trillium.moduleManager.getModuleByClass(Models.class);
         GlStateManager.pushMatrix();
@@ -649,5 +641,4 @@ public class MixinModelPlayer extends ModelBiped{
         }
         GlStateManager.popMatrix();
     }
-
 }

@@ -245,18 +245,6 @@ public abstract class MixinEntity implements IEntity
         this.stamp = System.currentTimeMillis();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     @Inject(method = "setPositionAndRotation", at = @At("RETURN"))
     public void setPositionAndRotationHook(double x,
                                            double y,
