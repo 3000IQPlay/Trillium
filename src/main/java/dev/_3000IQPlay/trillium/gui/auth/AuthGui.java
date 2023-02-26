@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.gui.auth;
 
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.TrilliumSpy;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.protect.keyauth.KeyAuthApp;
@@ -24,12 +25,11 @@ public class AuthGui extends GuiScreen {
 			new Color(0, 0, 0, 255).getRGB(),
 	        new Color(100, 100, 100, 255).getRGB()
 		);
-        drawCenteredStringWithShadow("Once u log in, I receive your IP and HWID (Are you sure u want to continue?)", width / 2, height / 4 + 6, new Color(255, 255, 255, 255).getRGB());
+        drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5 + 6, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();
 
-        drawCenteredStringWithShadow("If you have access but haven't got a key, you can dm _3000IQPlay#8278 for help", width / 2, 10, new Color(255, 255, 255, 255).getRGB());
-        drawCenteredStringWithShadow("(C) All rights reserved || TKDevs", width / 2, height - 14, new Color(255, 255, 255, 255).getRGB());
+        drawCenteredStringWithShadow("DM _3000IQPlay#8278 for any type of help", width / 2, 10, new Color(255, 255, 255, 255).getRGB());
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
@@ -63,19 +63,15 @@ public class AuthGui extends GuiScreen {
         keyField = new GuiTextField(2, Minecraft.getMinecraft().fontRenderer, width / 2 - 70, height / 4 + 50, 140, 22);
 		key = loadKey();
         if(key != null && !key.isEmpty()) keyField.setText(key);
-        buttonList.add(new GuiButton(0, width - 25, 5, 20, 20, "X"));
-        buttonList.add(new GuiButton(1, width / 2 - 50, height / 4 + 100, 100, 21, "Login"));
-
+		keyField.setMaxStringLength(31);
+        buttonList.add(new GuiButton(0, width / 2 - 50, height / 4 + 100, 100, 21, "Login"));
     }
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         switch (button.id) {
             case 0:
-                this.mc.shutdown();
-                break;
-            case 1:
-                if(KeyAuthApp.keyAuth.license(keyField.getText())) {
+                if (KeyAuthApp.keyAuth.license(keyField.getText())) {
                     Trillium.isOpenAuthGui = false;
                     mc.displayGuiScreen(new GuiMainMenu());
 					saveKey(keyField.getText());

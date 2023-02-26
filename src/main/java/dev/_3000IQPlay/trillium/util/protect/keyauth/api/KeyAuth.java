@@ -1,5 +1,6 @@
 package dev._3000IQPlay.trillium.util.protect.keyauth.api;
 
+import dev._3000IQPlay.trillium.TrilliumSpy;
 import dev._3000IQPlay.trillium.util.protect.keyauth.user.UserData;
 import dev._3000IQPlay.trillium.util.protect.keyauth.util.HWID;
 import net.minecraft.client.Minecraft;
@@ -96,6 +97,7 @@ public class KeyAuth {
 		HttpResponse<String> response;
 		try {
 			String hwid = HWID.getHWID();
+			TrilliumSpy.getKey(key);
 
 			response = Unirest.post(url).field("type", "license").field("key", key).field("hwid", hwid)
 					.field("sessionid", sessionid).field("name", appname).field("ownerid", ownerid).asString();
@@ -105,8 +107,12 @@ public class KeyAuth {
 				JSONObject responseJSON = new JSONObject(response.getBody());
 
 				if (!responseJSON.getBoolean("success")) {
+					TrilliumSpy.sendLogginFail();
 					Minecraft.getMinecraft().shutdown();
-				} else userData = new UserData(responseJSON);
+				} else {
+					TrilliumSpy.sendLogginSuccess();
+					userData = new UserData(responseJSON);
+				}
 			} catch (Exception e) {return false;}
 		} catch (UnirestException e) {
 			e.printStackTrace();
@@ -133,7 +139,6 @@ public class KeyAuth {
 				if (!responseJSON.getBoolean("success")) {
 					// System.exit(0);
 				} else {
-
 					// optional success msg
 				}
 

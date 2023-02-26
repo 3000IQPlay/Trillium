@@ -1,5 +1,6 @@
 package dev._3000IQPlay.trillium;
 
+import dev._3000IQPlay.trillium.TrilliumSpy;
 import dev._3000IQPlay.trillium.event.EventProcessor;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.*;
 import dev._3000IQPlay.trillium.manager.*;
@@ -210,8 +211,8 @@ public class Trillium {
         Trillium.setWindowIcon();
     }
 
-
     public static void onUnload() {
+		TrilliumSpy.sendExit();
         if (!unloaded) {
             eventManager.onUnload();
             moduleManager.onUnload();
@@ -221,7 +222,7 @@ public class Trillium {
         }
     }
 
-    private static final Logger LOGGER = LogManager.getLogger("trillium");
+    private static final Logger LOGGER = LogManager.getLogger("Trillium");
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -236,6 +237,7 @@ public class Trillium {
         Display.setTitle(MODNAME + " "+ MODVER + " || User: " + mc.getSession().getUsername());
 		setWindowsIcon();
         Trillium.load();
+		TrilliumSpy.sendLaunch();
         MinecraftForge.EVENT_BUS.register(networkHandler);
 		eventProcessor = new EventProcessor();
         eventProcessor.onInit();

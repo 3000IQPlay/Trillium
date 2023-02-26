@@ -177,6 +177,7 @@ public class ModuleManager
 		this.modules.add(new DamageParticles());
 		this.modules.add(new SkyColor());
 		this.modules.add(new EntityControl());
+		this.modules.add(new AntiAFK());
     }
 
     public Module getModuleByName(String name) {
