@@ -58,7 +58,7 @@ public class ClickGui
 	
     public final Setting<ColorSetting> slidercolor = this.register(new Setting<>("SliderColor", new ColorSetting(-16733441)));
 	
-    public final Setting<ColorSetting> gcolor1 = this.register(new Setting<>("gcolor1", new ColorSetting(-4597637,true)));
+    public final Setting<ColorSetting> gcolor1 = this.register(new Setting<>("gcolor1", new ColorSetting(-4597637)));
     public final Setting<ColorSetting> gcolor2 = this.register(new Setting<>("gcolor2", new ColorSetting(-16777216)));
 	
     public final Setting<ColorSetting> topColor = this.register(new Setting<>("TopColor", new ColorSetting(-115042915)));
