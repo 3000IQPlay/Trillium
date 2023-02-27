@@ -13,8 +13,7 @@ public class FileManager
         extends Feature {
     private final Path base = this.getMkDirectory(this.getRoot(), "Trillium");
     private final Path config = this.getMkDirectory(this.base, "config");
-    private final Path notebot = this.getMkDirectory(this.base, "tmp");
-    private final Path avatars = this.getMkDirectory(this.base, "friendsAvatars");
+    private final Path avatars = this.getMkDirectory(this.base, "FriendsAvatars");
     private final Path skins = this.getMkDirectory(this.base, "skins");
     private final Path niggs = this.getMkDirectory(this.base, "customimg");
 

@@ -49,19 +49,13 @@ public class EventManager extends Feature {
         MinecraftForge.EVENT_BUS.unregister(this);
     }
 
-
     @SubscribeEvent
     public void onUpdate(LivingEvent.LivingUpdateEvent event) {
         if (!fullNullCheck() && (event.getEntity().getEntityWorld()).isRemote && event.getEntityLiving().equals(mc.player)) {
-            if(mc.player != null && mc.player.getName().equals("Hell_Raider")){
-                Trillium.unload(true);
-            }
             Trillium.moduleManager.onUpdate();
             Trillium.moduleManager.sortModules(true);
         }
     }
-
-
 
     @SubscribeEvent
     public void onClientConnect(FMLNetworkEvent.ClientConnectedToServerEvent event) {
@@ -98,7 +92,6 @@ public class EventManager extends Feature {
             }
         }
     }
-
 
     public static String serverip = "null";
     @SubscribeEvent
@@ -191,7 +184,6 @@ public class EventManager extends Feature {
         if (event.isCanceled())
             return;
 
-
         mc.profiler.startSection("Trillium");
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
@@ -200,10 +192,6 @@ public class EventManager extends Feature {
         GlStateManager.shadeModel(7425);
         GlStateManager.disableDepth();
         GlStateManager.glLineWidth(1.0F);
-
-
-
-
 
        // prepareGL();
         Render3DEvent render3dEvent = new Render3DEvent(event.getPartialTicks());
@@ -225,9 +213,6 @@ public class EventManager extends Feature {
         GlStateManager.enableBlend();
         GlStateManager.enableDepth();
            mc.profiler.endSection();
-
-
-
     }
 
     @SubscribeEvent
@@ -273,11 +258,11 @@ public class EventManager extends Feature {
                 if (event.getMessage().length() > 1) {
                     Trillium.commandManager.executeCommand(event.getMessage().substring(Command.getCommandPrefix().length() - 1));
                 } else {
-                    Command.sendMessage("Неверная команда!");
+                    Command.sendMessage("Wrong command!");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Command.sendMessage(ChatFormatting.RED + "Ошибка команды!");
+                Command.sendMessage(ChatFormatting.RED + "Command error!");
             }
         }
     }
@@ -288,7 +273,6 @@ public class EventManager extends Feature {
     public void onTickHighest(final TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             this.tickOngoing.set(true);
-         //   NewAC.getInstance().tickRunning.set(true);
         }
     }
 
@@ -296,7 +280,6 @@ public class EventManager extends Feature {
     public void onTickLowest(final TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             this.tickOngoing.set(false);
-            //NewAC.getInstance().tickRunning.set(false);
         }
     }
     public static boolean isMacro = false;

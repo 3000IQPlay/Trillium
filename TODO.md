@@ -8,3 +8,5 @@ Advence the GUI little bit
 + Added DeathSounds (Done)
 
 - Removed LowHPScreen (Done)
+
+* Transaltions

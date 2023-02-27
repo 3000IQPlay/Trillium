@@ -12,14 +12,14 @@ public class Optimization extends Module {
         super("RamOptimization", "Optimizes your ram so it woudnt explode", Category.CLIENT, true, false, false);
     }
 
-    public Setting<Boolean> cleanOnJoin = register(new Setting<>("cleanOnJoin", false));
-    public Setting<Boolean> autoCleanup = register(new Setting<>("autoCleanup", false));
+    public Setting<Boolean> cleanOnJoin = register(new Setting<>("CleanOnJoin", false));
+    public Setting<Boolean> autoCleanup = register(new Setting<>("AutoCleanup", false));
 
 
-    public Setting<Integer> minInterval = register(new Setting("minInterval", 1800, 5, 10000));
+    public Setting<Integer> minInterval = register(new Setting("MinInterval", 1800, 5, 10000));
     public Setting<Integer> maxInterval = register(new Setting("FOV", 1800, 5, 10000));
-    public Setting<Integer> minIdleTime = register(new Setting("minIdleTime", 1800, 5, 10000));
-    public Setting<Integer> forceCleanPercentage = register(new Setting("forceCleanPercentage", 80, 20, 100));
+    public Setting<Integer> minIdleTime = register(new Setting("MinIdleTime", 1800, 5, 10000));
+    public Setting<Integer> forceCleanPercentage = register(new Setting("ForceCleanPercentage", 80, 20, 100));
 
 
     public static long lastCleanTime = 0;

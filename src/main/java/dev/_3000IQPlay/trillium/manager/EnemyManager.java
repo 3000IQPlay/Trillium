@@ -75,12 +75,7 @@ public class EnemyManager
 
     public void addEnemy(Enemy enemy) {
         this.enemies.add(enemy);
-
     }
-
-
-
-
 
     public static class Enemy {
         private final String username;

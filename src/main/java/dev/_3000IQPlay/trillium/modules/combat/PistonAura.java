@@ -1197,24 +1197,14 @@ public class PistonAura extends Module {
         }
     }
 
-
     public void lookAtVec3d(Vec3d vec3d) {
         float[] angle = MathUtil.calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), new Vec3d(vec3d.x, vec3d.y, vec3d.z));
         yawToEvent = angle[0];
         pitchToEvent = angle[1];
     }
+	
     public void lookAtXYZ(double x, double y, double z) {
         Vec3d vec3d = new Vec3d(x, y, z);
         lookAtVec3d(vec3d);
     }
-
-    // поршень -> кристал -> редстоун -> лома
-
-    //       # <- redstone stage 3           x - TARGET
-    //       # <- piston stage 1           # - SUPPORT BLOCK
-    //       # <- crystal stage 2
-    //   ### x ###
-    //       #
-    //       #
-    //       #
 }

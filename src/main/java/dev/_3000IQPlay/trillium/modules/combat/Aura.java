@@ -70,7 +70,7 @@ public class Aura extends Module {
     public static Vector2f serverRotation = new Vector2f();
 
     public enum rotmod {
-        Matrix, Nexus, FunnyGame,DeadCode;
+        NCP, Matrix, Nexus, DeadCode;
     }
 	
 	public enum AutoSwitch {
@@ -79,7 +79,7 @@ public class Aura extends Module {
 
     /*-------------   AntiCheat  ----------*/
   //  public  Setting<Parent> antiCheat = this.register(new Setting<>("AntiCheat", new Parent(false)));
-    private Setting<rotmod> rotation = register(new Setting("Rotation", rotmod.Matrix));//(antiCheat);
+    private Setting<rotmod> rotation = register(new Setting("Rotation", rotmod.NCP));//(antiCheat);
     public Setting<Boolean> fullpower = register(new Setting<>("fullpower", false));//(antiCheat);
     public Setting<Boolean> betterCrits = register(new Setting<>("BetterCrits", true));//(antiCheat);
     public Setting<Boolean> rtx = register(new Setting<>("RTX", true));//(antiCheat);
@@ -702,7 +702,7 @@ public class Aura extends Module {
                     this.prevAdditionYaw = additionYaw;
                     break;
                 }
-                case FunnyGame: {
+                case NCP: {
                     float[] ncp;
                     if(!backtrack.getValue() || !btprofit || getBestHitbox(base,getAttackdistance()) == null) {
                         ncp = RotationHelper.getNCPRotations(base, false);
@@ -745,7 +745,7 @@ public class Aura extends Module {
             SPacketEntityStatus sPacketEntityStatus = sound.getPacket();
             if (sPacketEntityStatus.getOpCode() == 30) {
                 if (sPacketEntityStatus.getEntity(mc.world) == target) {
-                    NotificationManager.publicity(TextFormatting.GREEN + "ShieldBreaker", "Успешно снёс щит " + target.getName(), 2, NotificationType.SUCCESS);
+                    NotificationManager.publicity(TextFormatting.GREEN + "ShieldBreaker", "Successfully took down"  + target.getName() + "s shield", 2, NotificationType.SUCCESS);
                 }
             }
         }

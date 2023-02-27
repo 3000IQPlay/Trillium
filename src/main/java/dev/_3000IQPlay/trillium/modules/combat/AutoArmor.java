@@ -43,11 +43,11 @@ public class AutoArmor
     }
 
 
-    private Setting<Mode> mode = register(new Setting<>("Mode", Mode.FunnyGame));
+    private Setting<Mode> mode = register(new Setting<>("Mode", Mode.NCP));
 
 
     public enum Mode {
-        FunnyGame,
+        NCP,
         Default
     }
 
