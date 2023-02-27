@@ -18,9 +18,8 @@ import org.lwjgl.opengl.GL11;
 
 public class JumpCircle extends Module {
 
-
     public JumpCircle() {
-        super("JumpCircle", "JumpCircle", Category.RENDER, true, false, false);
+        super("JumpCircle", "JumpCircle", Module.Category.RENDER, true, false, false);
     }
 
     public Setting<Float> range2 = register(new Setting<>("Radius", 1F, 0.1F, 3.0F));

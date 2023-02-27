@@ -29,13 +29,13 @@ import java.util.Objects;
 @Mod(
         modid = "trillium",
         name = "Trillium",
-        version = "b1.5.9")
+        version = "b1.6.4")
 
 
 public class Trillium {
     public static final String MODID = "trillium";
 	public static final String MODNAME = "Trillium";
-    public static final String MODVER = "b1.5.9";
+    public static final String MODVER = "b1.6.4";
     public static boolean isOpenAuthGui;
     public static CommandManager commandManager;
     public static FriendManager friendManager;

@@ -37,7 +37,6 @@ public class ModuleManager
         this.modules.add(new ClickGui());
         this.modules.add(new AimAssist());
         this.modules.add(new AntiBadEffects());
-        this.modules.add(new LowHPScreen());
         this.modules.add(new Optimization());
         this.modules.add(new AutoCrystal());
         this.modules.add(new AutoMine());
