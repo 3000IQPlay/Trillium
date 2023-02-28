@@ -42,29 +42,29 @@ public class EntityESP extends Module {
 
     private final int black = Color.BLACK.getRGB();
 
-    private Setting<healcolorModeEn> healcolorMode = register(new Setting("HealthMode", healcolorModeEn.Custom));
+    private final Setting<healcolorModeEn> healcolorMode = register(new Setting("HealthMode", healcolorModeEn.Custom));
     public enum healcolorModeEn {
-        Custom, Astolfo, Health,Rainbow,Client;
+        Custom, Astolfo, Health,Rainbow,Client
     }
-    private Setting<colorModeEn> colorMode = register(new Setting("ColorBoxMode", colorModeEn.Custom));
+    private final Setting<colorModeEn> colorMode = register(new Setting("ColorBoxMode", colorModeEn.Custom));
     public enum colorModeEn {
-        Custom, Astolfo,Rainbow,Client;
+        Custom, Astolfo,Rainbow,Client
     }
-    private Setting<triangleModeEn> triangleMode = register(new Setting("TriangleMode", triangleModeEn.Custom));
+    private final Setting<triangleModeEn> triangleMode = register(new Setting("TriangleMode", triangleModeEn.Custom));
     public enum triangleModeEn {
-        Custom, Astolfo,Rainbow,Client;
+        Custom, Astolfo,Rainbow,Client
     }
-    private Setting<espModeEn> espMode = register(new Setting("ESPMode", espModeEn.Flat));
+    private final Setting<espModeEn> espMode = register(new Setting("ESPMode", espModeEn.Flat));
     public enum espModeEn {
-        Flat, Box;
+        Flat, Box
     }
-    private Setting<rectModeEn> rectMode = register(new Setting("RectMode", rectModeEn.Default));
+    private final Setting<rectModeEn> rectMode = register(new Setting("RectMode", rectModeEn.Default));
     public enum rectModeEn {
-        Default, Smooth;
+        Default, Smooth
     }
-    private Setting<csgoModeEn> csgoMode = register(new Setting("CSGOMode", csgoModeEn.Box));
+    private final Setting<csgoModeEn> csgoMode = register(new Setting("CSGOMode", csgoModeEn.Box));
     public enum csgoModeEn {
-        Box, Corner;
+        Box, Corner
     }
 
 

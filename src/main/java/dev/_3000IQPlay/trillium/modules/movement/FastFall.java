@@ -2,15 +2,13 @@ package dev._3000IQPlay.trillium.modules.movement;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
+import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
+import dev._3000IQPlay.trillium.modules.player.FreeCam;
+import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.EntityUtil;
 import dev._3000IQPlay.trillium.util.PlayerUtils;
 import dev._3000IQPlay.trillium.util.Timer;
-import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
-import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.modules.movement.Flight;
-import dev._3000IQPlay.trillium.modules.movement.Speed;
-import dev._3000IQPlay.trillium.modules.player.FreeCam;
-import dev._3000IQPlay.trillium.setting.Setting;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
@@ -150,8 +148,8 @@ public class FastFall
         return state.getBlock() == Blocks.AIR;
     }
 	
-	public static enum Mode {
+	public enum Mode {
         Motion,
-        Timer;
+        Timer
     }
 }

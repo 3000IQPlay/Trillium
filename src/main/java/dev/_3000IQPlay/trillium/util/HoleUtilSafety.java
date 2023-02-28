@@ -202,7 +202,7 @@ public class HoleUtilSafety
                 int n6 = bl ? n2 - (int)d : n2;
                 while (true) {
                     double d2 = n6;
-                    double d3 = bl ? (double)n2 + d : (double)n2 + d;
+                    double d3 = (double) n2 + d;
                     double d4 = d3;
                     if (!(d2 < d3)) break;
                     double d5 = (n - n4) * (n - n4) + (n3 - n5) * (n3 - n5) + (bl ? (n2 - n6) * (n2 - n6) : 0);

@@ -55,8 +55,8 @@ public class Animations
         }
     }
 
-    public static enum AnimationVersion {
+    public enum AnimationVersion {
         OneDotEight,
-        OneDotTwelve;
+        OneDotTwelve
     }
 }

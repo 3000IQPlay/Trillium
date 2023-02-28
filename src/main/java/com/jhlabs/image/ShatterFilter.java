@@ -1,14 +1,12 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import java.awt.Color;
-/*     */ import java.awt.Graphics2D;
-/*     */ import java.awt.Rectangle;
-/*     */ import java.awt.Shape;
-/*     */ import java.awt.geom.AffineTransform;
-/*     */ import java.awt.geom.Point2D;
-/*     */ import java.awt.image.BufferedImage;
-/*     */ import java.awt.image.ImageObserver;
-/*     */ import java.util.Random;
+/*     */
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -248,7 +246,7 @@
 /* 248 */       g.setColor(Color.getHSBColor(h, 1.0F, 1.0F));
 /* 249 */       Shape clip = g.getClip();
 /* 250 */       g.clip(tile.shape);
-/* 251 */       g.drawImage(src, 0, 0, (ImageObserver)null);
+/* 251 */       g.drawImage(src, 0, 0, null);
 /* 252 */       g.setClip(clip);
 /* 253 */       g.setTransform(t);
 /*     */     } 

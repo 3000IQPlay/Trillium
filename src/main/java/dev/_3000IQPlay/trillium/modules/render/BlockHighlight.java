@@ -19,7 +19,7 @@ public class BlockHighlight
 	private final Setting<ColorSetting> bfC = this.register(new Setting<ColorSetting>("BottomFill", new ColorSetting(0x00ffff)));
 	private final Setting<ColorSetting> boC = this.register(new Setting<ColorSetting>("BottomOutline", new ColorSetting(0x00ffff)));
 	private final Setting<Float> lineWidth = this.register(new Setting<Object>("LineWidth", Float.valueOf(1.5f), Float.valueOf(0.1f), Float.valueOf(5.0f)));
-	private int currentAlpha = 0;
+	private final int currentAlpha = 0;
 
     public BlockHighlight() {
         super("BlockHighlight", "Highlights the block u look at.", Module.Category.RENDER, false, false, false);

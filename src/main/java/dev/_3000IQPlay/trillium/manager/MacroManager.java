@@ -1,7 +1,6 @@
 package dev._3000IQPlay.trillium.manager;
 
 import dev._3000IQPlay.trillium.macro.Macro;
-import org.lwjgl.input.Keyboard;
 
 import java.io.*;
 import java.util.concurrent.CopyOnWriteArrayList;

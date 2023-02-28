@@ -25,15 +25,15 @@ public class AimAssist extends Module{
     }
 
 
-    private Setting<sortEn> sort = register(new Setting("TargetMode", sortEn.Distance));
+    private final Setting<sortEn> sort = register(new Setting("TargetMode", sortEn.Distance));
 
     public enum sortEn {
-        Distance, HigherArmor, BlockingStatus,LowestArmor, Health,Angle,HurtTime;
+        Distance, HigherArmor, BlockingStatus,LowestArmor, Health,Angle,HurtTime
     }
-    private Setting<clickModeEn> part = register(new Setting("part", clickModeEn.Random));
+    private final Setting<clickModeEn> part = register(new Setting("part", clickModeEn.Random));
 
     public enum clickModeEn {
-        Chest, Head, Leggings, Boots, Random;
+        Chest, Head, Leggings, Boots, Random
     }
 
     public Setting<Boolean> players = register(new Setting<>("Players",  true));
@@ -101,7 +101,7 @@ public class AimAssist extends Module{
         else deltaY = 0;
     }
     private final Timer leftTimer = new Timer();
-    private double leftDelay = 0;
+    private final double leftDelay = 0;
     @SubscribeEvent
     public void onRender3D(Render3DEvent event) {
         if(target != null){

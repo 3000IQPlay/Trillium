@@ -80,7 +80,7 @@ public class fex {
 
     
     public String toString() {
-        return "VecRotation(vec=" + (Object)this.Field536 + ", rotation=" + this.Field537 + ", sideHit=" + (Object)this.Field538 + ")";
+        return "VecRotation(vec=" + this.Field536 + ", rotation=" + this.Field537 + ", sideHit=" + this.Field538 + ")";
     }
 
     public static fex Method895(fex fex2, Vec3d vec3d, Rotation rotation, EnumFacing enumFacing, int n, Object object) {

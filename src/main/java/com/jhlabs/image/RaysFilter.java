@@ -1,10 +1,11 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import com.jhlabs.composite.MiscComposite;
-/*     */ import java.awt.AlphaComposite;
-/*     */ import java.awt.Graphics2D;
-/*     */ import java.awt.geom.AffineTransform;
-/*     */ import java.awt.image.BufferedImage;
+/*     */
+
+import com.jhlabs.composite.MiscComposite;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -216,11 +217,11 @@
 /* 216 */     if (!this.raysOnly) {
 /*     */       
 /* 218 */       g.setComposite(AlphaComposite.SrcOver);
-/* 219 */       g.drawRenderedImage(src, (AffineTransform)null);
+/* 219 */       g.drawRenderedImage(src, null);
 /*     */     } 
 /*     */     
 /* 222 */     g.setComposite(MiscComposite.getInstance(1, this.opacity));
-/* 223 */     g.drawRenderedImage(rays, (AffineTransform)null);
+/* 223 */     g.drawRenderedImage(rays, null);
 /* 224 */     g.dispose();
 /* 225 */     return dst;
 /*     */   }

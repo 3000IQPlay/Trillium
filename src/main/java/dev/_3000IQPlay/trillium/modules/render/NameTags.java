@@ -1,29 +1,25 @@
 package dev._3000IQPlay.trillium.modules.render;
 
-import dev._3000IQPlay.trillium.command.Command;
+import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
-import dev._3000IQPlay.trillium.modules.*;
-import dev._3000IQPlay.trillium.setting.*;
-import dev._3000IQPlay.trillium.event.events.*;
+import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.PaletteHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.*;
-import net.minecraft.entity.*;
-import net.minecraft.client.renderer.vertex.*;
+import dev._3000IQPlay.trillium.util.RenderHelper;
+import dev._3000IQPlay.trillium.util.SpecialTagCompound;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.vertex.*;
+import net.minecraft.enchantment.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.init.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
+import net.minecraft.util.text.*;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import net.minecraft.init.*;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.opengl.*;
-import net.minecraft.item.*;
-import net.minecraft.enchantment.*;
-import net.minecraft.util.text.*;
-import net.minecraft.nbt.*;
-import dev._3000IQPlay.trillium.util.*;
-
-import java.util.*;
-import dev._3000IQPlay.trillium.*;
+import java.util.Objects;
 
 import static dev._3000IQPlay.trillium.util.RenderUtil.drawRect;
 
@@ -416,6 +412,6 @@ public class NameTags extends Module
     public enum Mode {
         FULL,
         MINIMAL,
-        NONE;
+        NONE
     }
 }

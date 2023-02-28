@@ -31,7 +31,7 @@ public class Potions extends Module{
         super("Potions", "Potions", Module.Category.HUD, true, false, false);
     }
 
-    private Setting<Modes> mode = register(new Setting("Mode", Modes.New));
+    private final Setting<Modes> mode = register(new Setting("Mode", Modes.New));
 
     public enum Modes {
         Wexside, New

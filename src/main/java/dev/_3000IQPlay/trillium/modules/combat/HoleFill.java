@@ -2,7 +2,6 @@ package dev._3000IQPlay.trillium.modules.combat;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.modules.movement.ElytraFlight;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.HoleUtil;
 import dev._3000IQPlay.trillium.util.InventoryUtil;
@@ -33,15 +32,15 @@ public class HoleFill extends Module {
         super("HoleFill", "HoleFill", Category.COMBAT, true, false, false);
     }
 
-    private  Setting<Mode> mode =register( new Setting<>("Mode", Mode.Web));
+    private final Setting<Mode> mode =register( new Setting<>("Mode", Mode.Web));
     private enum Mode {
         Obby, Echest, Web,Plate,Skull,Both
     }
 
 
-    private  Setting<Integer> bpc = register(new Setting<>("BPS", 2, 1, 5));
-    private  Setting<Integer> retryDelay = register(new Setting<>("RetryDelay", 10, 0, 50));
-    private  Setting<Integer> placeDelay = register(new Setting<>("Delay", 2, 0, 10));
+    private final Setting<Integer> bpc = register(new Setting<>("BPS", 2, 1, 5));
+    private final Setting<Integer> retryDelay = register(new Setting<>("RetryDelay", 10, 0, 50));
+    private final Setting<Integer> placeDelay = register(new Setting<>("Delay", 2, 0, 10));
 
     public Setting<Float> range = this.register(new Setting<>("Range", 4f, 0f, 10f));
     public Setting<Float> playerRange = this.register(new Setting<>("PlayerRange", 3f, 1f, 6f));

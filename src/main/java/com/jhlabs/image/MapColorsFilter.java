@@ -28,8 +28,8 @@
 /*    */ public class MapColorsFilter
 /*    */   extends PointFilter
 /*    */ {
-/*    */   private int oldColor;
-/*    */   private int newColor;
+/*    */   private final int oldColor;
+/*    */   private final int newColor;
 /*    */   
 /*    */   public MapColorsFilter() {
 /* 35 */     this(-1, -16777216);

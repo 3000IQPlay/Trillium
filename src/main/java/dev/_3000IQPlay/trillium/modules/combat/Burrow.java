@@ -1,17 +1,17 @@
 package dev._3000IQPlay.trillium.modules.combat;
 
 import com.google.common.collect.Sets;
-import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.*;
+import dev._3000IQPlay.trillium.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockObsidian;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
@@ -19,23 +19,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.*;
+import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.server.SPacketExplosion;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.network.play.client.CPacketEntityAction;
-import net.minecraft.util.math.BlockPos;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Burrow extends Module{
     public Burrow( ) {
@@ -45,7 +42,7 @@ public class Burrow extends Module{
     private volatile double last_y;
     private volatile double last_z;
 
-    private  Setting<OffsetMode> offsetMode = register(new Setting("Mode", OffsetMode.Smart));
+    private final Setting<OffsetMode> offsetMode = register(new Setting("Mode", OffsetMode.Smart));
 
     public static final Set<Block> BAD_BLOCKS = Sets.newHashSet(
             Blocks.ENDER_CHEST, Blocks.CHEST, Blocks.TRAPPED_CHEST,
@@ -793,12 +790,7 @@ public class Burrow extends Module{
     }
     public static boolean canBreakWeakness(ItemStack stack)
     {
-        if (stack.getItem() instanceof ItemSword)
-        {
-            return true;
-        }
-
-        return false;
+        return stack.getItem() instanceof ItemSword;
     }
     public static boolean shouldSneak(BlockPos pos, boolean manager)
     {

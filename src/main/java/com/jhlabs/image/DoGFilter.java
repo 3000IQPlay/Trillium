@@ -1,10 +1,11 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import com.jhlabs.composite.SubtractComposite;
-/*     */ import java.awt.Composite;
-/*     */ import java.awt.Graphics2D;
-/*     */ import java.awt.image.BufferedImage;
-/*     */ import java.awt.image.ImageObserver;
+/*     */
+
+import com.jhlabs.composite.SubtractComposite;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -107,7 +108,7 @@
 /* 107 */     BufferedImage image2 = (new BoxBlurFilter(this.radius2, this.radius2, 3)).filter(src, null);
 /* 108 */     Graphics2D g2d = image2.createGraphics();
 /* 109 */     g2d.setComposite((Composite)new SubtractComposite(1.0F));
-/* 110 */     g2d.drawImage(image1, 0, 0, (ImageObserver)null);
+/* 110 */     g2d.drawImage(image1, 0, 0, null);
 /* 111 */     g2d.dispose();
 /*     */     
 /* 113 */     if (this.normalize && this.radius1 != this.radius2) {

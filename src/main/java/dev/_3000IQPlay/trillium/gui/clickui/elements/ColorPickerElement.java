@@ -1,13 +1,13 @@
 package dev._3000IQPlay.trillium.gui.clickui.elements;
 
-import dev._3000IQPlay.trillium.util.Drawable;
-import dev._3000IQPlay.trillium.util.RenderUtil;
-import dev._3000IQPlay.trillium.util.RoundedShader;
 import dev._3000IQPlay.trillium.gui.clickui.base.AbstractElement;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.Drawable;
 import dev._3000IQPlay.trillium.util.MathUtil;
+import dev._3000IQPlay.trillium.util.RenderUtil;
+import dev._3000IQPlay.trillium.util.RoundedShader;
 
 import java.awt.*;
 
@@ -28,7 +28,7 @@ public class ColorPickerElement extends AbstractElement {
     
     private boolean firstInit;
 
-    private Setting colorSetting;
+    private final Setting colorSetting;
     public ColorSetting getColorSetting() {
         return (ColorSetting) colorSetting.getValue();
     }

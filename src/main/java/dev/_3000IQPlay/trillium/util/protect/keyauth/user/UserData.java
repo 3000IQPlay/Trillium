@@ -5,9 +5,9 @@ import org.json.JSONObject;
 
 public class UserData {
 
-	private String username;
-	private String subscription;
-	private String expiry;
+	private final String username;
+	private final String subscription;
+	private final String expiry;
 
 	public UserData(JSONObject json) {
 		JSONObject info = json.getJSONObject("info");

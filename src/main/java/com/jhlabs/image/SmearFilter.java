@@ -28,12 +28,12 @@
 /*     */   public static final int LINES = 1;
 /*     */   public static final int CIRCLES = 2;
 /*     */   public static final int SQUARES = 3;
-/*  31 */   private Colormap colormap = new LinearColormap();
+/*  31 */   private final Colormap colormap = new LinearColormap();
 /*  32 */   private float angle = 0.0F;
 /*  33 */   private float density = 0.5F;
 /*  34 */   private float scatter = 0.0F;
 /*  35 */   private int distance = 8;
-/*     */   private Random randomGenerator;
+/*     */   private final Random randomGenerator;
 /*  37 */   private long seed = 567L;
 /*  38 */   private int shape = 1;
 /*  39 */   private float mix = 0.5F;
@@ -148,8 +148,11 @@
 /*     */ 
 /*     */   
 /*     */   protected int[] filterPixels(int width, int height, int[] inPixels, Rectangle transformedSpace) {
-/* 151 */     int numShapes, radius, radius2, outPixels[] = new int[width * height];
-/* 152 */     this.randomGenerator.setSeed(this.seed);
+/* 151 */     int numShapes;
+    int radius;
+    int radius2;
+    int[] outPixels = new int[width * height];
+    /* 152 */     this.randomGenerator.setSeed(this.seed);
 /* 153 */     float sinAngle = (float)Math.sin(this.angle);
 /* 154 */     float cosAngle = (float)Math.cos(this.angle);
 /* 155 */     int i = 0;

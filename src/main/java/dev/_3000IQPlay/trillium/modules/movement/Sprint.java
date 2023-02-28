@@ -10,10 +10,10 @@ public class Sprint extends Module {
     }
 
     public enum mode {
-        legit, Rage;
+        legit, Rage
     }
 
-    private Setting<mode> Mode = register(new Setting("Mode", mode.legit));
+    private final Setting<mode> Mode = register(new Setting("Mode", mode.legit));
 
 
 

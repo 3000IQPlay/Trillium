@@ -1,7 +1,10 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import com.jhlabs.math.FFT;
-/*     */ import java.awt.image.BufferedImage;
+/*     */
+
+import com.jhlabs.math.FFT;
+
+import java.awt.image.BufferedImage;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -30,7 +33,7 @@
 /*  30 */   private float radius = 10.0F;
 /*  31 */   private float bloom = 2.0F;
 /*  32 */   private float bloomThreshold = 255.0F;
-/*  33 */   private float angle = 0.0F;
+/*  33 */   private final float angle = 0.0F;
 /*  34 */   private int sides = 5;
 /*     */ 
 /*     */ 

@@ -2,9 +2,9 @@ package dev._3000IQPlay.trillium.manager;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Feature;
-import dev._3000IQPlay.trillium.command.Command;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

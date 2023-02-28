@@ -2,7 +2,6 @@ package dev._3000IQPlay.trillium.modules.combat;
 
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
-import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.MathUtil;
@@ -17,21 +16,18 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static dev._3000IQPlay.trillium.util.PlacementUtil.getPlaceableSideExlude;
 import static dev._3000IQPlay.trillium.util.PlacementUtil.placeBlock;
 
 public class CivBreaker extends Module {
@@ -41,13 +37,13 @@ public class CivBreaker extends Module {
     }
 
 
-    private Setting<type> targetType = this.register(new Setting("Target", type.NEAREST));
-    private Setting<mode> breakMode  = this.register(new Setting("Break Mode", mode.Vanilla));
-    private Setting<Integer> startDelay = this.register(new Setting("Start Delay", 1, 0, 10));
-    private Setting<Integer> breakDelay = this.register(new Setting("Break Delay", 1, 0, 10));
-    private Setting<Integer> crystalDelay = this.register(new Setting("Crystal Delay", 1, 0, 10));
-    private Setting<Integer> hitDelay = this.register(new Setting("Hit Delay", 3, 0, 10));
-    private Setting<Integer> nosleep = this.register(new Setting("Block Delay", 3, 0, 10));
+    private final Setting<type> targetType = this.register(new Setting("Target", type.NEAREST));
+    private final Setting<mode> breakMode  = this.register(new Setting("Break Mode", mode.Vanilla));
+    private final Setting<Integer> startDelay = this.register(new Setting("Start Delay", 1, 0, 10));
+    private final Setting<Integer> breakDelay = this.register(new Setting("Break Delay", 1, 0, 10));
+    private final Setting<Integer> crystalDelay = this.register(new Setting("Crystal Delay", 1, 0, 10));
+    private final Setting<Integer> hitDelay = this.register(new Setting("Hit Delay", 3, 0, 10));
+    private final Setting<Integer> nosleep = this.register(new Setting("Block Delay", 3, 0, 10));
 
 
 
@@ -257,12 +253,12 @@ public class CivBreaker extends Module {
     public enum type
     {
         NEAREST,
-        LOOKING;
+        LOOKING
     }
 
     public enum mode
     {
         Vanilla,
-        Packet;
+        Packet
     }
 }

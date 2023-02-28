@@ -1,9 +1,9 @@
 /*    */ package com.jhlabs.composite;
 /*    */ 
-/*    */ import java.awt.Color;
-/*    */ import java.awt.CompositeContext;
-/*    */ import java.awt.RenderingHints;
-/*    */ import java.awt.image.ColorModel;
+/*    */
+
+import java.awt.*;
+import java.awt.image.ColorModel;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -33,8 +33,8 @@
 /*    */   
 /*    */   static class Context
 /*    */     extends RGBComposite.RGBCompositeContext {
-/* 36 */     private float[] sHSB = new float[3];
-/* 37 */     private float[] dHSB = new float[3];
+/* 36 */     private final float[] sHSB = new float[3];
+/* 37 */     private final float[] dHSB = new float[3];
 /*    */ 
 /*    */     
 /*    */     public Context(float alpha, ColorModel srcColorModel, ColorModel dstColorModel) {

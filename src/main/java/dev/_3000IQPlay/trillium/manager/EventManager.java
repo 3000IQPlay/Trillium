@@ -3,13 +3,12 @@ package dev._3000IQPlay.trillium.manager;
 import com.google.common.base.Strings;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.macro.Macro;
-import dev._3000IQPlay.trillium.modules.misc.Macros;
-import dev._3000IQPlay.trillium.util.TrilliumUtils;
-import dev._3000IQPlay.trillium.util.Timer;
 import dev._3000IQPlay.trillium.modules.Feature;
-import dev._3000IQPlay.trillium.command.Command;
+import dev._3000IQPlay.trillium.modules.misc.Macros;
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -33,9 +32,9 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 public class EventManager extends Feature {

@@ -10,5 +10,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(value={NetworkManager.class})
 public interface INetworkManager {
     @Invoker(value="dispatchPacket")
-    public void hookDispatchPacket(Packet<?> var1, GenericFutureListener<? extends Future<? super Void>>[] var2);
+    void hookDispatchPacket(Packet<?> var1, GenericFutureListener<? extends Future<? super Void>>[] var2);
 }

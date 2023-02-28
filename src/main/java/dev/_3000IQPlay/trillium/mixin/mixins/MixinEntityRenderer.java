@@ -1,45 +1,49 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import dev._3000IQPlay.trillium.Trillium;
-import dev._3000IQPlay.trillium.event.events.*;
-import dev._3000IQPlay.trillium.modules.render.*;
-import net.minecraft.client.multiplayer.WorldClient;
+import dev._3000IQPlay.trillium.event.events.PerspectiveEvent;
+import dev._3000IQPlay.trillium.event.events.PostRenderEvent;
+import dev._3000IQPlay.trillium.event.events.PreRenderEvent;
+import dev._3000IQPlay.trillium.event.events.RenderHand;
+import dev._3000IQPlay.trillium.modules.render.Ambience;
+import dev._3000IQPlay.trillium.modules.render.BackTrack;
+import dev._3000IQPlay.trillium.modules.render.ItemShaders;
+import dev._3000IQPlay.trillium.modules.render.NoRender;
+import net.minecraft.block.state.*;
+import net.minecraft.client.*;
+import net.minecraft.client.entity.*;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.*;
 import net.minecraft.item.*;
-import net.minecraft.client.*;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.common.*;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.Project;
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.callback.*;
-import net.minecraft.client.entity.*;
-import net.minecraftforge.common.*;
-import net.minecraft.world.*;
-import net.minecraft.entity.*;
-import net.minecraft.block.state.*;
-import net.minecraft.init.*;
-import net.minecraft.client.renderer.*;
-import net.minecraft.util.math.*;
-import com.google.common.base.*;
-import dev._3000IQPlay.trillium.modules.player.*;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin({ EntityRenderer.class })
 public abstract class MixinEntityRenderer
@@ -50,7 +54,7 @@ public abstract class MixinEntityRenderer
     @Shadow
     @Final
     private Minecraft mc;
-    private boolean injection;
+    private final boolean injection;
 	@Shadow
     public Entity pointedEntity;
 
@@ -89,7 +93,7 @@ public abstract class MixinEntityRenderer
 
     @Inject(method = { "renderItemActivation" },  at = { @At("HEAD") },  cancellable = true)
     public void renderItemActivationHook(final CallbackInfo info) {
-        if (this.itemActivationItem != null && NoRender.getInstance().isOn() && (boolean)NoRender.getInstance().totemPops.getValue() && this.itemActivationItem.getItem() == Items.TOTEM_OF_UNDYING) {
+        if (this.itemActivationItem != null && NoRender.getInstance().isOn() && NoRender.getInstance().totemPops.getValue() && this.itemActivationItem.getItem() == Items.TOTEM_OF_UNDYING) {
             info.cancel();
         }
     }
@@ -105,7 +109,7 @@ public abstract class MixinEntityRenderer
 
     @Overwrite
     public void renderItemActivation(int p_190563_1_, int p_190563_2_, float p_190563_3_) {
-        if (this.itemActivationItem != null && NoRender.getInstance().isOn() && (boolean)NoRender.getInstance().totemPops.getValue() && this.itemActivationItem.getItem() == Items.TOTEM_OF_UNDYING) {
+        if (this.itemActivationItem != null && NoRender.getInstance().isOn() && NoRender.getInstance().totemPops.getValue() && this.itemActivationItem.getItem() == Items.TOTEM_OF_UNDYING) {
             return;
         }
         if (this.itemActivationItem != null && this.itemActivationTicks > 0) {
@@ -184,21 +188,21 @@ public abstract class MixinEntityRenderer
     private void onSetupCameraTransform(float f, float f2, float f3, float f4) {
         PerspectiveEvent perspectiveEvent = new PerspectiveEvent((float)this.mc.displayWidth / (float)this.mc.displayHeight);
         MinecraftForge.EVENT_BUS.post((Event)perspectiveEvent);
-        Project.gluPerspective((float)f, (float)perspectiveEvent.getAspect(), (float)f3, (float)f4);
+        Project.gluPerspective(f, (float)perspectiveEvent.getAspect(), f3, f4);
     }
 
     @Redirect(method={"renderWorldPass"}, at=@At(value="INVOKE", target="Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V"))
     private void onRenderWorldPass(float f, float f2, float f3, float f4) {
         PerspectiveEvent perspectiveEvent = new PerspectiveEvent((float)this.mc.displayWidth / (float)this.mc.displayHeight);
         MinecraftForge.EVENT_BUS.post((Event)perspectiveEvent);
-        Project.gluPerspective((float)f, (float)perspectiveEvent.getAspect(), (float)f3, (float)f4);
+        Project.gluPerspective(f, (float)perspectiveEvent.getAspect(), f3, f4);
     }
 
     @Redirect(method={"renderCloudsCheck"}, at=@At(value="INVOKE", target="Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V"))
     private void onRenderCloudsCheck(float f, float f2, float f3, float f4) {
         PerspectiveEvent perspectiveEvent = new PerspectiveEvent((float)this.mc.displayWidth / (float)this.mc.displayHeight);
         MinecraftForge.EVENT_BUS.post((Event)perspectiveEvent);
-        Project.gluPerspective((float)f, (float)perspectiveEvent.getAspect(), (float)f3, (float)f4);
+        Project.gluPerspective(f, (float)perspectiveEvent.getAspect(), f3, f4);
     }
 
     @Inject(method = { "setupFog" },  at = { @At("HEAD") },  cancellable = true)
@@ -490,7 +494,7 @@ public abstract class MixinEntityRenderer
                 GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
             }
         } else if (this.mc.gameSettings.thirdPersonView > 0) {
-            double d3 = (double)(this.thirdPersonDistancePrev + (4.0F - this.thirdPersonDistancePrev) * partialTicks);
+            double d3 = this.thirdPersonDistancePrev + (4.0F - this.thirdPersonDistancePrev) * partialTicks;
             if (this.mc.gameSettings.debugCamEnable) {
                 GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
             } else {

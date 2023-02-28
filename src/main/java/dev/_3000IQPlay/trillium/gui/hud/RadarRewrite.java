@@ -3,14 +3,15 @@ package dev._3000IQPlay.trillium.gui.hud;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.gui.clickui.ColorUtil;
-import dev._3000IQPlay.trillium.util.Drawable;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.DrawHelper;
+import dev._3000IQPlay.trillium.util.Drawable;
+import dev._3000IQPlay.trillium.util.RenderHelper;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
-import dev._3000IQPlay.trillium.util.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,32 +30,32 @@ public class RadarRewrite extends Module {
         super("AkrienRadar", "Radar from russian client", Module.Category.HUD, true, false, false);
     }
 
-    private Setting<Float> width = register( new Setting<>("TracerHeight", 2.28f, 0.1f, 5f));
-    private Setting<Float> rad22ius = register(new Setting<>("TracerDown", 3.63f, 0.1F, 20.0F));
-    private Setting<Float> tracerA = register(new Setting<>("TracerWidth", 0.44F, 0.0F, 8.0F));
-    private Setting<Integer> xOffset = register(new Setting<>("TracerRadius", 68, 20, 100));
-    private Setting<Integer> maxup2 = register(new Setting<>("PitchLock", 42, -90, 90));
+    private final Setting<Float> width = register( new Setting<>("TracerHeight", 2.28f, 0.1f, 5f));
+    private final Setting<Float> rad22ius = register(new Setting<>("TracerDown", 3.63f, 0.1F, 20.0F));
+    private final Setting<Float> tracerA = register(new Setting<>("TracerWidth", 0.44F, 0.0F, 8.0F));
+    private final Setting<Integer> xOffset = register(new Setting<>("TracerRadius", 68, 20, 100));
+    private final Setting<Integer> maxup2 = register(new Setting<>("PitchLock", 42, -90, 90));
     public Setting<Boolean> glow = register(new Setting("TracerGlow", false));
-    private Setting<Integer> glowe = register(new Setting<>("GlowRadius", 10, 1, 20));
-    private Setting<Integer> glowa = register(new Setting<>("GlowAlpha", 170, 0, 255));
+    private final Setting<Integer> glowe = register(new Setting<>("GlowRadius", 10, 1, 20));
+    private final Setting<Integer> glowa = register(new Setting<>("GlowAlpha", 170, 0, 255));
 
-    private Setting<triangleModeEn> triangleMode = register(new Setting<>("TracerCMode", triangleModeEn.Astolfo));
-    private Setting<mode2> Mode2 = register(new Setting<>("CircleCMode", mode2.Astolfo));
-    private Setting<PositionSetting> pos = this.register(new Setting<>("Position", new PositionSetting(0.5f, 0.78f)));
-    private Setting<Float> CRadius = register(new Setting<>("CompasRadius", 47F, 0.1F, 70.0F));
-    private Setting<Integer> fsef = register(new Setting<>("Correct", 12, -90, 90));
-    private  Setting<ColorSetting> cColor = this.register(new Setting<>("CompassColor", new ColorSetting(0x2250b4b4)));
-    private  Setting<ColorSetting> ciColor = this.register(new Setting<>("CircleColor", new ColorSetting(0x2250b4b4)));
-    private  Setting<ColorSetting> colorf = this.register(new Setting<>("FriendColor", new ColorSetting(0x2250b4b4)));
-    private  Setting<ColorSetting> colors = this.register(new Setting<>("TracerColor", new ColorSetting(0x2250b4b4)));
+    private final Setting<triangleModeEn> triangleMode = register(new Setting<>("TracerCMode", triangleModeEn.Astolfo));
+    private final Setting<mode2> Mode2 = register(new Setting<>("CircleCMode", mode2.Astolfo));
+    private final Setting<PositionSetting> pos = this.register(new Setting<>("Position", new PositionSetting(0.5f, 0.78f)));
+    private final Setting<Float> CRadius = register(new Setting<>("CompasRadius", 47F, 0.1F, 70.0F));
+    private final Setting<Integer> fsef = register(new Setting<>("Correct", 12, -90, 90));
+    private final Setting<ColorSetting> cColor = this.register(new Setting<>("CompassColor", new ColorSetting(0x2250b4b4)));
+    private final Setting<ColorSetting> ciColor = this.register(new Setting<>("CircleColor", new ColorSetting(0x2250b4b4)));
+    private final Setting<ColorSetting> colorf = this.register(new Setting<>("FriendColor", new ColorSetting(0x2250b4b4)));
+    private final Setting<ColorSetting> colors = this.register(new Setting<>("TracerColor", new ColorSetting(0x2250b4b4)));
 
 
     public enum mode2 {
-        Custom, Rainbow, Astolfo;
+        Custom, Rainbow, Astolfo
     }
 
     public enum triangleModeEn {
-        Custom, Astolfo, Rainbow;
+        Custom, Astolfo, Rainbow
     }
 
 

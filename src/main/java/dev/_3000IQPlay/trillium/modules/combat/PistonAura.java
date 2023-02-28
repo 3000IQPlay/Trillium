@@ -6,16 +6,15 @@ import dev._3000IQPlay.trillium.event.events.EventPostMotion;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
-
-
 import dev._3000IQPlay.trillium.mixin.mixins.IEntityPlayerSP;
 import dev._3000IQPlay.trillium.mixin.mixins.IRenderManager;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.*;
+import dev._3000IQPlay.trillium.util.BlockUtils;
+import dev._3000IQPlay.trillium.util.CrystalUtils;
+import dev._3000IQPlay.trillium.util.InteractionUtil;
 import dev._3000IQPlay.trillium.util.Timer;
-
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -38,28 +37,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static dev._3000IQPlay.trillium.util.CrystalUtils.calculateDamage;
-
 
 public class PistonAura extends Module {
-    private Setting<Mode> mode = register(new Setting<>("Mode", Mode.DAMAGE));
-    private Setting<Boolean> smart = register(new Setting<>("Smart", true, v-> mode.getValue() == Mode.PUSH));
-    private Setting<Boolean> triggerable = register(new Setting<>("DisablePush", true,v -> mode.getValue() == Mode.PUSH));
-    private Setting<Boolean> disableWhenNone = register(new Setting<>("DisableNone", false,v-> mode.getValue() == Mode.DAMAGE));
+    private final Setting<Mode> mode = register(new Setting<>("Mode", Mode.DAMAGE));
+    private final Setting<Boolean> smart = register(new Setting<>("Smart", true, v-> mode.getValue() == Mode.PUSH));
+    private final Setting<Boolean> triggerable = register(new Setting<>("DisablePush", true, v -> mode.getValue() == Mode.PUSH));
+    private final Setting<Boolean> disableWhenNone = register(new Setting<>("DisableNone", false, v-> mode.getValue() == Mode.DAMAGE));
     private static PistonAura INSTANCE = new PistonAura();
-    private Setting<Integer> targetRange = register(new Setting<>("TargetRange", 3, 1, 6));
-    private Setting<Integer> breakDelay = register(new Setting<>("Delay", 25, 0, 100));
-    private  Setting<Integer> actionShift = register(new Setting<>("ActionShift", 3, 1, 8));
-    private  Setting<Integer> actionInterval = register(new Setting<>("ActionInterval", 0, 0, 10));
-    private Setting<Boolean> strict = register(new Setting<>("Strict", false));
-    private Setting<Boolean> raytrace = register(new Setting<>("RayTrace", false));
-    private Setting<Boolean> antiSuicide = register(new Setting<>("AntiSuicide", false));
-    private Setting<Boolean> mine = register(new Setting<>("Mine", false));
-    private Setting<Boolean> autotrap = register(new Setting<>("AutoTrap", false));
-    private   Setting<Boolean> ccrys = register(new Setting<>("WaitCrystal", true));
+    private final Setting<Integer> targetRange = register(new Setting<>("TargetRange", 3, 1, 6));
+    private final Setting<Integer> breakDelay = register(new Setting<>("Delay", 25, 0, 100));
+    private final Setting<Integer> actionShift = register(new Setting<>("ActionShift", 3, 1, 8));
+    private final Setting<Integer> actionInterval = register(new Setting<>("ActionInterval", 0, 0, 10));
+    private final Setting<Boolean> strict = register(new Setting<>("Strict", false));
+    private final Setting<Boolean> raytrace = register(new Setting<>("RayTrace", false));
+    private final Setting<Boolean> antiSuicide = register(new Setting<>("AntiSuicide", false));
+    private final Setting<Boolean> mine = register(new Setting<>("Mine", false));
+    private final Setting<Boolean> autotrap = register(new Setting<>("AutoTrap", false));
+    private final Setting<Boolean> ccrys = register(new Setting<>("WaitCrystal", true));
 
-    private Setting<rMode> rmode = register(new Setting<>("RotateMode", rMode.Strict));
-    private Setting<rMode> rmodepost = register(new Setting<>("PostRotate", rMode.Strict));
+    private final Setting<rMode> rmode = register(new Setting<>("RotateMode", rMode.Strict));
+    private final Setting<rMode> rmodepost = register(new Setting<>("PostRotate", rMode.Strict));
 
     public   Setting<Boolean> render = register(new Setting<>("Render", true));
 
@@ -70,11 +67,11 @@ public class PistonAura extends Module {
     public final Setting<ColorSetting> colorCurrent = this.register(new Setting<>("ColorCurrent", new ColorSetting(-1323314462)));
 
 
-    private   Setting<Boolean> renderCurrent = register(new Setting<>("Current", true, v ->render.getValue()));
-    private   Setting<Boolean> renderFull = register(new Setting<>("Full", true, v ->render.getValue()));
-    private   Setting<Boolean> arrow = register(new Setting<>("Arrow", true, v ->render.getValue()));
-    private   Setting<Boolean> bottomArrow = register(new Setting<>("Bottom", true, v ->render.getValue()));
-    private   Setting<Boolean> topArrow = register(new Setting<>("Top", true, v ->render.getValue()));
+    private final Setting<Boolean> renderCurrent = register(new Setting<>("Current", true, v ->render.getValue()));
+    private final Setting<Boolean> renderFull = register(new Setting<>("Full", true, v ->render.getValue()));
+    private final Setting<Boolean> arrow = register(new Setting<>("Arrow", true, v ->render.getValue()));
+    private final Setting<Boolean> bottomArrow = register(new Setting<>("Bottom", true, v ->render.getValue()));
+    private final Setting<Boolean> topArrow = register(new Setting<>("Top", true, v ->render.getValue()));
 
 
     public PistonAura() {
@@ -104,16 +101,16 @@ public class PistonAura extends Module {
     public BlockPos pistonNeighbour;
     public EnumFacing pistonOffset;
     private BlockPos torchPos;
-    private Timer torchTimer = new Timer();
+    private final Timer torchTimer = new Timer();
     private boolean skipPiston;
-    private Timer delayTimer = new Timer();
+    private final Timer delayTimer = new Timer();
     private int delayTime;
-    private Timer renderTimer = new Timer();
+    private final Timer renderTimer = new Timer();
     private Runnable postAction = null;
     private int tickCounter = 0;
     private BlockPos placedPiston = null;
-    private Timer placedPistonTimer = new Timer();
-    private Timer actionTimer = new Timer();
+    private final Timer placedPistonTimer = new Timer();
+    private final Timer actionTimer = new Timer();
     private float yawToEvent,pitchToEvent;
 
     private enum Stage {

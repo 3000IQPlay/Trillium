@@ -4,8 +4,6 @@ import dev._3000IQPlay.trillium.event.events.RenderHand;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.shaders.impl.fill.*;
-import dev._3000IQPlay.trillium.util.shaders.impl.outline.*;
 import dev._3000IQPlay.trillium.util.shaders.impl.outline.GradientOutlineShader;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,14 +38,14 @@ public class ItemShaders extends Module{
         None, Color,Astral,RainbowCube,Gradient,Circle,Smoke,Aqua
     }
 
-    private Setting<Boolean> rangeCheck = this.register(new Setting<Boolean>("Range Check", true));
+    private final Setting<Boolean> rangeCheck = this.register(new Setting<Boolean>("Range Check", true));
 
     // BooleanSetting fadeFill = registerBoolean("Fade Fill", false, () -> fillShader.getValue() == fillShadermode.Astral);//TODO
-    private Setting<Boolean> fadeFill = this.register(new Setting<Boolean>("Fade Fill", false));
+    private final Setting<Boolean> fadeFill = this.register(new Setting<Boolean>("Fade Fill", false));
 
     // BooleanSetting fadeOutline = registerBoolean("Fade Fill", false, () -> glowESP.getValue() == glowESPmode.Astral);
-    private Setting<Boolean> fadeOutline = this.register(new Setting<Boolean>("FadeOL Fill", false));
-    private Setting<Boolean> GradientAlpha = this.register(new Setting<Boolean>("Gradient Alpha", false));
+    private final Setting<Boolean> fadeOutline = this.register(new Setting<Boolean>("FadeOL Fill", false));
+    private final Setting<Boolean> GradientAlpha = this.register(new Setting<Boolean>("Gradient Alpha", false));
 
 
     public Setting<Float> duplicateOutline = register(new Setting("Speed", 1.0F, 0.0F, 20.0F));
@@ -69,7 +67,7 @@ public class ItemShaders extends Module{
     public Setting<Float> volumStepsFill = register(new Setting("Volum Steps", 10.0F, 0.0F, 10.0F,v-> fillShader.getValue() == fillShadermode.Astral));
     public Setting<Float> zoomFill = register(new Setting("Zoom", 3.9F, 0.0F, 20.0F,v-> fillShader.getValue() == fillShadermode.Astral));
     public Setting<Float> formuparam2Fill = register(new Setting("formuparam2", 0.89F, 0.0F, 1.5F,v-> fillShader.getValue() == fillShadermode.Astral));
-    public Setting<Float> saturationOutline = register(new Setting("saturation", 0.4F, 0.0F, 3.0F,v-> glowESP.getValue() == glowESPmode.Astral.Astral));
+    public Setting<Float> saturationOutline = register(new Setting("saturation", 0.4F, 0.0F, 3.0F,v-> glowESP.getValue() == glowESPmode.Astral));
     public Setting <Integer> iterationsFill = this.register ( new Setting <> ( "Iteration", 4, 3, 20,v-> fillShader.getValue() == fillShadermode.Astral) );
     public Setting <Integer> redFill = this.register ( new Setting <> ( "Tick Regen", 0, 0, 100,v-> fillShader.getValue() == fillShadermode.Astral ) );
     public Setting <Integer> MaxIterFill = this.register ( new Setting <> ( "Max Iter", 5, 0, 30, v->fillShader.getValue() == fillShadermode.Aqua) );

@@ -12,8 +12,8 @@ import java.awt.*;
 public class SkyColor
         extends Module {
     private static SkyColor INSTANCE = new SkyColor();
-	private Setting<Boolean> fog = this.register(new Setting<Boolean>("Fog", true));
-    private Setting<ColorSetting> cColor = this.register(new Setting<ColorSetting>("Color", new ColorSetting(0x00ffff)));
+	private final Setting<Boolean> fog = this.register(new Setting<Boolean>("Fog", true));
+    private final Setting<ColorSetting> cColor = this.register(new Setting<ColorSetting>("Color", new ColorSetting(0x00ffff)));
 
     public SkyColor() {
         super("SkyColor", "Changes the color of the sky", Module.Category.RENDER, false, false, false);

@@ -169,7 +169,7 @@ public class ToolTips
             int n = 7;
             float n2 = 135.0f;
             float n3 = 0.5f;
-            GlStateManager.translate((float)event.getX(), (float)((float)event.getY() - n2 * n3 - 5.0f), (float)0.0f);
+            GlStateManager.translate((float)event.getX(), (float)(event.getY() - n2 * n3 - 5.0f), (float)0.0f);
             GlStateManager.scale((float)n3, (float)n3, (float)n3);
             buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
             buffer.pos((double)(-n), (double)n2, 0.0).tex(0.0, 1.0).endVertex();

@@ -1,13 +1,12 @@
 package dev._3000IQPlay.trillium.modules.render;
 
-import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
+import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.BlockUtils;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.RotationUtil;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -40,9 +39,9 @@ public class HoleESP
 	private final Setting<ColorSetting> obfC = this.register(new Setting<ColorSetting>("OutlineBottomFill", new ColorSetting(16711680), v -> this.renderObsidianHoles.getValue()));
 	private final Setting<ColorSetting> oboC = this.register(new Setting<ColorSetting>("OutlineBottomOutline", new ColorSetting(-65536), v -> this.renderObsidianHoles.getValue()));
 
-    private List<BlockPos> obiHoles = new ArrayList<>();
-    private List<BlockPos> bedrockHoles = new ArrayList<>();
-	private int currentAlpha = 0;
+    private final List<BlockPos> obiHoles = new ArrayList<>();
+    private final List<BlockPos> bedrockHoles = new ArrayList<>();
+	private final int currentAlpha = 0;
 
     public HoleESP() {
         super("HoleESP", "Shows safe spots", Module.Category.RENDER, true, false, false);

@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
-import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.RenderItemEvent;
 import dev._3000IQPlay.trillium.modules.render.NoRender;
 import dev._3000IQPlay.trillium.modules.render.ViewModel;
@@ -29,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract
 class MixinItemRenderer {
     public Minecraft mc;
-    private boolean injection = true;
+    private final boolean injection = true;
 
     @Shadow
     protected abstract void

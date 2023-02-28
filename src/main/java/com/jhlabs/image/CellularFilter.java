@@ -1,9 +1,12 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import com.jhlabs.math.Function2D;
-/*     */ import com.jhlabs.math.Noise;
-/*     */ import java.awt.Rectangle;
-/*     */ import java.util.Random;
+/*     */
+
+import com.jhlabs.math.Function2D;
+import com.jhlabs.math.Noise;
+
+import java.awt.*;
+import java.util.Random;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -684,8 +687,8 @@
 /*     */   
 /*     */   public Object clone() {
 /* 686 */     CellularFilter f = (CellularFilter)super.clone();
-/* 687 */     f.coefficients = (float[])this.coefficients.clone();
-/* 688 */     f.results = (Point[])this.results.clone();
+/* 687 */     f.coefficients = this.coefficients.clone();
+/* 688 */     f.results = this.results.clone();
 /* 689 */     f.random = new Random();
 /*     */ 
 /*     */     

@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
 
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class RenderHelper{
 
     public static Frustum frustum = new Frustum();
 
-    private static HashMap<Integer, Integer> shadowCache = new HashMap();
+    private static final HashMap<Integer, Integer> shadowCache = new HashMap();
 
 
     public static void drawBlurredShadow(float x, float y, float width, float height, int blurRadius, Color color) {
@@ -35,9 +34,9 @@ public class RenderHelper{
         float _X = (x -= (float)blurRadius) - 0.25f;
         float _Y = (y -= (float)blurRadius) + 0.25f;
         int identifier = String.valueOf((width += (float)(blurRadius * 2)) * (height += (float)(blurRadius * 2)) + width + (float)(1000000000 * blurRadius) + (float)blurRadius).hashCode();
-        GL11.glEnable((int)3553);
-        GL11.glDisable((int)2884);
-        GL11.glEnable((int)3008);
+        GL11.glEnable(3553);
+        GL11.glDisable(2884);
+        GL11.glEnable(3008);
         GlStateManager.enableBlend();
         int texId = -1;
         if (shadowCache.containsKey(identifier)) {
@@ -65,20 +64,20 @@ public class RenderHelper{
             shadowCache.put(identifier, texId);
         }
         GlStateManager.color(color.getRed() / 255f,color.getGreen()/255f,color.getBlue()/255f,color.getAlpha()/255f);
-        glBegin((int)7);
-        GL11.glTexCoord2f((float)0.0f, (float)0.0f);
-        glVertex2f((float)_X, (float)_Y);
-        GL11.glTexCoord2f((float)0.0f, (float)1.0f);
-        glVertex2f((float)_X, (float)(_Y + height));
-        GL11.glTexCoord2f((float)1.0f, (float)1.0f);
-        glVertex2f((float)(_X + width), (float)(_Y + height));
-        GL11.glTexCoord2f((float)1.0f, (float)0.0f);
-        glVertex2f((float)(_X + width), (float)_Y);
+        glBegin(7);
+        GL11.glTexCoord2f(0.0f, 0.0f);
+        glVertex2f(_X, _Y);
+        GL11.glTexCoord2f(0.0f, 1.0f);
+        glVertex2f(_X, _Y + height);
+        GL11.glTexCoord2f(1.0f, 1.0f);
+        glVertex2f(_X + width, _Y + height);
+        GL11.glTexCoord2f(1.0f, 0.0f);
+        glVertex2f(_X + width, _Y);
         glEnd();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
         GlStateManager.resetColor();
-        GL11.glEnable((int)2884);
+        GL11.glEnable(2884);
         GL11.glPopMatrix();
     }
 

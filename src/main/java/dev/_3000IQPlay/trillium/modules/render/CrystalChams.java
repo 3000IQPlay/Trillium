@@ -1,8 +1,8 @@
 package dev._3000IQPlay.trillium.modules.render;
 
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
+import dev._3000IQPlay.trillium.setting.Setting;
 
 public class CrystalChams
         extends Module {
@@ -28,18 +28,18 @@ public class CrystalChams
         INSTANCE = this;
     }
 
-    public static enum modes {
+    public enum modes {
         FILL,
-        WIREFRAME;
+        WIREFRAME
     }
 
-    public static enum outlineModes {
+    public enum outlineModes {
         WIRE,
-        FLAT;
+        FLAT
     }
 	
-    public static enum BlendModes {
+    public enum BlendModes {
         Default,
-        Brighter;
+        Brighter
     }
 }

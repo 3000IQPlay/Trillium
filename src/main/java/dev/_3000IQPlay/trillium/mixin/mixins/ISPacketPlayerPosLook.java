@@ -13,11 +13,11 @@ public interface ISPacketPlayerPosLook {
     void setPitch(float pitch);
 	
 	@Accessor(value="x")
-    public void setX(double x);
+    void setX(double x);
 
     @Accessor(value="y")
-    public void setY(double y);
+    void setY(double y);
 
     @Accessor(value="z")
-    public void setZ(double z);
+    void setZ(double z);
 }

@@ -1,9 +1,10 @@
 /*    */ package com.jhlabs.image;
 /*    */ 
-/*    */ import java.awt.Graphics2D;
-/*    */ import java.awt.Image;
-/*    */ import java.awt.image.BufferedImage;
-/*    */ import java.awt.image.ColorModel;
+/*    */
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -28,8 +29,8 @@
 /*    */ public class ScaleFilter
 /*    */   extends AbstractBufferedImageOp
 /*    */ {
-/*    */   private int width;
-/*    */   private int height;
+/*    */   private final int width;
+/*    */   private final int height;
 /*    */   
 /*    */   public ScaleFilter() {
 /* 35 */     this(32, 32);

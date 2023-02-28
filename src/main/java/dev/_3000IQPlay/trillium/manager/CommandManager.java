@@ -1,11 +1,13 @@
 package dev._3000IQPlay.trillium.manager;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import dev._3000IQPlay.trillium.modules.Feature;
 import dev._3000IQPlay.trillium.command.Command;
-import dev._3000IQPlay.trillium.command.commands.*;
+import dev._3000IQPlay.trillium.command.commands.EclipCommand;
+import dev._3000IQPlay.trillium.command.commands.HClipCommand;
+import dev._3000IQPlay.trillium.command.commands.ReloadSoundCommand;
+import dev._3000IQPlay.trillium.command.commands.VClipCommand;
+import dev._3000IQPlay.trillium.modules.Feature;
 import dev._3000IQPlay.trillium.util.TextUtil;
-import org.apache.commons.lang3.RandomUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,7 +15,7 @@ import java.util.LinkedList;
 public class CommandManager extends Feature {
     private final ArrayList<Command> commands = new ArrayList();
     private String prefix = ".";
-	private String clientMessage = TextUtil.coloredString("[", TextUtil.Color.DARK_GRAY) + TextUtil.coloredString("Trillium", TextUtil.Color.AQUA) + TextUtil.coloredString("]", TextUtil.Color.DARK_GRAY);
+	private final String clientMessage = TextUtil.coloredString("[", TextUtil.Color.DARK_GRAY) + TextUtil.coloredString("Trillium", TextUtil.Color.AQUA) + TextUtil.coloredString("]", TextUtil.Color.DARK_GRAY);
 
     public CommandManager() {
         super("Command");

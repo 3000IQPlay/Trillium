@@ -1,16 +1,19 @@
 package dev._3000IQPlay.trillium.modules.combat;
 
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.EventPostMotion;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
-import dev._3000IQPlay.trillium.command.Command;
+import dev._3000IQPlay.trillium.mixin.mixins.IEntityPlayerSP;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.mixin.mixins.IEntityPlayerSP;
-import dev._3000IQPlay.trillium.util.*;
+import dev._3000IQPlay.trillium.util.BlockUtils;
+import dev._3000IQPlay.trillium.util.CrystalUtils;
+import dev._3000IQPlay.trillium.util.InteractionUtil;
+import dev._3000IQPlay.trillium.util.RenderUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
@@ -44,25 +47,25 @@ public class CevBreaker extends Module {
 
 
     private final Setting<Integer> pickTickSwitch = this.register(new Setting<>("Pick Switch Destroy", 0, 0, 20));
-    private Setting<Mode> mode = register(new Setting("BreakMode", Mode.TripleP));
+    private final Setting<Mode> mode = register(new Setting("BreakMode", Mode.TripleP));
     public final Setting<ColorSetting> Color = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
 
-    private  Setting<Integer> crysDelay = this.register(new Setting<>("CrysDelay", 200, 1, 1000));
-    private  Setting<Integer> atttt = this.register(new Setting<>("AttackDelay", 200, 1, 1000));
-    private  Setting<Integer> pausedelay = this.register(new Setting<>("PauseDelay", 300, 1, 1000));
+    private final Setting<Integer> crysDelay = this.register(new Setting<>("CrysDelay", 200, 1, 1000));
+    private final Setting<Integer> atttt = this.register(new Setting<>("AttackDelay", 200, 1, 1000));
+    private final Setting<Integer> pausedelay = this.register(new Setting<>("PauseDelay", 300, 1, 1000));
 
     private  final Setting<Float> placeRange = this.register( new Setting<>("TargetRange", 4.5f, 1f, 16f));
-    private  Setting<Integer> actionShift = this.register(new Setting<>("ActionShift", 3, 1, 8));
-    private  Setting<Integer> actionInterval = this.register(new Setting<>("ActionInterval", 0, 0, 10));
+    private final Setting<Integer> actionShift = this.register(new Setting<>("ActionShift", 3, 1, 8));
+    private final Setting<Integer> actionInterval = this.register(new Setting<>("ActionInterval", 0, 0, 10));
     public final Setting<ColorSetting> Color2 = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
-    private  Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
-    private  Setting<Boolean> rotate = this.register(new Setting<>("Rotate", true));
+    private final Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
+    private final Setting<Boolean> rotate = this.register(new Setting<>("Rotate", true));
 
-    private  Setting<Boolean> p1 = this.register(new Setting<>("PacketCrystal", true));
+    private final Setting<Boolean> p1 = this.register(new Setting<>("PacketCrystal", true));
 
 
-    private  Setting<Boolean> MStrict = this.register(new Setting<>("ModeStrict", true));
-    private  Setting<Boolean> strictdirection = this.register(new Setting<>("StrictDirection", true));
+    private final Setting<Boolean> MStrict = this.register(new Setting<>("ModeStrict", true));
+    private final Setting<Boolean> strictdirection = this.register(new Setting<>("StrictDirection", true));
 
 
     public enum Mode {
@@ -79,8 +82,8 @@ public class CevBreaker extends Module {
     private boolean pickStillBol = false;
     private EnumFacing direction;
     boolean broke = false;
-    private Timer attackTimer = new Timer();
-    private Timer cryTimer = new Timer();
+    private final Timer attackTimer = new Timer();
+    private final Timer cryTimer = new Timer();
 
 
     private int itemSlot;
@@ -91,8 +94,8 @@ public class CevBreaker extends Module {
     private BlockPos toppos = null;
     private InteractionUtil.Placement placement;
     private InteractionUtil.Placement lastPlacement;
-    private Timer lastPlacementTimer = new Timer();
-    private Timer pausetimer = new  Timer();
+    private final Timer lastPlacementTimer = new Timer();
+    private final Timer pausetimer = new  Timer();
     public boolean startBreak = false;
     public static ConcurrentHashMap<BlockPos, Long> shiftedBlocks = new ConcurrentHashMap<>();
 
@@ -424,7 +427,7 @@ public class CevBreaker extends Module {
             BlockPos furthestBlock = null;
             double furthestDistance = 0D;
             if (canPlaceBlock(playerPos.up().offset(enumFacing), false)) {
-                BlockPos tempBlock = playerPos.up().offset(enumFacing);;
+                BlockPos tempBlock = playerPos.up().offset(enumFacing);
                 double tempDistance = mc.player.getDistance(tempBlock.getX() + 0.5, tempBlock.getY() + 0.5, tempBlock.getZ() + 0.5);
                 if (tempDistance >= furthestDistance) {
                     furthestBlock = tempBlock;

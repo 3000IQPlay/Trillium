@@ -1,12 +1,9 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import java.awt.AlphaComposite;
-/*     */ import java.awt.Color;
-/*     */ import java.awt.GradientPaint;
-/*     */ import java.awt.Graphics2D;
-/*     */ import java.awt.Shape;
-/*     */ import java.awt.geom.AffineTransform;
-/*     */ import java.awt.image.BufferedImage;
+/*     */
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -130,12 +127,12 @@
 /* 130 */     Graphics2D g = dst.createGraphics();
 /* 131 */     Shape clip = g.getClip();
 /* 132 */     g.clipRect(0, 0, width, h);
-/* 133 */     g.drawRenderedImage(src, (AffineTransform)null);
+/* 133 */     g.drawRenderedImage(src, null);
 /* 134 */     g.setClip(clip);
 /* 135 */     g.clipRect(0, h + d, width, height - h - d);
 /* 136 */     g.translate(0, 2 * h + d);
 /* 137 */     g.scale(1.0D, -1.0D);
-/* 138 */     g.drawRenderedImage(src, (AffineTransform)null);
+/* 138 */     g.drawRenderedImage(src, null);
 /* 139 */     g.setPaint(new GradientPaint(0.0F, 0.0F, new Color(1.0F, 0.0F, 0.0F, 0.0F), 0.0F, h, new Color(0.0F, 1.0F, 0.0F, this.opacity)));
 /* 140 */     g.setComposite(AlphaComposite.getInstance(6));
 /* 141 */     g.fillRect(0, 0, width, h);

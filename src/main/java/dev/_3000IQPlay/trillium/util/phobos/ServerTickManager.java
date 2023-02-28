@@ -28,9 +28,9 @@ public class ServerTickManager extends Feature
         MinecraftForge.EVENT_BUS.register(this);
     }
     private int serverTicks;
-    private Map<BlockPos, Long> timeMap = new HashMap<>();
+    private final Map<BlockPos, Long> timeMap = new HashMap<>();
     private final Timer serverTickTimer = new Timer();
-    private boolean flag = true;
+    private final boolean flag = true;
     private boolean initialized = false; // will be used for checks in the future
 
     private final ArrayDeque<Integer> spawnObjectTimes = new ArrayDeque<>();

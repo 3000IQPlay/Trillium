@@ -23,7 +23,7 @@
 /*     */ public class Noise
 /*     */   implements Function1D, Function2D, Function3D
 /*     */ {
-/*  26 */   private static Random randomGenerator = new Random();
+/*  26 */   private static final Random randomGenerator = new Random();
 /*     */   private static final int B = 256;
 /*     */   
 /*     */   public float evaluate(float x) {

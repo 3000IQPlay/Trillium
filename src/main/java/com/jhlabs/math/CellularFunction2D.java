@@ -24,8 +24,8 @@
 /*  24 */   public float distancePower = 2.0F;
 /*     */   public boolean cells = false;
 /*     */   public boolean angular = false;
-/*  27 */   private float[] coefficients = new float[] { 1.0F, 0.0F, 0.0F, 0.0F };
-/*  28 */   private Random random = new Random();
+/*  27 */   private final float[] coefficients = new float[] { 1.0F, 0.0F, 0.0F, 0.0F };
+/*  28 */   private final Random random = new Random();
 /*  29 */   private Point[] results = null;
 /*     */ 
 /*     */   

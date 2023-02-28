@@ -3,7 +3,6 @@ package dev._3000IQPlay.trillium.modules.misc;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.modules.client.ClickGui;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.TrilliumUtils;
 import net.minecraft.network.play.server.SPacketChat;
@@ -22,7 +21,7 @@ public class AutoEZ extends Module {
         loadEZ();
     }
 
-    private Setting<ModeEn> Mode = register(new Setting("Mode", ModeEn.Basic));
+    private final Setting<ModeEn> Mode = register(new Setting("Mode", ModeEn.Basic));
 
     public enum ModeEn {
         Custom,
@@ -88,7 +87,7 @@ public class AutoEZ extends Module {
     public static void loadEZ() {
         try {
             File file = new File("Trillium/AutoEZ.txt");
-            if (!file.exists()) file.createNewFile();;
+            if (!file.exists()) file.createNewFile();
 
             new Thread(() -> {
                 try {

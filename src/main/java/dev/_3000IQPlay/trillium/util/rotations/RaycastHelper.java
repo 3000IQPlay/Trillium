@@ -1,23 +1,13 @@
 package dev._3000IQPlay.trillium.util.rotations;
 
-import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.*;
 
 import javax.vecmath.Vector2f;
 
-import com.google.common.base.Predicates;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-
 public class RaycastHelper {
-    private static Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
 
     public static Entity getPointedEntity(Vector2f rot, double dst, float scale, boolean walls, Entity target) {

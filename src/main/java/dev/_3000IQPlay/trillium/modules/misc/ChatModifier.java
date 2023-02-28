@@ -2,13 +2,11 @@ package dev._3000IQPlay.trillium.modules.misc;
 
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
-import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
+import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.ColorUtil;
 import dev._3000IQPlay.trillium.util.RenderUtil;
-import dev._3000IQPlay.trillium.util.TextUtil;
 import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
@@ -16,12 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.awt.Color;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.*;
 
 public class ChatModifier
         extends Module {
@@ -292,7 +287,7 @@ public class ChatModifier
     public enum Suffix {
         None,
         Trillium,
-		ExperiumPlus;
+		ExperiumPlus
     }
 	
 	public enum TextColor {
@@ -305,7 +300,7 @@ public class ChatModifier
 		PURPLE,
 		RED,
 		DARKRED,
-		GRAY;
+		GRAY
     }
 	
 	public enum StiTextColor {
@@ -330,6 +325,6 @@ public class ChatModifier
         BOLD,
         STRIKE,
         UNDERLINE,
-        ITALIC;
+        ITALIC
     }
 }

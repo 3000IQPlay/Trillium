@@ -1,10 +1,11 @@
 /*     */ package com.jhlabs.composite;
 /*     */ 
-/*     */ import java.awt.Composite;
-/*     */ import java.awt.CompositeContext;
-/*     */ import java.awt.image.ColorModel;
-/*     */ import java.awt.image.Raster;
-/*     */ import java.awt.image.WritableRaster;
+/*     */
+
+import java.awt.*;
+import java.awt.image.ColorModel;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -57,20 +58,18 @@
 /*     */     
 /*  58 */     RGBComposite c = (RGBComposite)o;
 /*     */     
-/*  60 */     if (this.extraAlpha != c.extraAlpha)
-/*     */     {
-/*  62 */       return false;
-/*     */     }
+/*  60 */     /*     */     /*  62 */     /*     */
+    return this.extraAlpha == c.extraAlpha;
 /*     */     
-/*  65 */     return true;
-/*     */   }
+/*  65 */
+    /*     */   }
 /*     */   
 /*     */   public static abstract class RGBCompositeContext
 /*     */     implements CompositeContext
 /*     */   {
-/*     */     private float alpha;
-/*     */     private ColorModel srcColorModel;
-/*     */     private ColorModel dstColorModel;
+/*     */     private final float alpha;
+/*     */     private final ColorModel srcColorModel;
+/*     */     private final ColorModel dstColorModel;
 /*     */     
 /*     */     public RGBCompositeContext(float alpha, ColorModel srcColorModel, ColorModel dstColorModel) {
 /*  76 */       this.alpha = alpha;

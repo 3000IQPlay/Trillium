@@ -26,8 +26,8 @@ public class PearlESP extends Module {
 	
     public static List<PredictionLine> lines;
     public static EntityEnderPearl entityPearl;
-    private Setting<Boolean> pearlPrediction = this.register(new Setting<Boolean>("PearlPrediction", true));
-    private Setting<Boolean> triangleESP = this.register(new Setting<Boolean>("TriangleESP", true));
+    private final Setting<Boolean> pearlPrediction = this.register(new Setting<Boolean>("PearlPrediction", true));
+    private final Setting<Boolean> triangleESP = this.register(new Setting<Boolean>("TriangleESP", true));
 
 
     //distance - prev dist
@@ -133,7 +133,7 @@ public class PearlESP extends Module {
     }
 
     public static void drawTriangle(final float x, final float y, final float size, final float vector, final int color) {
-        GL11.glTranslated((double)x, (double)y, 0.0);
+        GL11.glTranslated(x, y, 0.0);
         GL11.glRotatef(180.0f + vector, 0.0f, 0.0f, 1.0f);
         final float alpha = (color >> 24 & 0xFF) / 255.0f;
         final float red = (color >> 16 & 0xFF) / 255.0f;
@@ -147,16 +147,16 @@ public class PearlESP extends Module {
         GL11.glLineWidth(1.0f);
         GL11.glBegin(6);
 
-        GL11.glVertex2d(0.0, (double)size);
-        GL11.glVertex2d((double)(1.0f * size), (double)(-size));
-        GL11.glVertex2d((double)(-(1.0f * size)), (double)(-size));
+        GL11.glVertex2d(0.0, size);
+        GL11.glVertex2d(1.0f * size, -size);
+        GL11.glVertex2d(-(1.0f * size), -size);
 
         GL11.glEnd();
         GL11.glDisable(2848);
         GL11.glEnable(3553);
         GL11.glDisable(3042);
         GL11.glRotatef(-180.0f - vector, 0.0f, 0.0f, 1.0f);
-        GL11.glTranslated((double)(-x), (double)(-y), 0.0);
+        GL11.glTranslated(-x, -y, 0.0);
     }
 
     @SubscribeEvent

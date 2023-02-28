@@ -1,6 +1,8 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import java.awt.Color;
+/*     */
+
+import java.awt.*;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -106,7 +108,7 @@
 /*     */ 
 /*     */   
 /*     */   public Gradient(int[] rgb) {
-/* 109 */     this((int[])null, rgb, (byte[])null);
+/* 109 */     this(null, rgb, null);
 /*     */   }
 /*     */ 
 /*     */ 
@@ -116,7 +118,7 @@
 /*     */ 
 /*     */   
 /*     */   public Gradient(int[] x, int[] rgb) {
-/* 119 */     this(x, rgb, (byte[])null);
+/* 119 */     this(x, rgb, null);
 /*     */   }
 /*     */ 
 /*     */ 
@@ -134,9 +136,9 @@
 /*     */   public Object clone() {
 /* 135 */     Gradient g = (Gradient)super.clone();
 /* 136 */     g.map = (int[])this.map.clone();
-/* 137 */     g.xKnots = (int[])this.xKnots.clone();
-/* 138 */     g.yKnots = (int[])this.yKnots.clone();
-/* 139 */     g.knotTypes = (byte[])this.knotTypes.clone();
+/* 137 */     g.xKnots = this.xKnots.clone();
+/* 138 */     g.yKnots = this.yKnots.clone();
+/* 139 */     g.knotTypes = this.knotTypes.clone();
 /* 140 */     return g;
 /*     */   }
 /*     */ 
@@ -148,9 +150,9 @@
 /*     */   public void copyTo(Gradient g) {
 /* 149 */     g.numKnots = this.numKnots;
 /* 150 */     g.map = (int[])this.map.clone();
-/* 151 */     g.xKnots = (int[])this.xKnots.clone();
-/* 152 */     g.yKnots = (int[])this.yKnots.clone();
-/* 153 */     g.knotTypes = (byte[])this.knotTypes.clone();
+/* 151 */     g.xKnots = this.xKnots.clone();
+/* 152 */     g.yKnots = this.yKnots.clone();
+/* 153 */     g.knotTypes = this.knotTypes.clone();
 /*     */   }
 /*     */ 
 /*     */ 

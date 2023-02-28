@@ -4,8 +4,8 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import net.minecraft.client.gui.GuiGameOver;
 import dev._3000IQPlay.trillium.util.Timer;
+import net.minecraft.client.gui.GuiGameOver;
 
 public class AutoRespawn extends Module {
     public AutoRespawn() {
@@ -36,7 +36,7 @@ public class AutoRespawn extends Module {
                 mc.player.sendChatMessage("/kit "+ kit.getValue());
             }
             if(deathcoords.getValue()){
-                Command.sendMessage(ChatFormatting.GOLD + "[PlayerDeath] " + ChatFormatting.YELLOW + (int) mc.player.posX + " " + (int) mc.player.posY + " " + (int) mc.player.posZ);
+                Command.sendMessage(ChatFormatting.GOLD + "[PlayerDeath] " + ChatFormatting.YELLOW + mc.player.posX + " " + mc.player.posY + " " + mc.player.posZ);
             }
             timer.reset();
 
@@ -46,7 +46,7 @@ public class AutoRespawn extends Module {
                 mc.player.sendChatMessage("/home");
             }
             if(deathcoords.getValue()){
-                Command.sendMessage(ChatFormatting.GOLD + "[PlayerDeath] " + ChatFormatting.YELLOW + (int) mc.player.posX + " " + (int) mc.player.posY + " " + (int) mc.player.posZ);
+                Command.sendMessage(ChatFormatting.GOLD + "[PlayerDeath] " + ChatFormatting.YELLOW + mc.player.posX + " " + mc.player.posY + " " + mc.player.posZ);
             }
             timer.reset();
         }

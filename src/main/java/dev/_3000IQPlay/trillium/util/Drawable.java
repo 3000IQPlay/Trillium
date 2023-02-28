@@ -1,28 +1,6 @@
 package dev._3000IQPlay.trillium.util;
 
-import static dev._3000IQPlay.trillium.util.ItemUtil.mc;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_SMOOTH;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.net.URL;
-import java.util.HashMap;
-
-import javax.imageio.ImageIO;
-
-import org.lwjgl.opengl.GL11;
-
 import com.jhlabs.image.GaussianFilter;
-
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,10 +9,20 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.util.HashMap;
+
+import static dev._3000IQPlay.trillium.util.ItemUtil.mc;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Drawable {
 
-    private static HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
+    private static final HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
 
     public static void drawTexture(ResourceLocation texture, double x, double y, double width, double height) {
         drawTexture(texture, x, y, width, height, Color.WHITE);
@@ -278,14 +266,14 @@ public class Drawable {
         GL11.glLineWidth(lineWidth);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex2d((double) x, (double) y);
-        GL11.glVertex2d((double) x + width, (double) y);
-        GL11.glVertex2d((double) x + width, (double) y);
-        GL11.glVertex2d((double) x + width, (double) y + height);
-        GL11.glVertex2d((double) x + width, (double) y + height);
-        GL11.glVertex2d((double) x, (double) y + height);
-        GL11.glVertex2d((double) x, (double) y + height);
-        GL11.glVertex2d((double) x, (double) y);
+        GL11.glVertex2d(x, y);
+        GL11.glVertex2d(x + width, y);
+        GL11.glVertex2d(x + width, y);
+        GL11.glVertex2d(x + width, y + height);
+        GL11.glVertex2d(x + width, y + height);
+        GL11.glVertex2d(x, y + height);
+        GL11.glVertex2d(x, y + height);
+        GL11.glVertex2d(x, y);
         GL11.glEnd();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_CULL_FACE);
@@ -477,7 +465,7 @@ public class Drawable {
         }
     }
 
-    private static HashMap<Integer, Integer> shadowCache2 = new HashMap<Integer, Integer>();
+    private static final HashMap<Integer, Integer> shadowCache2 = new HashMap<Integer, Integer>();
 
     public static boolean isHovered(double mouseX, double mouseY, double x, double y, double width, double height) {
         return mouseX >= x && mouseX - width <= x && mouseY >= y && mouseY - height <= y;
@@ -553,9 +541,9 @@ public class Drawable {
         GL11.glTexCoord2f(0, 1); // bottom left
         GL11.glVertex2f(_X, _Y + height);
         GL11.glTexCoord2f(1, 1); // bottom right
-        GL11.glVertex2f((float) (_X + width), _Y + height);
+        GL11.glVertex2f(_X + width, _Y + height);
         GL11.glTexCoord2f(1, 0); // top right
-        GL11.glVertex2f((float) (_X + width), _Y);
+        GL11.glVertex2f(_X + width, _Y);
         GL11.glEnd();
         GlStateManager.resetColor();
         if(!blend)

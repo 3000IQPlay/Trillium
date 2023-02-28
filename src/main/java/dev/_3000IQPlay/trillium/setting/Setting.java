@@ -1,18 +1,14 @@
 package dev._3000IQPlay.trillium.setting;
 
-import dev._3000IQPlay.trillium.command.Command;
-import dev._3000IQPlay.trillium.modules.Feature;
 import dev._3000IQPlay.trillium.event.events.ClientEvent;
+import dev._3000IQPlay.trillium.modules.Feature;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Predicate;
 
 public class Setting<T> {
     private final String name;
-    private  T defaultValue;
+    private final T defaultValue;
     private T value;
     private T plannedValue;
     private T min;

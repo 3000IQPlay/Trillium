@@ -1,7 +1,9 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import java.awt.Color;
-/*     */ import java.util.Random;
+/*     */
+
+import java.awt.*;
+import java.util.Random;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -47,7 +49,7 @@
 /*     */   public static final int DST_IN = 18;
 /*     */   public static final int ALPHA = 19;
 /*     */   public static final int ALPHA_TO_GRAY = 20;
-/*  50 */   private static Random randomGenerator = new Random();
+/*  50 */   private static final Random randomGenerator = new Random();
 /*     */ 
 /*     */ 
 /*     */ 

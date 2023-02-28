@@ -7,17 +7,18 @@ import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.ColorShell;
 import dev._3000IQPlay.trillium.util.DrawHelper;
-import dev._3000IQPlay.trillium.util.*;
+import dev._3000IQPlay.trillium.util.RenderUtil;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Indicators extends Module {
     public Indicators() {
@@ -25,7 +26,7 @@ public class Indicators extends Module {
     }
 
 
-    private static List<Indicator> indicators = new java.util.ArrayList();
+    private static final List<Indicator> indicators = new java.util.ArrayList();
     public static AstolfoAnimation astolfo = new AstolfoAnimation();
 
     public Setting<Boolean> Memoryy = register(new Setting<>("Memory", true));
@@ -43,9 +44,9 @@ public class Indicators extends Module {
 
 
 
-    private Setting<mode2> colorType = register(new Setting("Mode", mode2.Astolfo));
+    private final Setting<mode2> colorType = register(new Setting("Mode", mode2.Astolfo));
     public enum mode2 {
-        Static, StateBased, Astolfo;
+        Static, StateBased, Astolfo
     }
 
     boolean once = false;

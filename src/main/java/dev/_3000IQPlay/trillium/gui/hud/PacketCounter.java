@@ -3,10 +3,10 @@ package dev._3000IQPlay.trillium.gui.hud;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.PaletteHelper;
 import dev._3000IQPlay.trillium.notification.NotificationManager;
 import dev._3000IQPlay.trillium.notification.NotificationType;
+import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.PaletteHelper;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.Timer;
 import dev._3000IQPlay.trillium.util.Util;
@@ -29,10 +29,10 @@ public class PacketCounter extends Module{
     public Setting<Integer> waterMarkZ1 = register(new Setting("Y", 10, 0, 524));
     public Setting<Integer> waterMarkZ2 = register(new Setting("X", 20, 0, 862));
 
-    private Setting<mode> Mode = register(new Setting("Mode", mode.FunnyGame));
+    private final Setting<mode> Mode = register(new Setting("Mode", mode.FunnyGame));
 
     public enum mode {
-        FunnyGame, TOOBEE, Custom;
+        FunnyGame, TOOBEE, Custom
     }
 
     public Setting<Integer> i1 = register(new Setting("green under", 20, 0, 100, v-> Mode.getValue() == mode.Custom));

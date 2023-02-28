@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 @Cancelable
 public class PlayerMoveEvent extends EventStage {
-    private static PlayerMoveEvent INSTANCE = new PlayerMoveEvent();
+    private static final PlayerMoveEvent INSTANCE = new PlayerMoveEvent();
 
     private MoverType type;
 	private float yaw;

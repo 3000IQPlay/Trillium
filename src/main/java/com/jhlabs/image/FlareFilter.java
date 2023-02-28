@@ -1,7 +1,10 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import com.jhlabs.math.Noise;
-/*     */ import java.awt.geom.Point2D;
+/*     */
+
+import com.jhlabs.math.Noise;
+
+import java.awt.geom.Point2D;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -26,7 +29,7 @@
 /*     */ public class FlareFilter
 /*     */   extends PointFilter
 /*     */ {
-/*  29 */   private int rays = 50;
+/*  29 */   private final int rays = 50;
 /*     */   private float radius;
 /*  31 */   private float baseAmount = 1.0F;
 /*  32 */   private float ringAmount = 0.2F;
@@ -36,10 +39,10 @@
 /*  36 */   private float centreX = 0.5F, centreY = 0.5F; private int height;
 /*  37 */   private float ringWidth = 1.6F;
 /*     */   
-/*  39 */   private float linear = 0.03F;
-/*  40 */   private float gauss = 0.006F;
-/*  41 */   private float mix = 0.5F;
-/*  42 */   private float falloff = 6.0F;
+/*  39 */   private final float linear = 0.03F;
+/*  40 */   private final float gauss = 0.006F;
+/*  41 */   private final float mix = 0.5F;
+/*  42 */   private final float falloff = 6.0F;
 /*     */   
 /*     */   private float sigma;
 /*     */   private float icentreX;

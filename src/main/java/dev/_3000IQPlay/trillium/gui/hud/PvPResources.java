@@ -85,7 +85,7 @@ public class PvPResources extends Module{
             GlStateManager.disableCull();
             int n7 = (int) x1;
             int n8 = (int) y1;
-            ItemStack itemStack = (ItemStack)list.get(i);
+            ItemStack itemStack = list.get(i);
             n7 = i % 2 * 20;
             n8 = i / 2 * 20;
             mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, (int) (x1 + n7 + 2), (int) (y1 + n8 + 2));

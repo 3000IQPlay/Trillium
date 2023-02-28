@@ -1,8 +1,10 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import java.awt.geom.AffineTransform;
-/*     */ import java.awt.geom.Point2D;
-/*     */ import java.awt.image.BufferedImage;
+/*     */
+
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -25,7 +27,7 @@
 /*     */   extends AbstractBufferedImageOp
 /*     */ {
 /*  27 */   private float angle = 0.0F;
-/*  28 */   private float falloff = 1.0F;
+/*  28 */   private final float falloff = 1.0F;
 /*  29 */   private float distance = 1.0F;
 /*  30 */   private float zoom = 0.0F;
 /*  31 */   private float rotation = 0.0F;

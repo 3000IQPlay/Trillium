@@ -157,7 +157,7 @@
 /*     */   
 /*     */   public void prepareFilter(float transition) {
 /*     */     try {
-/* 160 */       this.method.invoke(this.filter, new Object[] { new Float(transition) });
+/* 160 */       this.method.invoke(this.filter, new Float(transition));
 /*     */     }
 /* 162 */     catch (Exception e) {
 /*     */       

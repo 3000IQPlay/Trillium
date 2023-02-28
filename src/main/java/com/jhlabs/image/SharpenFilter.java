@@ -23,7 +23,7 @@
 /*    */ public class SharpenFilter
 /*    */   extends ConvolveFilter
 /*    */ {
-/* 26 */   private static float[] sharpenMatrix = new float[] { 0.0F, -0.2F, 0.0F, -0.2F, 1.8F, -0.2F, 0.0F, -0.2F, 0.0F };
+/* 26 */   private static final float[] sharpenMatrix = new float[] { 0.0F, -0.2F, 0.0F, -0.2F, 1.8F, -0.2F, 0.0F, -0.2F, 0.0F };
 /*    */ 
 /*    */ 
 /*    */ 

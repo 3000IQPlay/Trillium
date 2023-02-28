@@ -1,7 +1,9 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import java.io.PrintStream;
-/*     */ import java.util.Vector;
+/*     */
+
+import java.io.PrintStream;
+import java.util.Vector;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -77,12 +79,12 @@
 /*     */     }
 /*     */   }
 /*  79 */   private int nodes = 0;
-/*     */   private OctTreeNode root;
+/*     */   private final OctTreeNode root;
 /*     */   private int reduceColors;
 /*     */   private int maximumColors;
 /*  83 */   private int colors = 0;
 /*     */   
-/*     */   private Vector[] colorList;
+/*     */   private final Vector[] colorList;
 /*     */   
 /*     */   public OctTreeQuantizer() {
 /*  88 */     setup(256);

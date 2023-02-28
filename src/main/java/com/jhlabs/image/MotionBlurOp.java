@@ -1,12 +1,10 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import java.awt.AlphaComposite;
-/*     */ import java.awt.Graphics2D;
-/*     */ import java.awt.RenderingHints;
-/*     */ import java.awt.geom.AffineTransform;
-/*     */ import java.awt.geom.Point2D;
-/*     */ import java.awt.image.BufferedImage;
-/*     */ import java.awt.image.ImageObserver;
+/*     */
+
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -234,7 +232,7 @@
 /* 234 */     if (steps == 0) {
 /*     */       
 /* 236 */       Graphics2D g = dst.createGraphics();
-/* 237 */       g.drawRenderedImage(src, (AffineTransform)null);
+/* 237 */       g.drawRenderedImage(src, null);
 /* 238 */       g.dispose();
 /* 239 */       return dst;
 /*     */     } 
@@ -244,7 +242,7 @@
 /* 244 */     for (int i = 0; i < steps; i++) {
 /*     */       
 /* 246 */       Graphics2D g = tmp.createGraphics();
-/* 247 */       g.drawImage(tsrc, (AffineTransform)null, (ImageObserver)null);
+/* 247 */       g.drawImage(tsrc, null, null);
 /* 248 */       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 /* 249 */       g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 /* 250 */       g.setComposite(AlphaComposite.getInstance(3, 0.5F));
@@ -257,7 +255,7 @@
 /*     */       }
 /*     */       
 /* 259 */       g.translate(-cx, -cy);
-/* 260 */       g.drawImage(dst, (AffineTransform)null, (ImageObserver)null);
+/* 260 */       g.drawImage(dst, null, null);
 /* 261 */       g.dispose();
 /* 262 */       BufferedImage ti = dst;
 /* 263 */       dst = tmp;

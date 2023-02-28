@@ -38,7 +38,7 @@
 /*  38 */   private int distribution = 1;
 /*     */   private boolean monochrome = false;
 /*  40 */   private float density = 1.0F;
-/*  41 */   private Random randomNumbers = new Random();
+/*  41 */   private final Random randomNumbers = new Random();
 /*     */ 
 /*     */ 
 /*     */ 

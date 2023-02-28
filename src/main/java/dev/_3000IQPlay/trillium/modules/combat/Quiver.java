@@ -2,18 +2,16 @@ package dev._3000IQPlay.trillium.modules.combat;
 
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.StopUsingItemEvent;
+import dev._3000IQPlay.trillium.mixin.mixins.IEntityPlayerSP;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.mixin.mixins.IEntityPlayerSP;
-import dev._3000IQPlay.trillium.util.*;
-
+import dev._3000IQPlay.trillium.util.InteractionUtil;
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.init.*;
+import net.minecraft.inventory.*;
+import net.minecraft.item.*;
 import net.minecraft.network.play.client.*;
 import net.minecraft.util.EnumHand;
-import net.minecraft.inventory.*;
-import dev._3000IQPlay.trillium.util.Timer;
-
-import net.minecraft.item.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Quiver extends Module
@@ -35,7 +33,7 @@ public class Quiver extends Module
     public  final Setting<Boolean> fdf = this.register(new Setting<>("ForDmgFly", false));
 
 
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
 
     private boolean cancelStopUsingItem = false;
 

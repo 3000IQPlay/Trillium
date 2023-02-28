@@ -6,7 +6,7 @@ import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.SubBind;
 import dev._3000IQPlay.trillium.util.PaletteHelper;
-import dev._3000IQPlay.trillium.util.*;
+import dev._3000IQPlay.trillium.util.RenderUtil;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
@@ -27,17 +27,17 @@ import java.awt.*;
 public class FastPlace2
         extends Module {
 	public static BlockPos target;
-    private  Setting<Integer> threshold = this.register (new Setting<>("Percent", 100, 0, 100));
+    private final Setting<Integer> threshold = this.register (new Setting<>("Percent", 100, 0, 100));
     public Setting<Integer> waterMarkZ1 = register(new Setting("Y", 10, 0, 524));
     public Setting<Integer> waterMarkZ2 = register(new Setting("X", 20, 0, 862));
-    private  Setting<Integer> dlay = this.register (new Setting<>("delay", 100, 0, 100));
-    private  Setting<Integer> armdlay = this.register (new Setting<>("ArmorDelay", 100, 0, 1000));
+    private final Setting<Integer> dlay = this.register (new Setting<>("delay", 100, 0, 100));
+    private final Setting<Integer> armdlay = this.register (new Setting<>("ArmorDelay", 100, 0, 1000));
     public Setting<SubBind> aboba = this.register(new Setting<>("Butt", new SubBind(Keyboard.KEY_LMENU)));
     public Setting<Boolean> afast = this.register ( new Setting <> ( "AlwaysFast", false));
     public static boolean isMending = false;
     private boolean shouldMend = false;
-    private Timer timer = new Timer();
-    private Timer timer2 = new Timer();
+    private final Timer timer = new Timer();
+    private final Timer timer2 = new Timer();
     int arm1;
     int arm2;
     int arm3;
@@ -245,7 +245,7 @@ public class FastPlace2
         int expCount = 0;
         for (int i = 0; i < 45; ++i) {
             if (FastPlace2.mc.player.inventory.getStackInSlot(i).getItem().equals(Items.EXPERIENCE_BOTTLE)) {
-                expCount = expCount + FastPlace2.mc.player.inventory.getStackInSlot(i).stackSize;;
+                expCount = expCount + FastPlace2.mc.player.inventory.getStackInSlot(i).stackSize;
             }
         }
         if (FastPlace2.mc.player.getHeldItemOffhand().getItem().equals(Items.EXPERIENCE_BOTTLE)) {

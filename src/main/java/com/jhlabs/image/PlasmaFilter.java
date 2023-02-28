@@ -1,8 +1,10 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */ import java.awt.Rectangle;
-/*     */ import java.util.Date;
-/*     */ import java.util.Random;
+/*     */
+
+import java.awt.*;
+import java.util.Date;
+import java.util.Random;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -26,7 +28,7 @@
 /*  26 */   public float turbulence = 1.0F;
 /*  27 */   private float scaling = 0.0F;
 /*  28 */   private Colormap colormap = new LinearColormap();
-/*     */   private Random randomGenerator;
+/*     */   private final Random randomGenerator;
 /*  30 */   private long seed = 567L;
 /*     */   
 /*     */   private boolean useColormap = false;
@@ -224,13 +226,11 @@
 /* 224 */         putPixel(i, j, mm, pixels, stride);
 /*     */       } 
 /*     */       
-/* 227 */       if (x2 - x1 < 3 && y2 - y1 < 3)
-/*     */       {
-/* 229 */         return false;
-/*     */       }
+/* 227 */       /*     */       /* 229 */       /*     */
+        return x2 - x1 >= 3 || y2 - y1 >= 3;
 /*     */       
-/* 232 */       return true;
-/*     */     } 
+/* 232 */
+        /*     */     }
 /*     */     
 /* 235 */     int mx = (x1 + x2) / 2;
 /* 236 */     int my = (y1 + y2) / 2;

@@ -35,7 +35,7 @@ public class TPSCounter extends Module{
 
     @SubscribeEvent
     public void onRender2D(Render2DEvent e){
-        String str = "TPS " + ChatFormatting.WHITE + String.valueOf(Double.parseDouble(String.valueOf(Trillium.serverManager.getTPS())));
+        String str = "TPS " + ChatFormatting.WHITE + Double.parseDouble(String.valueOf(Trillium.serverManager.getTPS()));
         y1 = e.scaledResolution.getScaledHeight() * pos.getValue().getY();
         x1 = e.scaledResolution.getScaledWidth() * pos.getValue().getX();
         FontRender.drawString6(str,x1,y1, color.getValue().getRawColor(),false);

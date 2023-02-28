@@ -1,25 +1,19 @@
 package dev._3000IQPlay.trillium.util.ffp;
 
-import net.minecraft.network.EnumPacketDirection;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.NettyPacketDecoder;
-import net.minecraft.network.NettyPacketEncoder;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.fml.relauncher.Side;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelPipeline;
+import net.minecraft.network.*;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 
@@ -31,10 +25,10 @@ public class NetworkHandler {
     private boolean isConnected;
     private NetworkManager networkManager;
 
-    private ReadWriteLock[] outbound_lock;
-    private ReadWriteLock[] inbound_lock;
-    private List<PacketListener>[] outbound_listeners;
-    private List<PacketListener>[] inbound_listeners;
+    private final ReadWriteLock[] outbound_lock;
+    private final ReadWriteLock[] inbound_lock;
+    private final List<PacketListener>[] outbound_listeners;
+    private final List<PacketListener>[] inbound_listeners;
 
     public NetworkHandler() {
         this.isConnected = false;

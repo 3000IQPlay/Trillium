@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
-import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.BlockUtils;
@@ -87,11 +86,11 @@ public class AntiVoid
     return slot;
 }
 
-    static enum Mode {
+    enum Mode {
 		ObiClutch,
         MotionStop,
         Motion,
         Glide,
-        Packet;
+        Packet
     }
 }

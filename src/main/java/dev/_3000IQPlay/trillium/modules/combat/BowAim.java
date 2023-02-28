@@ -2,17 +2,13 @@ package dev._3000IQPlay.trillium.modules.combat;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.EventPostMotion;
-import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.EntityUtil;
 import dev._3000IQPlay.trillium.util.PaletteHelper;
 import dev._3000IQPlay.trillium.util.RenderHelper;
-import dev._3000IQPlay.trillium.util.RotationUtil;
-import dev._3000IQPlay.trillium.util.phobos.RayTraceUtil;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBow;
 import net.minecraft.util.math.MathHelper;
@@ -23,8 +19,8 @@ import java.awt.*;
 
 public class BowAim extends Module {
 	
-    private Setting<Boolean> ignoreWalls = register(new Setting<>("IgnoreWalls", false));
-    private Setting<Boolean> noVertical = register(new Setting<>("NoVertical", false));
+    private final Setting<Boolean> ignoreWalls = register(new Setting<>("IgnoreWalls", false));
+    private final Setting<Boolean> noVertical = register(new Setting<>("NoVertical", false));
     private  final Setting<Float> range = this.register( new Setting<>("Range", 60.0f, 0.0f, 200f));
     private  final Setting<Float> fov = this.register( new Setting<>("fov", 60.0f, 0.0f, 180f));
 

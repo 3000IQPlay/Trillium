@@ -48,7 +48,7 @@
 /*     */   public Object clone() {
 /*     */     try {
 /*  50 */       ArrayColormap g = (ArrayColormap)super.clone();
-/*  51 */       g.map = (int[])this.map.clone();
+/*  51 */       g.map = this.map.clone();
 /*  52 */       return g;
 /*     */     }
 /*  54 */     catch (CloneNotSupportedException cloneNotSupportedException) {

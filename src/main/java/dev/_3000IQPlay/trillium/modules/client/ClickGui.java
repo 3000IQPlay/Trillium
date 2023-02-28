@@ -1,7 +1,6 @@
 package dev._3000IQPlay.trillium.modules.client;
 
 import dev._3000IQPlay.trillium.Trillium;
-import dev._3000IQPlay.trillium.event.events.ConnectToServerEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.gui.clickui.ClickUI;
 import dev._3000IQPlay.trillium.gui.clickui.ColorUtil;
@@ -9,21 +8,13 @@ import dev._3000IQPlay.trillium.gui.clickui.Colors;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.PNGtoResourceLocation;
 import dev._3000IQPlay.trillium.util.Timer;
 import dev._3000IQPlay.trillium.util.Util;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.util.Objects;
-
-import static org.lwjgl.opengl.GL11.GL_BLEND;
 
 public class ClickGui
         extends Module {
@@ -33,7 +24,7 @@ public class ClickGui
     private int n;
     public int i = 85;
     private final Timer timer = new Timer();
-    private Setting<colorModeEn> colorMode = register(new Setting("ColorMode", colorModeEn.Analogous));
+    private final Setting<colorModeEn> colorMode = register(new Setting("ColorMode", colorModeEn.Analogous));
 	public Setting<GM> gradientMode = register(new Setting("GradientMode", GM.Horizontal));
 	public Setting<Boolean> darkBackGround = this.register(new Setting<Boolean>("DarkBackGround", true));
 	public Setting<Boolean> showBinds = this.register(new Setting<Boolean>("ShowBinds", true));
@@ -79,7 +70,7 @@ public class ClickGui
 
 
     public Color getColor(int count) {
-        int index = (int) (count);
+        int index = count;
         switch (colorMode.getValue()) {
             case Sky:
                 return ColorUtil.skyRainbow((int)30 - this.colorSpeed.getValue(), index);
@@ -161,9 +152,9 @@ public class ClickGui
         GL11.glPopMatrix();
     }
 	
-	public static enum GM {
+	public enum GM {
         Horizontal,
-        Vertical;
+        Vertical
     }
 
     public enum colorModeEn {

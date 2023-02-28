@@ -2,10 +2,11 @@ package dev._3000IQPlay.trillium.manager;
 
 import com.google.gson.*;
 import dev._3000IQPlay.trillium.Trillium;
-import dev._3000IQPlay.trillium.setting.*;
-import dev._3000IQPlay.trillium.util.Util;
 import dev._3000IQPlay.trillium.modules.Feature;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.setting.BlockListSetting;
+import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.Util;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -213,7 +214,7 @@ public class ConfigManager implements Util {
             path.mkdir();
         Trillium.friendManager.saveFriends();
         Trillium.enemyManager.saveEnemies();
-        Trillium.macromanager.saveMacro();
+        MacroManager.saveMacro();
         for (Feature feature : this.features) {
                 try {
                     saveSettings(feature);

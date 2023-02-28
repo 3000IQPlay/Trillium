@@ -2,7 +2,10 @@ package dev._3000IQPlay.trillium.util;
 
 
 public class ColorShell {
-    private int r, g, b, a;
+    private int r;
+    private int g;
+    private int b;
+    private final int a;
     private boolean rainbow;
 
     public ColorShell() {

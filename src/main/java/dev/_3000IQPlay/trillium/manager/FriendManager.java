@@ -1,12 +1,15 @@
 package dev._3000IQPlay.trillium.manager;
 
-import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.modules.Feature;
+import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.PlayerUtils;
 import dev._3000IQPlay.trillium.util.TrilliumUtils;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class FriendManager extends Feature {
     public List<Friend> friends = new ArrayList<Friend>();

@@ -161,8 +161,9 @@
 /*     */ 
 /*     */   
 /*     */   public BufferedImage filter(BufferedImage src, BufferedImage dst) {
-/* 164 */     int dstPixels[], width = src.getWidth();
-/* 165 */     int height = src.getHeight();
+/* 164 */     int[] dstPixels;
+    int width = src.getWidth();
+    /* 165 */     int height = src.getHeight();
 /* 166 */     int[] pixels = new int[width];
 /* 167 */     int length2 = (int)(this.length / 1.414F);
 /* 168 */     int[] colors = new int[this.length + 1];

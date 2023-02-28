@@ -3,8 +3,6 @@ package dev._3000IQPlay.trillium.modules.render;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.shaders.impl.fill.*;
-import dev._3000IQPlay.trillium.util.shaders.impl.outline.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.*;
@@ -22,8 +20,8 @@ public class Shaders extends Module {
         super("Shaders", "Sweet Shaders", Category.RENDER, true, false, false);
     }
 
-    private Setting<fillShadermode> fillShader = register(new Setting("Fill Shader", fillShadermode.None));
-    private Setting<glowESPmode> glowESP = register(new Setting("Glow ESP", glowESPmode.None));
+    private final Setting<fillShadermode> fillShader = register(new Setting("Fill Shader", fillShadermode.None));
+    private final Setting<glowESPmode> glowESP = register(new Setting("Glow ESP", glowESPmode.None));
 
     public enum fillShadermode {
         Astral, Aqua,Smoke,RainbowCube,Gradient,Fill,Circle,Phobos,None
@@ -31,34 +29,34 @@ public class Shaders extends Module {
     public enum glowESPmode {
         None, Color,Astral,RainbowCube,Gradient,Circle,Smoke,Aqua
     }
-    private Setting<Boolean> rangeCheck = this.register(new Setting<Boolean>("Range Check", true));
-    private Setting<Boolean> arrowOutline = this.register(new Setting<Boolean>("Arrow Outline", false));
-    private Setting<Boolean> enderPerleOutline = this.register(new Setting<Boolean>("EnderPerle Outline", false));
-    private Setting<Boolean> minecartTntOutline = this.register(new Setting<Boolean>("MinecartTnt Outline", false));
-    private Setting<Boolean> boatOutline = this.register(new Setting<Boolean>("Boat Outline", false));
-    private Setting<Boolean> bottleOutline = this.register(new Setting<Boolean>("Bottle Outline", false));
-    private Setting<Boolean> xpOutline = this.register(new Setting<Boolean>("XP Outline", false));
-    private Setting<Boolean> crystalsOutline = this.register(new Setting<Boolean>("Crystals Outline", false));
-    private Setting<Boolean> playersOutline = this.register(new Setting<Boolean>("Players Outline", false));
-    private Setting<Boolean> mobsOutline = this.register(new Setting<Boolean>("Mobs Outline", false));
-    private Setting<Boolean> itemsOutline = this.register(new Setting<Boolean>("Items Outline", false));
-    private Setting<Boolean> arrowFill = this.register(new Setting<Boolean>("Arrow Fill", false));
-    private Setting<Boolean> enderPerleFill = this.register(new Setting<Boolean>("EnderPerle Fill", false));
-    private Setting<Boolean> minecartFill = this.register(new Setting<Boolean>("MinecartTnt Fill", false));
-    private Setting<Boolean> boatFill = this.register(new Setting<Boolean>("Boat Fill", false));
-    private Setting<Boolean> bottleFill = this.register(new Setting<Boolean>("Bottle Fill", false));
-    private Setting<Boolean> xpFill = this.register(new Setting<Boolean>("XP Fill", false));
-    private Setting<Boolean> crystalsFill = this.register(new Setting<Boolean>("Crystals Fill", false));
-    private Setting<Boolean> playersFill = this.register(new Setting<Boolean>("Players Fill", false));
-    private Setting<Boolean> mobsFill = this.register(new Setting<Boolean>("Mobs Fill", false));
-    private Setting<Boolean> itemsFill = this.register(new Setting<Boolean>("Items Fill", false));
+    private final Setting<Boolean> rangeCheck = this.register(new Setting<Boolean>("Range Check", true));
+    private final Setting<Boolean> arrowOutline = this.register(new Setting<Boolean>("Arrow Outline", false));
+    private final Setting<Boolean> enderPerleOutline = this.register(new Setting<Boolean>("EnderPerle Outline", false));
+    private final Setting<Boolean> minecartTntOutline = this.register(new Setting<Boolean>("MinecartTnt Outline", false));
+    private final Setting<Boolean> boatOutline = this.register(new Setting<Boolean>("Boat Outline", false));
+    private final Setting<Boolean> bottleOutline = this.register(new Setting<Boolean>("Bottle Outline", false));
+    private final Setting<Boolean> xpOutline = this.register(new Setting<Boolean>("XP Outline", false));
+    private final Setting<Boolean> crystalsOutline = this.register(new Setting<Boolean>("Crystals Outline", false));
+    private final Setting<Boolean> playersOutline = this.register(new Setting<Boolean>("Players Outline", false));
+    private final Setting<Boolean> mobsOutline = this.register(new Setting<Boolean>("Mobs Outline", false));
+    private final Setting<Boolean> itemsOutline = this.register(new Setting<Boolean>("Items Outline", false));
+    private final Setting<Boolean> arrowFill = this.register(new Setting<Boolean>("Arrow Fill", false));
+    private final Setting<Boolean> enderPerleFill = this.register(new Setting<Boolean>("EnderPerle Fill", false));
+    private final Setting<Boolean> minecartFill = this.register(new Setting<Boolean>("MinecartTnt Fill", false));
+    private final Setting<Boolean> boatFill = this.register(new Setting<Boolean>("Boat Fill", false));
+    private final Setting<Boolean> bottleFill = this.register(new Setting<Boolean>("Bottle Fill", false));
+    private final Setting<Boolean> xpFill = this.register(new Setting<Boolean>("XP Fill", false));
+    private final Setting<Boolean> crystalsFill = this.register(new Setting<Boolean>("Crystals Fill", false));
+    private final Setting<Boolean> playersFill = this.register(new Setting<Boolean>("Players Fill", false));
+    private final Setting<Boolean> mobsFill = this.register(new Setting<Boolean>("Mobs Fill", false));
+    private final Setting<Boolean> itemsFill = this.register(new Setting<Boolean>("Items Fill", false));
 
     // BooleanSetting fadeFill = registerBoolean("Fade Fill", false, () -> fillShader.getValue() == fillShadermode.Astral);//TODO
-    private Setting<Boolean> fadeFill = this.register(new Setting<Boolean>("Fade Fill", false));
+    private final Setting<Boolean> fadeFill = this.register(new Setting<Boolean>("Fade Fill", false));
 
     // BooleanSetting fadeOutline = registerBoolean("Fade Fill", false, () -> glowESP.getValue() == glowESPmode.Astral);
-    private Setting<Boolean> fadeOutline = this.register(new Setting<Boolean>("FadeOL Fill", false));
-    private Setting<Boolean> GradientAlpha = this.register(new Setting<Boolean>("Gradient Alpha", false));
+    private final Setting<Boolean> fadeOutline = this.register(new Setting<Boolean>("FadeOL Fill", false));
+    private final Setting<Boolean> GradientAlpha = this.register(new Setting<Boolean>("Gradient Alpha", false));
     
     
     public Setting<Float> duplicateOutline = register(new Setting("duplicateOutline", 1.0F, 0.0F, 20.0F));
@@ -82,7 +80,7 @@ public class Shaders extends Module {
     public Setting<Float> formuparam2Fill = register(new Setting("formuparam2", 0.89F, 0.0F, 1.5F,v-> fillShader.getValue() == fillShadermode.Astral));
 
 
-    public Setting<Float> saturationOutline = register(new Setting("saturation", 0.4F, 0.0F, 3.0F,v-> glowESP.getValue() == glowESPmode.Astral.Astral));
+    public Setting<Float> saturationOutline = register(new Setting("saturation", 0.4F, 0.0F, 3.0F,v-> glowESP.getValue() == glowESPmode.Astral));
 
     public Setting <Integer> maxEntities = this.register ( new Setting <> ( "Max Entities", 100, 10, 500) );
     public Setting <Integer> iterationsFill = this.register ( new Setting <> ( "Iteration", 4, 3, 20,v-> fillShader.getValue() == fillShadermode.Astral) );
@@ -445,35 +443,25 @@ public class Shaders extends Module {
                             return false;
                         if (e instanceof EntityPlayer) {
                             if (playersFill.getValue())
-                                if (e != mc.player || mc.gameSettings.thirdPersonView != 0)
-                                    return true;
+                                return e != mc.player || mc.gameSettings.thirdPersonView != 0;
                         } else if (e instanceof EntityItem) {
-                            if (itemsFill.getValue())
-                                return true;
+                            return itemsFill.getValue();
                         } else if (e instanceof EntityCreature) {
-                            if (mobsFill.getValue())
-                                return true;
+                            return mobsFill.getValue();
                         } else if (e instanceof EntityEnderCrystal) {
-                            if (crystalsFill.getValue())
-                                return true;
+                            return crystalsFill.getValue();
                         } else if (e instanceof EntityXPOrb) {
-                            if (xpFill.getValue())
-                                return true;
+                            return xpFill.getValue();
                         } else if (e instanceof EntityExpBottle) {
-                            if (bottleFill.getValue())
-                                return true;
+                            return bottleFill.getValue();
                         } else if (e instanceof EntityBoat) {
-                            if (boatFill.getValue())
-                                return true;
+                            return boatFill.getValue();
                         } else if (e instanceof EntityMinecart) {
-                            if (minecartFill.getValue())
-                                return true;
+                            return minecartFill.getValue();
                         } else if (e instanceof EntityEnderPearl) {
-                            if (enderPerleFill.getValue())
-                                return true;
+                            return enderPerleFill.getValue();
                         } else if (e instanceof EntityArrow) {
-                            if (arrowFill.getValue())
-                                return true;
+                            return arrowFill.getValue();
                         }
                         return false;
                     }
@@ -503,35 +491,25 @@ public class Shaders extends Module {
                             return false;
                         if (e instanceof EntityPlayer) {
                             if (playersOutline.getValue())
-                                if (e != mc.player || mc.gameSettings.thirdPersonView != 0)
-                                    return true;
+                                return e != mc.player || mc.gameSettings.thirdPersonView != 0;
                         } else if (e instanceof EntityItem) {
-                            if (itemsOutline.getValue())
-                                return true;
+                            return itemsOutline.getValue();
                         } else if (e instanceof EntityCreature) {
-                            if (mobsOutline.getValue())
-                                return true;
+                            return mobsOutline.getValue();
                         } else if (e instanceof EntityEnderCrystal) {
-                            if (crystalsOutline.getValue())
-                                return true;
+                            return crystalsOutline.getValue();
                         } else if (e instanceof EntityXPOrb) {
-                            if (xpOutline.getValue() || e.getEntityId() == -1000)
-                                return true;
+                            return xpOutline.getValue() || e.getEntityId() == -1000;
                         } else if (e instanceof EntityExpBottle) {
-                            if (bottleOutline.getValue())
-                                return true;
+                            return bottleOutline.getValue();
                         } else if (e instanceof EntityBoat) {
-                            if (boatOutline.getValue())
-                                return true;
+                            return boatOutline.getValue();
                         } else if (e instanceof EntityMinecart) {
-                            if (minecartTntOutline.getValue())
-                                return true;
+                            return minecartTntOutline.getValue();
                         } else if (e instanceof EntityEnderPearl) {
-                            if (enderPerleOutline.getValue())
-                                return true;
+                            return enderPerleOutline.getValue();
                         } else if (e instanceof EntityArrow) {
-                            if (arrowOutline.getValue())
-                                return true;
+                            return arrowOutline.getValue();
                         }
                         return false;
                     }

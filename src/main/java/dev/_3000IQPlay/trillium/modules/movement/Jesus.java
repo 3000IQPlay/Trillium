@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
-import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import net.minecraft.block.Block;
@@ -23,10 +22,10 @@ public class Jesus extends Module {
     }
 
 
-    private  Setting<Mode> mode = this.register(new Setting<>("Mode", Mode.SOLID));
-    private  Setting<Boolean> glide = this.register(new Setting<>("Glide", false));
-    private  Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
-    private  Setting<Boolean> boost = this.register(new Setting<>("Boost", false));
+    private final Setting<Mode> mode = this.register(new Setting<>("Mode", Mode.SOLID));
+    private final Setting<Boolean> glide = this.register(new Setting<>("Glide", false));
+    private final Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
+    private final Setting<Boolean> boost = this.register(new Setting<>("Boost", false));
 
     private boolean jumping;
 

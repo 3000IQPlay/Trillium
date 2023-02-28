@@ -1,11 +1,10 @@
 package dev._3000IQPlay.trillium.modules.misc;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.mixin.mixins.IGuiMerchant;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.Timer;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.gui.GuiMerchant;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
@@ -15,7 +14,9 @@ import net.minecraft.network.play.client.CPacketConfirmTransaction;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Timer;
 
 /**
  * @author gerald0mc
@@ -53,7 +54,7 @@ public class AutoTrader
     public List<Trade> customTrades = new LinkedList<>();
     //The MerchantRecipeList that is set when you open a villagers GUI
     private MerchantRecipeList recipeList = null;
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
 
     @Override
     public void onUpdate() {
@@ -256,8 +257,8 @@ public class AutoTrader
         }
     }
 	
-	public static enum Page {
+	public enum Page {
 		Settings,
-		Items;
-	}
+		Items
+    }
 }

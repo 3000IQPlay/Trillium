@@ -18,7 +18,7 @@
 /*    */ public class FractalSumFunction
 /*    */   extends CompoundFunction2D
 /*    */ {
-/* 21 */   private float octaves = 1.0F;
+/* 21 */   private final float octaves = 1.0F;
 /*    */ 
 /*    */   
 /*    */   public FractalSumFunction(Function2D basis) {

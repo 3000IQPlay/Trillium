@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.Color;
+import java.awt.*;
 
 @Mixin(value = {RenderEnderCrystal.class})
 public abstract class MixinRenderEnderCrystal {
@@ -77,41 +77,41 @@ public abstract class MixinRenderEnderCrystal {
                     this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                 }
             }
-            GL11.glPushAttrib((int) 1048575);
+            GL11.glPushAttrib(1048575);
             if (CrystalChams.INSTANCE.mode.getValue().equals((Object) CrystalChams.modes.WIREFRAME)) {
-                GL11.glPolygonMode((int) 1032, (int) 6913);
+                GL11.glPolygonMode(1032, 6913);
             }
             if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Default)) {
-				GL11.glBlendFunc((int) 770, (int) 771);
+				GL11.glBlendFunc(770, 771);
             }
 			if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Brighter)) {
-                GL11.glBlendFunc((int)770, (int)32772);
+                GL11.glBlendFunc(770, 32772);
             }
-            GL11.glDisable((int) 3008);
-            GL11.glDisable((int) 3553);
-            GL11.glDisable((int) 2896);
-            GL11.glEnable((int) 3042);
-            GL11.glLineWidth((float) 1.5f);
-            GL11.glEnable((int) 2960);
-            GL11.glDisable((int) 2929);
-            GL11.glDepthMask((boolean) false);
-            GL11.glEnable((int) 10754);
+            GL11.glDisable(3008);
+            GL11.glDisable(3553);
+            GL11.glDisable(2896);
+            GL11.glEnable(3042);
+            GL11.glLineWidth(1.5f);
+            GL11.glEnable(2960);
+            GL11.glDisable(2929);
+            GL11.glDepthMask(false);
+            GL11.glEnable(10754);
             Color visibleColor = new Color(CrystalChams.INSTANCE.colorC.getValue().getRed(), CrystalChams.INSTANCE.colorC.getValue().getGreen(), CrystalChams.INSTANCE.colorC.getValue().getBlue());
             Color hiddenColor = new Color(CrystalChams.INSTANCE.hiddenC.getValue().getRed(), CrystalChams.INSTANCE.hiddenC.getValue().getGreen(), CrystalChams.INSTANCE.hiddenC.getValue().getBlue());
             Color color = outlineColor = new Color(CrystalChams.INSTANCE.outlineC.getValue().getRed(), CrystalChams.INSTANCE.outlineC.getValue().getGreen(), CrystalChams.INSTANCE.outlineC.getValue().getBlue());
             if (CrystalChams.INSTANCE.hiddenSync.getValue().booleanValue()) {
-                GL11.glColor4f((float) ((float) visibleColor.getRed() / 255.0f), (float) ((float) visibleColor.getGreen() / 255.0f), (float) ((float) visibleColor.getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.colorC.getValue().getAlpha() / 255.0f));
+                GL11.glColor4f((float) visibleColor.getRed() / 255.0f, (float) visibleColor.getGreen() / 255.0f, (float) visibleColor.getBlue() / 255.0f, (float) CrystalChams.INSTANCE.colorC.getValue().getAlpha() / 255.0f);
             } else {
-                GL11.glColor4f((float) ((float) hiddenColor.getRed() / 255.0f), (float) ((float) hiddenColor.getGreen() / 255.0f), (float) ((float) hiddenColor.getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.hiddenC.getValue().getAlpha() / 255.0f));
+                GL11.glColor4f((float) hiddenColor.getRed() / 255.0f, (float) hiddenColor.getGreen() / 255.0f, (float) hiddenColor.getBlue() / 255.0f, (float) CrystalChams.INSTANCE.hiddenC.getValue().getAlpha() / 255.0f);
             }
             if (var1.shouldShowBottom()) {
                 this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
             } else {
                 this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
             }
-            GL11.glEnable((int) 2929);
-            GL11.glDepthMask((boolean) true);
-            GL11.glColor4f((float) ((float) visibleColor.getRed() / 255.0f), (float) ((float) visibleColor.getGreen() / 255.0f), (float) ((float) visibleColor.getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.colorC.getValue().getAlpha() / 255.0f));
+            GL11.glEnable(2929);
+            GL11.glDepthMask(true);
+            GL11.glColor4f((float) visibleColor.getRed() / 255.0f, (float) visibleColor.getGreen() / 255.0f, (float) visibleColor.getBlue() / 255.0f, (float) CrystalChams.INSTANCE.colorC.getValue().getAlpha() / 255.0f);
             if (var1.shouldShowBottom()) {
                 this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
             } else {
@@ -119,61 +119,61 @@ public abstract class MixinRenderEnderCrystal {
             }
             if (CrystalChams.INSTANCE.enchanted.getValue().booleanValue()) {
                 mc.getTextureManager().bindTexture(RES_ITEM_GLINT);
-                GL11.glTexCoord3d((double) 1.0, (double) 1.0, (double) 1.0);
-                GL11.glEnable((int) 3553);
-                GL11.glBlendFunc((int) 768, (int) 771);
-                GL11.glColor4f((float) ((float) CrystalChams.INSTANCE.glintC.getValue().getRed() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getGreen() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.glintC.getValue().getAlpha() / 255.0f));
+                GL11.glTexCoord3d(1.0, 1.0, 1.0);
+                GL11.glEnable(3553);
+                GL11.glBlendFunc(768, 771);
+                GL11.glColor4f((float) CrystalChams.INSTANCE.glintC.getValue().getRed() / 255.0f, (float) CrystalChams.INSTANCE.glintC.getValue().getGreen() / 255.0f, (float) CrystalChams.INSTANCE.glintC.getValue().getBlue() / 255.0f, (float) CrystalChams.INSTANCE.glintC.getValue().getAlpha() / 255.0f);
                 if (var1.shouldShowBottom()) {
                     this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                 } else {
                     this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                 }
                 if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Default)) {
-				    GL11.glBlendFunc((int) 768, (int) 771);
+				    GL11.glBlendFunc(768, 771);
                 }
 			    if (CrystalChams.INSTANCE.blendModes.getValue().equals((Object) CrystalChams.BlendModes.Brighter)) {
-                    GL11.glBlendFunc((int)770, (int)32772);
+                    GL11.glBlendFunc(770, 32772);
 			    } else {
-                    GL11.glBlendFunc((int)770, (int)771);	
+                    GL11.glBlendFunc(770, 771);
                 }
-                GL11.glColor4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+                GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             }
-            GL11.glEnable((int) 3042);
-            GL11.glEnable((int) 2896);
-            GL11.glEnable((int) 3553);
-            GL11.glEnable((int) 3008);
+            GL11.glEnable(3042);
+            GL11.glEnable(2896);
+            GL11.glEnable(3553);
+            GL11.glEnable(3008);
             GL11.glPopAttrib();
             if (CrystalChams.INSTANCE.outline.getValue().booleanValue()) {
                 if (CrystalChams.INSTANCE.outlineMode.getValue().equals((Object) CrystalChams.outlineModes.WIRE)) {
-                    GL11.glPushAttrib((int) 1048575);
-                    GL11.glPolygonMode((int) 1032, (int) 6913);
-                    GL11.glDisable((int) 3008);
-                    GL11.glDisable((int) 3553);
-                    GL11.glDisable((int) 2896);
-                    GL11.glEnable((int) 3042);
-                    GL11.glBlendFunc((int) 770, (int) 771);
+                    GL11.glPushAttrib(1048575);
+                    GL11.glPolygonMode(1032, 6913);
+                    GL11.glDisable(3008);
+                    GL11.glDisable(3553);
+                    GL11.glDisable(2896);
+                    GL11.glEnable(3042);
+                    GL11.glBlendFunc(770, 771);
                     GL11.glLineWidth((float) CrystalChams.INSTANCE.lineWidth.getValue().floatValue());
-                    GL11.glEnable((int) 2960);
-                    GL11.glDisable((int) 2929);
-                    GL11.glDepthMask((boolean) false);
-                    GL11.glEnable((int) 10754);
-                    GL11.glColor4f((float) ((float) outlineColor.getRed() / 255.0f), (float) ((float) outlineColor.getGreen() / 255.0f), (float) ((float) outlineColor.getBlue() / 255.0f), (float) ((float) CrystalChams.INSTANCE.outlineC.getValue().getAlpha() / 255.0f));
+                    GL11.glEnable(2960);
+                    GL11.glDisable(2929);
+                    GL11.glDepthMask(false);
+                    GL11.glEnable(10754);
+                    GL11.glColor4f((float) outlineColor.getRed() / 255.0f, (float) outlineColor.getGreen() / 255.0f, (float) outlineColor.getBlue() / 255.0f, (float) CrystalChams.INSTANCE.outlineC.getValue().getAlpha() / 255.0f);
                     if (var1.shouldShowBottom()) {
                         this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                     } else {
                         this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                     }
-                    GL11.glEnable((int) 2929);
-                    GL11.glDepthMask((boolean) true);
+                    GL11.glEnable(2929);
+                    GL11.glDepthMask(true);
                     if (var1.shouldShowBottom()) {
                         this.modelEnderCrystal.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                     } else {
                         this.modelEnderCrystalNoBase.render((Entity) var1, 0.0f, var14 * spinSpeed, var15 * bounceSpeed, 0.0f, 0.0f, 0.0625f);
                     }
-                    GL11.glEnable((int) 3042);
-                    GL11.glEnable((int) 2896);
-                    GL11.glEnable((int) 3553);
-                    GL11.glEnable((int) 3008);
+                    GL11.glEnable(3042);
+                    GL11.glEnable(2896);
+                    GL11.glEnable(3553);
+                    GL11.glEnable(3008);
                     GL11.glPopAttrib();
                 } else {
                     RenderUtil.setColor(new Color(outlineColor.getRed(), outlineColor.getGreen(), outlineColor.getBlue()));
