@@ -177,6 +177,8 @@ public class ModuleManager
 		this.modules.add(new SkyColor());
 		this.modules.add(new EntityControl());
 		this.modules.add(new AntiAFK());
+		this.modules.add(new AntiInvisible());
+		this.modules.add(new BackTrack());
     }
 
     public Module getModuleByName(String name) {

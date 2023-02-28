@@ -18,6 +18,4 @@ public class CustomEnchants extends Module{
         INSTANCE = this;
     }
     private static CustomEnchants INSTANCE = new CustomEnchants();
-
-
 }

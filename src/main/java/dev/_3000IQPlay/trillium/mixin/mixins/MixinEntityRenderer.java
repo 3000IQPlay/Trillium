@@ -3,9 +3,11 @@ package dev._3000IQPlay.trillium.mixin.mixins;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.modules.render.*;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.client.*;
 import net.minecraft.util.EntitySelectors;
@@ -30,11 +32,13 @@ import com.google.common.base.*;
 import dev._3000IQPlay.trillium.modules.player.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import org.spongepowered.asm.mixin.injection.*;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 
 @Mixin({ EntityRenderer.class })
@@ -47,16 +51,18 @@ public abstract class MixinEntityRenderer
     @Final
     private Minecraft mc;
     private boolean injection;
+	@Shadow
+    public Entity pointedEntity;
 
     public MixinEntityRenderer() {
         this.injection = true;
     }
-
-
-
-    @Inject(method = "renderWorldPass", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;clear(I)V", ordinal = 1, shift = At.Shift.BEFORE))
+	
+	@Inject(method = "renderWorldPass", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;clear(I)V", ordinal = 1, shift = At.Shift.BEFORE))
     private void renderWorldPass(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci) {
         if (Display.isActive() || Display.isVisible()) {
+			PreRenderEvent render3dEventFirst = new PreRenderEvent(partialTicks);
+            MinecraftForge.EVENT_BUS.post(render3dEventFirst);
             GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
             GlStateManager.disableAlpha();
@@ -81,15 +87,12 @@ public abstract class MixinEntityRenderer
         }
     }
 
-
     @Inject(method = { "renderItemActivation" },  at = { @At("HEAD") },  cancellable = true)
     public void renderItemActivationHook(final CallbackInfo info) {
         if (this.itemActivationItem != null && NoRender.getInstance().isOn() && (boolean)NoRender.getInstance().totemPops.getValue() && this.itemActivationItem.getItem() == Items.TOTEM_OF_UNDYING) {
             info.cancel();
         }
     }
-
-
 
     @Shadow
     public int itemActivationTicks;
@@ -100,10 +103,6 @@ public abstract class MixinEntityRenderer
     @Shadow
     public float itemActivationOffY;
 
-    /**
-     * @awd
-     * @dawd
-     */
     @Overwrite
     public void renderItemActivation(int p_190563_1_, int p_190563_2_, float p_190563_3_) {
         if (this.itemActivationItem != null && NoRender.getInstance().isOn() && (boolean)NoRender.getInstance().totemPops.getValue() && this.itemActivationItem.getItem() == Items.TOTEM_OF_UNDYING) {
@@ -260,6 +259,124 @@ public abstract class MixinEntityRenderer
                 GlStateManager.popMatrix();
             }
             ci.cancel();
+        }
+    }
+	
+	@Overwrite
+    public void getMouseOver(float partialTicks) {
+        BackTrack bt = Trillium.moduleManager.getModuleByClass(BackTrack.class);
+        Entity entity = mc.getRenderViewEntity();
+        if (entity != null && mc.world != null) {
+            mc.profiler.startSection("pick");
+            mc.pointedEntity = null;
+            double d0 = (double) mc.playerController.getBlockReachDistance();
+                mc.objectMouseOver = entity.rayTrace(d0, partialTicks);
+                Vec3d vec3d = entity.getPositionEyes(partialTicks);
+                boolean flag = false;
+                double d1 = d0;
+                if (mc.playerController.extendedReach()) {
+                    d1 = 6.0;
+                    d0 = d1;
+                } else if (d0 > 3.0) {
+                    flag = true;
+                }
+                if (mc.objectMouseOver != null) {
+                    d1 = mc.objectMouseOver.hitVec.distanceTo(vec3d);
+                }
+                Vec3d vec3d1 = entity.getLook(1.0F);
+                Vec3d vec3d2 = vec3d.add(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0);
+                pointedEntity = null;
+                Vec3d vec3d3 = null;
+                float f = 1.0F;
+                List<Entity> list = mc.world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().expand(vec3d1.x * d0, vec3d1.y * d0, vec3d1.z * d0).grow(1.0, 1.0, 1.0), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>() {
+                    public boolean apply(@Nullable Entity p_apply_1_) {
+                        return p_apply_1_ != null && p_apply_1_.canBeCollidedWith();
+                    }
+                }));
+                double d2 = d1;
+                for (Entity value : list) {
+                    AxisAlignedBB axisalignedbb = value.getEntityBoundingBox().grow((double) value.getCollisionBorderSize());
+                    RayTraceResult raytraceresult = axisalignedbb.calculateIntercept(vec3d, vec3d2);
+                    if (axisalignedbb.contains(vec3d)) {
+                        if (d2 >= 0.0) {
+                            pointedEntity = value;
+                            vec3d3 = raytraceresult == null ? vec3d : raytraceresult.hitVec;
+                            d2 = 0.0;
+                        }
+                    } else if (raytraceresult != null) {
+                        double d3 = vec3d.distanceTo(raytraceresult.hitVec);
+                        if (d3 < d2 || d2 == 0.0) {
+                            if (value.getLowestRidingEntity() == entity.getLowestRidingEntity() && !value.canRiderInteract()) {
+                                if (d2 == 0.0) {
+                                    pointedEntity = value;
+                                    vec3d3 = raytraceresult.hitVec;
+                                }
+                            } else {
+                                pointedEntity = value;
+                                vec3d3 = raytraceresult.hitVec;
+                                d2 = d3;
+                            }
+                        }
+                    }
+                }
+                if (pointedEntity != null && flag && vec3d.distanceTo(vec3d3) > 3.0) {
+                    pointedEntity = null;
+                    mc.objectMouseOver = new RayTraceResult(RayTraceResult.Type.MISS, vec3d3, null, new BlockPos(vec3d3));
+                }
+                if (pointedEntity != null && (d2 < d1 || mc.objectMouseOver == null)) {
+                    mc.objectMouseOver = new RayTraceResult(pointedEntity, vec3d3);
+                    if (pointedEntity instanceof EntityLivingBase || pointedEntity instanceof EntityItemFrame) {
+                        mc.pointedEntity = pointedEntity;
+                    }
+                }
+                if (pointedEntity == null && bt.isOn()) {
+                    for (EntityPlayer pl_box : mc.world.playerEntities) {
+                        if (pl_box == mc.player) {
+                            continue;
+                        }
+                        List<BackTrack.Box> trails22 = new ArrayList<>();
+                        bt.entAndTrail.putIfAbsent(pl_box, trails22);
+                        if (bt.entAndTrail.get(pl_box).size() > 0) {
+                            for (int i = 0; i < bt.entAndTrail.get(pl_box).size(); i++) {
+                                AxisAlignedBB axisalignedbb = new AxisAlignedBB(
+                                        Trillium.moduleManager.getModuleByClass(BackTrack.class).entAndTrail.get(pl_box).get(i).getPosition().x - 0.3,
+                                        Trillium.moduleManager.getModuleByClass(BackTrack.class).entAndTrail.get(pl_box).get(i).getPosition().y,
+                                        Trillium.moduleManager.getModuleByClass(BackTrack.class).entAndTrail.get(pl_box).get(i).getPosition().z - 0.3,
+                                        Trillium.moduleManager.getModuleByClass(BackTrack.class).entAndTrail.get(pl_box).get(i).getPosition().x + 0.3,
+                                        Trillium.moduleManager.getModuleByClass(BackTrack.class).entAndTrail.get(pl_box).get(i).getPosition().y + 1.8,
+                                        Trillium.moduleManager.getModuleByClass(BackTrack.class).entAndTrail.get(pl_box).get(i).getPosition().z + 0.3);
+
+                                RayTraceResult raytraceresult = axisalignedbb.calculateIntercept(vec3d, vec3d2);
+                                if (axisalignedbb.contains(vec3d)) {
+                                    if (d2 >= 0.0) {
+                                        pointedEntity = pl_box;
+                                        vec3d3 = raytraceresult == null ? vec3d : raytraceresult.hitVec;
+                                        d2 = 0.0;
+                                        if (raytraceresult != null) {
+                                            mc.objectMouseOver = raytraceresult;
+                                        }
+                                    }
+                                } else if (raytraceresult != null) {
+                                    double d3 = vec3d.distanceTo(raytraceresult.hitVec);
+                                    if (d3 < d2 || d2 == 0.0) {
+                                        if (pl_box.getLowestRidingEntity() == entity.getLowestRidingEntity() && !pl_box.canRiderInteract()) {
+                                            if (d2 == 0.0) {
+                                                pointedEntity = pl_box;
+                                            }
+                                        } else {
+                                            pointedEntity = pl_box;
+                                            d2 = d3;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (pointedEntity != null) {
+                        mc.objectMouseOver = new RayTraceResult(pointedEntity);
+                    }
+                }
+            mc.profiler.endSection();
         }
     }
 

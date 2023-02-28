@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.event.events;
 
-
 import dev._3000IQPlay.trillium.event.EventStage;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;

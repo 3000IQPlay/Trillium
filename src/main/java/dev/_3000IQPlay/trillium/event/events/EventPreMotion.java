@@ -19,6 +19,4 @@ public class EventPreMotion extends EventStage {
         this.yaw = yaw;
         this.pitch = pitch;
     }
-
-
 }
