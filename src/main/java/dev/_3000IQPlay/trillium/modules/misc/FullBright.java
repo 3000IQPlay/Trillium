@@ -3,10 +3,10 @@ package dev._3000IQPlay.trillium.modules.misc;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import net.minecraft.init.MobEffects;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.network.play.server.SPacketEntityEffect;
 import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.init.MobEffects;
 
 public class FullBright
         extends Module {
@@ -55,6 +55,6 @@ public class FullBright
     public enum Mode
     {
         GAMMA,
-        POTION
+        POTION;
     }
 }

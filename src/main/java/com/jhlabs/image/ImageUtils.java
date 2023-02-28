@@ -1,10 +1,19 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */
-
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.*;
+/*     */ import java.awt.Color;
+/*     */ import java.awt.Component;
+/*     */ import java.awt.Graphics;
+/*     */ import java.awt.Graphics2D;
+/*     */ import java.awt.Image;
+/*     */ import java.awt.Rectangle;
+/*     */ import java.awt.Shape;
+/*     */ import java.awt.geom.AffineTransform;
+/*     */ import java.awt.image.BufferedImage;
+/*     */ import java.awt.image.ImageObserver;
+/*     */ import java.awt.image.ImageProducer;
+/*     */ import java.awt.image.PixelGrabber;
+/*     */ import java.awt.image.Raster;
+/*     */ import java.awt.image.WritableRaster;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -67,7 +76,7 @@ import java.awt.image.*;
 /*     */     
 /*  77 */     BufferedImage p = new BufferedImage(image.getWidth(null), image.getHeight(null), 2);
 /*  78 */     Graphics2D g = p.createGraphics();
-/*  79 */     g.drawImage(image, 0, 0, null);
+/*  79 */     g.drawImage(image, 0, 0, (ImageObserver)null);
 /*  80 */     g.dispose();
 /*  81 */     return p;
 /*     */   }
@@ -99,7 +108,7 @@ import java.awt.image.*;
 /*     */   public static BufferedImage cloneImage(BufferedImage image) {
 /* 109 */     BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), 2);
 /* 110 */     Graphics2D g = newImage.createGraphics();
-/* 111 */     g.drawRenderedImage(image, null);
+/* 111 */     g.drawRenderedImage(image, (AffineTransform)null);
 /* 112 */     g.dispose();
 /* 113 */     return newImage;
 /*     */   }

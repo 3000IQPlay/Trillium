@@ -61,7 +61,9 @@ public class Rotation{
         if (this != var1) {
             if (var1 instanceof Rotation) {
                 Rotation var2 = (Rotation)var1;
-                return Float.compare(this.yaw, var2.yaw) == 0 && Float.compare(this.pitch, var2.pitch) == 0;
+                if (Float.compare(this.yaw, var2.yaw) == 0 && Float.compare(this.pitch, var2.pitch) == 0) {
+                    return true;
+                }
             }
 
             return false;

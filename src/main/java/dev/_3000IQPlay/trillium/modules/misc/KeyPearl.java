@@ -64,7 +64,7 @@ public class KeyPearl
         }
     }
 	
-	public enum Mode {
+	public static enum Mode {
         Key,
         Middleclick
     }

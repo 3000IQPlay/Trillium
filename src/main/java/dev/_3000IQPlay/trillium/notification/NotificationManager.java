@@ -3,12 +3,14 @@ package dev._3000IQPlay.trillium.notification;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.RectHelper;
-import dev._3000IQPlay.trillium.util.ScreenHelper;
-import dev._3000IQPlay.trillium.util.Util;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
+import dev._3000IQPlay.trillium.util.Util;
+import dev._3000IQPlay.trillium.util.ScreenHelper;
+
+
+import dev._3000IQPlay.trillium.util.RectHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
@@ -27,7 +29,7 @@ super("Notifications", "aga", Category.CLIENT, true, false, false);
     public Setting<Float> deltt = this.register(new Setting<>("delta", 1.0f, 0f, 5.0f));
 
 
-    private final Setting<modeEn> mode = register(new Setting("Mode", modeEn.New));
+    private Setting<modeEn> mode = register(new Setting("Mode", modeEn.New));
     public enum modeEn {
         Old, New
     }

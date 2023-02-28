@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Step
         extends Module {
 	private static Step instance;
-    private final Setting<Mode> mode = this.register (new Setting<>("Mode", Mode.Normal));
+    private Setting<Mode> mode = this.register (new Setting<>("Mode", Mode.Normal));
     public Setting<Float> height = register(new Setting("Height", 2.0F, 1F, 2.5F));
     public Setting<Boolean> entityStep = this.register(new Setting<>("EntityStep", false));
     public Setting<Boolean> useTimer = this.register(new Setting<>("Timer", true));
@@ -155,8 +155,8 @@ public class Step
         return null;
     }
 	
-	public enum Mode {
+	public static enum Mode {
         Normal,
-        Vanilla
+        Vanilla;
     }
 }

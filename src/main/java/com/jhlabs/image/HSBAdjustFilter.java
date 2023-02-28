@@ -1,8 +1,6 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */
-
-import java.awt.*;
+/*     */ import java.awt.Color;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -24,7 +22,7 @@ import java.awt.*;
 /*     */   public float hFactor;
 /*     */   public float sFactor;
 /*     */   public float bFactor;
-/*  25 */   private final float[] hsb = new float[3];
+/*  25 */   private float[] hsb = new float[3];
 /*     */ 
 /*     */   
 /*     */   public HSBAdjustFilter() {

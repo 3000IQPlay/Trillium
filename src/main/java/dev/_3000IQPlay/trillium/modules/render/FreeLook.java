@@ -15,7 +15,7 @@ public class FreeLook extends Module{
     private float dYaw = 0F;
     private float dPitch = 0F;
 
-    private final Setting<Boolean> autoThirdPerson = this.register(new Setting<>("AutoThirdPerson", true));
+    private  Setting<Boolean> autoThirdPerson = this.register(new Setting<>("AutoThirdPerson", true));
 
 
 

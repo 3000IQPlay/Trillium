@@ -1,11 +1,11 @@
 package dev._3000IQPlay.trillium.modules.misc;
 
-import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
+import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.notification.NotificationManager;
 import dev._3000IQPlay.trillium.notification.NotificationType;
-import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.Timer;
 import dev._3000IQPlay.trillium.util.seedoverlay.WorldLoader;
@@ -38,7 +38,7 @@ public class SeedOverlay
     private static ExecutorService executor2;
     public int currentdis = 0;
     private ArrayList<ChunkData> chunks = new ArrayList<>();
-    private final ArrayList<int[]> tobesearch = new ArrayList<>();
+    private ArrayList<int[]> tobesearch = new ArrayList<>();
     private final Timer timer = new Timer();
 	
 	public SeedOverlay() {
@@ -103,7 +103,7 @@ public class SeedOverlay
                         if (mc.world.isChunkGeneratedAt(x, z)) {
                             boolean found = false;
                             for (int[] vec2d : tobesearch) {
-                                if (vec2d[0] == x && vec2d[1] == z) {
+                                if ((int) vec2d[0] == x && (int) vec2d[1] == z) {
                                     found = true;
                                     break;
                                 }
@@ -248,11 +248,17 @@ public class SeedOverlay
                     return false;
         }
 
-        return !FakeChunk.getLocalizedName().equals(RealChunk.getLocalizedName());
+        if (!FakeChunk.getLocalizedName().equals(RealChunk.getLocalizedName())) {
+            return true;
+        }
+        return false;
     }
 
     public boolean Treeroots(BlockPos b) {
-        return mc.world.getBlockState(b.up()).getBlock() instanceof BlockLog;
+        if (mc.world.getBlockState(b.up()).getBlock() instanceof BlockLog) {
+            return true;
+        }
+        return false;
     }
 
     public boolean Lavamix(BlockPos b) {
@@ -271,7 +277,10 @@ public class SeedOverlay
         if (mc.world.getBlockState(b.add(-1, 0, 0)).getBlock() instanceof BlockLiquid) {
             return true;
         }
-        return mc.world.getBlockState(b.add(0, 0, -1)).getBlock() instanceof BlockLiquid;
+        if (mc.world.getBlockState(b.add(0, 0, -1)).getBlock() instanceof BlockLiquid) {
+            return true;
+        }
+        return false;
     }
 
     @SubscribeEvent
@@ -310,7 +319,7 @@ public class SeedOverlay
         }
 
         public final List<BlockPos> blocks = new ArrayList<>();
-        private final ChunkPos chunkPos;
+        private ChunkPos chunkPos;
 
         public ChunkData(ChunkPos chunkPos, boolean Searched) {
             this.chunkPos = chunkPos;

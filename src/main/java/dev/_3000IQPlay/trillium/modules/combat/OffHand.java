@@ -3,23 +3,26 @@ package dev._3000IQPlay.trillium.modules.combat;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.modules.combat.AutoCrystal;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.CrystalUtils;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.item.Item;
 import net.minecraft.network.play.client.CPacketClickWindow;
 import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.List;
 
 
 public class OffHand extends Module {
@@ -48,7 +51,7 @@ public class OffHand extends Module {
 
     private final Queue<Integer> clickQueue = new LinkedList<>();
 
-    private final Timer timer = new Timer();
+    private Timer timer = new Timer();
 
     private enum CrystalCheck {
         NONE,

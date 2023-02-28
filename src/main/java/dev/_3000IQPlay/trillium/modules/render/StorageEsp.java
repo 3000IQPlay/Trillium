@@ -42,10 +42,10 @@ class StorageEsp extends Module
     private final Setting<ColorSetting> shulkColor = this.register(new Setting<>("secondColorImgOutline", new ColorSetting(0x8800FF00)));
     private final Setting<ColorSetting> echestColor = this.register(new Setting<>("thirdColorImgOutline", new ColorSetting(0x8800FF00)));
 
-    private final Setting<mode> Mode = register(new Setting("Shulker Mode", mode.Rainbow));
+    private Setting<mode> Mode = register(new Setting("Shulker Mode", mode.Rainbow));
 
     public enum mode {
-        Custom, Rainbow, Astolfo
+        Custom, Rainbow, Astolfo;
     }
 
     public Setting <Integer> del = this.register ( new Setting <> ( "Rainbow delay", 1, 0, 2000, v -> Mode.getValue() == mode.Rainbow ));

@@ -1,13 +1,14 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
 import dev._3000IQPlay.trillium.Trillium;
-import dev._3000IQPlay.trillium.command.Command;
-import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.command.Command;
+import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.util.EntityUtil;
-import dev._3000IQPlay.trillium.util.HoleUtilSafety;
 import dev._3000IQPlay.trillium.util.Timer;
+import dev._3000IQPlay.trillium.util.HoleUtilSafety;
+import dev._3000IQPlay.trillium.modules.movement.Speed;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.math.BlockPos;
@@ -19,16 +20,16 @@ import java.util.Comparator;
 
 public class HoleSnap
         extends Module {
-	Timer timer = new Timer();
+	Timer timer = new Timer();;
     public HoleUtilSafety.Hole holes;
 	public Setting<Mode> mode = this.register(new Setting<Mode>("SnapMode", Mode.Motion));
 	private final Setting<Float> range2 = this.register(new Setting<Float>("Motion Range", Float.valueOf(4.0f), Float.valueOf(0.1f), Float.valueOf(10.0f), f -> this.mode.getValue() == Mode.Motion));
 	public Setting<Float> timerfactor = this.register(new Setting<Float>("Timer", Float.valueOf(1.0f), Float.valueOf(1.0f), Float.valueOf(5.0f), f -> this.mode.getValue() == Mode.Motion));
-    private final Setting<Boolean> motionstop = this.register(new Setting<Boolean>("StopMotion", Boolean.valueOf(true), v -> this.mode.getValue() == Mode.Motion));
+    private Setting<Boolean> motionstop = this.register(new Setting<Boolean>("StopMotion", Boolean.valueOf(true), v -> this.mode.getValue() == Mode.Motion));
 	private final Setting<Boolean> SpeedCheck = this.register(new Setting<Boolean>("Disable Speed", Boolean.valueOf(true), v -> this.mode.getValue() == Mode.Motion));
 	private final Setting<Boolean> StepCheck = this.register(new Setting<Boolean>("Disable Step", Boolean.valueOf(true), v -> this.mode.getValue() == Mode.Motion));
     private final Setting<Float> range = this.register(new Setting<Float>("Instant Range", Float.valueOf(0.5f), Float.valueOf(0.1f), Float.valueOf(5.0f), f -> this.mode.getValue() == Mode.Instant));
-	private final int ticks = 0;
+	private int ticks = 0;
 	
 	public HoleSnap() {
         super("HoleSnap", "Teleport to Hole", Module.Category.MOVEMENT, true, false, false);
@@ -82,7 +83,7 @@ public class HoleSnap
             blockPos2 = this.holes.pos1;
             Vec3d vec3d = HoleSnap.mc.player.getPositionVector();
             Vec3d vec3d2 = new Vec3d((double)blockPos2.getX() + 0.5, HoleSnap.mc.player.posY, (double)blockPos2.getZ() + 0.5);
-            double d = Math.toRadians(HoleSnap.getRotationTo(vec3d, vec3d2).x);
+            double d = Math.toRadians(HoleSnap.getRotationTo((Vec3d)vec3d, (Vec3d)vec3d2).x);
             double d2 = vec3d.distanceTo(vec3d2);
             double d3 = HoleSnap.mc.player.onGround ? -Math.min(0.2805, d2 / 2.0) : -EntityUtil.getMaxSpeed() + 0.02;
             HoleSnap.mc.player.motionX = -Math.sin(d) * d3;
@@ -162,8 +163,8 @@ public class HoleSnap
         }
     }
 
-    public enum Mode {
+    public static enum Mode {
         Instant,
-        Motion
+        Motion;
     }
 }

@@ -28,7 +28,7 @@
 /*    */   public static final int ACOS = -2;
 /*    */   public static final int ATAN = -3;
 /*    */   public static final int SQR = -4;
-/*    */   private final int operation;
+/*    */   private int operation;
 /*    */   
 /*    */   public MathFunction1D(int operation) {
 /* 34 */     this.operation = operation;

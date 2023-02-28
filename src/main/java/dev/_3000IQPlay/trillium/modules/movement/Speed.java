@@ -74,7 +74,7 @@ public class Speed
     int boostticks = 0;
     boolean isBoosting = false;
     private double maxVelocity = 0;
-    private final Timer velocityTimer = new Timer();
+    private Timer velocityTimer = new Timer();
     int stage;
 
     public Speed() {
@@ -465,25 +465,25 @@ public class Speed
 		super.onDisable();
     }
 	
-	public enum DownMode {
+	public static enum DownMode {
 		Timer,
-		Motion
-    }
+		Motion;
+	}
 	
-	public enum DownSpeed {
+	public static enum DownSpeed {
         Custom,
-		SlowDown
+		SlowDown;
     }
 	
-	public enum UpSpeed {
+	public static enum UpSpeed {
         Custom,
-		SlowDown
+		SlowDown;
     }
 	
-	public enum SpeedNewModes {
+	public static enum SpeedNewModes {
 		Default,
         Custom,
 		NCP,
-		YPort
+		YPort;
     }
 }

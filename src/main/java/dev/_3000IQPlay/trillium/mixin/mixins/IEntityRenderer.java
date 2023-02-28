@@ -10,31 +10,31 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(value={EntityRenderer.class})
 public interface IEntityRenderer {
     @Invoker(value="orientCamera")
-    void orientCam(float var1);
+    public void orientCam(float var1);
 
     @Invoker(value="applyBobbing")
-    void viewBob(float var1);
+    public void viewBob(float var1);
 
     @Accessor(value="lightmapColors")
-    int[] getLightmapColors();
+    public int[] getLightmapColors();
 
     @Accessor(value="lightmapTexture")
-    DynamicTexture getLightmapTexture();
+    public DynamicTexture getLightmapTexture();
 
     @Accessor(value="torchFlickerX")
-    float getTorchFlickerX();
+    public float getTorchFlickerX();
 
     @Accessor(value="bossColorModifier")
-    float getBossColorModifier();
+    public float getBossColorModifier();
 
     @Accessor(value="bossColorModifierPrev")
-    float getBossColorModifierPrev();
+    public float getBossColorModifierPrev();
 
     @Invoker(value="getNightVisionBrightness")
-    float invokeGetNightVisionBrightness(EntityLivingBase var1, float var2);
+    public float invokeGetNightVisionBrightness(EntityLivingBase var1, float var2);
 
     @Invoker(value="setupCameraTransform")
-    void invokeSetupCameraTransform(float var1, int var2);
+    public void invokeSetupCameraTransform(float var1, int var2);
 
 
     @Accessor("rendererUpdateCount")

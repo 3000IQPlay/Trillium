@@ -11,6 +11,8 @@ import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.render.BackTrack;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.*;
+import dev._3000IQPlay.trillium.util.Timer;
 import dev._3000IQPlay.trillium.util.ExplosionBuilder;
 import dev._3000IQPlay.trillium.util.MathUtil;
 import dev._3000IQPlay.trillium.util.phobos.IEntityLivingBase;
@@ -31,23 +33,29 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.item.*;
 import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.client.CPacketEntityAction.Action;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
-
 import javax.vecmath.Vector2f;
+
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 
+import static dev._3000IQPlay.trillium.util.MovementUtil.isMoving;
+import static dev._3000IQPlay.trillium.util.MovementUtil.strafe;
 import static net.minecraft.util.math.MathHelper.clamp;
 import static net.minecraft.util.math.MathHelper.wrapDegrees;
 
@@ -59,13 +67,13 @@ public class Aura extends Module {
     }
 
     public enum rotmod {
-        NCP, AAC, Matrix, Matrix2, Matrix3
+        NCP, AAC, Matrix, Matrix2, Matrix3;
     }
     public enum CritMode {
-        WexSide, Simple
+        WexSide, Simple;
     }
     public enum AutoSwitch {
-        None, Default
+        None, Default;
     }
     public enum PointsMode {
         Distance, Angle
@@ -813,7 +821,7 @@ public class Aura extends Module {
     }
 
     public enum Hitbox {
-        HEAD, CHEST, LEGS
+        HEAD, CHEST, LEGS;
     }
 
 

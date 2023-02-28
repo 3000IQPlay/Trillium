@@ -33,7 +33,7 @@ public class Particles extends Module{
 
 
     private static final float SPEED = 0.1f;
-    private final List<Particle> particleList = new ArrayList<>();
+    private List<Particle> particleList = new ArrayList<>();
 
 
     private static Particles INSTANCE = new Particles();

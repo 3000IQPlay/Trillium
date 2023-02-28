@@ -1,19 +1,25 @@
 package dev._3000IQPlay.trillium.modules.render;
 
 import com.google.common.collect.Maps;
-import com.mojang.authlib.GameProfile;
 import dev._3000IQPlay.trillium.command.Command;
+import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.modules.Module;
-import dev._3000IQPlay.trillium.setting.Setting;
+import com.mojang.authlib.GameProfile;
+import dev._3000IQPlay.trillium.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
-import net.minecraft.util.math.*;
 import net.minecraft.util.math.Vec3d;
+import dev._3000IQPlay.trillium.setting.Setting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.util.math.*;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,6 +27,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -159,7 +166,7 @@ public class LogoutSpots extends Module {
             renderNameTag(data.position.x - mc.getRenderManager().renderPosX,
                           data.position.y - mc.getRenderManager().renderPosY,
                           data.position.z - mc.getRenderManager().renderPosZ,
-                    event.getPartialTicks(),data.profile.getName() + " just logout at " + data.position.x + " " + data.position.y + " " + data.position.z);
+                    event.getPartialTicks(),data.profile.getName() + " just logout at " + (int) data.position.x + " " + (int) data.position.y + " " + (int) data.position.z);
         }
     }
 
@@ -233,7 +240,7 @@ public class LogoutSpots extends Module {
         for (String uuid : this.logoutCache.keySet()) {
             if (!uuid.equals(uuid3)) // not matching uuid
                 continue;
-            Command.sendMessage(playerCache.get(uuid) + " logged back at  X: " + logoutCache.get(uuid).position.x + " Y: " + logoutCache.get(uuid).position.y + " Z: " + logoutCache.get(uuid).position.z);
+            Command.sendMessage(playerCache.get(uuid) + " logged back at  X: " + (int) logoutCache.get(uuid).position.x + " Y: " + (int) logoutCache.get(uuid).position.y + " Z: " + (int) logoutCache.get(uuid).position.z);
             this.logoutCache.remove(uuid);
         }
 
@@ -256,7 +263,7 @@ public class LogoutSpots extends Module {
         try {
             Vec3d position = data.position;
             return Minecraft.getMinecraft().player.getDistance(position.x, position.y, position.z) > this.removeDistance.getValue();
-        } catch (Exception ignored){}
+        } catch (Exception ignored){};
         return true;
     }
 

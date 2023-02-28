@@ -10,13 +10,16 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreenAddServer;
 import net.minecraft.client.gui.GuiScreenServerList;
 
+import java.io.*;
+import java.util.Objects;
+
 import static dev._3000IQPlay.trillium.util.ItemUtil.mc;
 
 public class Discord {
     private static final DiscordRPC rpc;
     public static DiscordRichPresence presence;
     private static Thread thread;
-    private static final int index;
+    private static int index;
     public static boolean started;
     static {
         index = 1;

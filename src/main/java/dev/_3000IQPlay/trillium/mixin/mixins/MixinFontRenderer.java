@@ -2,6 +2,7 @@ package dev._3000IQPlay.trillium.mixin.mixins;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.modules.misc.PasswordHider;
+import dev._3000IQPlay.trillium.util.Util;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +25,7 @@ public abstract class MixinFontRenderer {
         }
         if (Trillium.moduleManager.getModuleByClass(PasswordHider.class).isEnabled()) {
             if(string.contains("/login") || string.contains("/register") && mc.currentScreen instanceof GuiChat) {
-                StringBuilder final_string = new StringBuilder();
+                StringBuilder final_string = new StringBuilder("");
                 for(char cha: string.replace("/login","").replace("/register","").toCharArray()){
                     final_string.append("*");
                 }

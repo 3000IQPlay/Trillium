@@ -28,7 +28,7 @@ import java.util.List;
 public class CrystalUtils {
     public static Minecraft mc = Minecraft.getMinecraft();
 
-    private static final List<Block> valid = Arrays.asList(Blocks.OBSIDIAN, Blocks.BEDROCK, Blocks.ENDER_CHEST, Blocks.ANVIL);
+    private static List<Block> valid = Arrays.asList(Blocks.OBSIDIAN, Blocks.BEDROCK, Blocks.ENDER_CHEST, Blocks.ANVIL);
 
 
     public static float calculateDamage(World world, double posX, double posY, double posZ, Entity entity, boolean terrain) {

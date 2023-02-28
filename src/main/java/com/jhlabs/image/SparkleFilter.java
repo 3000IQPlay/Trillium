@@ -28,9 +28,9 @@
 /*  28 */   private int randomness = 25;
 /*     */   private int width;
 /*     */   private int height;
-/*  31 */   private final long seed = 371L; private int centreX; private int centreY;
+/*  31 */   private long seed = 371L; private int centreX; private int centreY;
 /*     */   private float[] rayLengths;
-/*  33 */   private final Random randomNumbers = new Random();
+/*  33 */   private Random randomNumbers = new Random();
 /*     */ 
 /*     */ 
 /*     */ 

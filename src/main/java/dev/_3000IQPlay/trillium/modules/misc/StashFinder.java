@@ -39,9 +39,9 @@ public class StashFinder extends Module {
 
     public StashFinder() {super("StashFinder", "looking for stashes in the loading zone", Module.Category.MISC, true, false, false);}
 
-    private final Timer timer = new Timer();
-    private final HashMap<Chunk, ArrayList<TileEntity>> map = new HashMap<>();
-    private final ArrayList<Chunk> loggedChunks = new ArrayList<Chunk>();
+    private Timer timer = new Timer();
+    private HashMap<Chunk, ArrayList<TileEntity>> map = new HashMap<>();
+    private ArrayList<Chunk> loggedChunks = new ArrayList<Chunk>();
 
     public Setting <Integer> amount = this.register ( new Setting <> ( "Amount", 15, 1, 100 ) );
     public Setting< Boolean > windowsAlert = this.register ( new Setting <> ( "WindowsAlert" , true) );

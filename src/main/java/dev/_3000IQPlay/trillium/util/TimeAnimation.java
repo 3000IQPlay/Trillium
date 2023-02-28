@@ -7,17 +7,17 @@ public class TimeAnimation {
 
     // length in ms
     private final long length;
-    private final double start;
-    private final double end;
+    private double start;
+    private double end;
     private double current;
     private double progress;
     private boolean playing;
     private boolean backwards;
     private boolean reverseOnEnd;
-    private final long startTime;
+    private long startTime;
     private long lastTime;
     private double per;
-    private final long dif;
+    private long dif;
     private boolean flag;
 
     private AnimationMode mode;

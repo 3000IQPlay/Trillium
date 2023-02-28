@@ -2,7 +2,6 @@ package dev._3000IQPlay.trillium.gui.particles;
 
 import dev._3000IQPlay.trillium.modules.client.Particles;
 import net.minecraft.client.gui.ScaledResolution;
-
 import javax.vecmath.Vector2f;
 import java.awt.*;
 import java.util.Random;

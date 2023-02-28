@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemEndCrystal;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
@@ -79,10 +80,10 @@ public class BowSpam
             }
         } else if (this.switched && this.lastHotbarSlot != -1) {
             InventoryUtil.switchToHotbarSlot(this.lastHotbarSlot, false);
-            BowSpam.mc.gameSettings.keyBindUseItem.pressed = Mouse.isButtonDown(1);
+            BowSpam.mc.gameSettings.keyBindUseItem.pressed = Mouse.isButtonDown((int)1);
             this.switched = false;
         } else {
-            BowSpam.mc.gameSettings.keyBindUseItem.pressed = Mouse.isButtonDown(1);
+            BowSpam.mc.gameSettings.keyBindUseItem.pressed = Mouse.isButtonDown((int)1);
         }
         if (this.mode.getValue() == Mode.FAST && (this.offhand || BowSpam.mc.player.inventory.getCurrentItem().getItem() instanceof ItemBow) && BowSpam.mc.player.isHandActive()) {
             float f = BowSpam.mc.player.getItemInUseMaxCount();
@@ -150,16 +151,16 @@ public class BowSpam
         return target;
     }
 
-    public enum Mode {
+    public static enum Mode {
         FAST,
         AUTORELEASE,
-        BOWBOMB
+        BOWBOMB;
 
     }
 
-    public enum Target {
+    public static enum Target {
         CLOSEST,
-        LOWEST
+        LOWEST;
 
     }
 }

@@ -5,8 +5,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
 public class EventEntityMove extends EventStage {
-    private final Entity ctx;
-    private final Vec3d from;
+    private Entity ctx;
+    private Vec3d from;
 
     public EventEntityMove(Entity ctx, Vec3d from) {
         this.ctx = ctx;

@@ -15,7 +15,7 @@ public class HoleManager
         extends Feature {
     private static final BlockPos[] surroundOffset = BlockUtils.toBlockPos(EntityUtil.getOffsets(0, true, true));
     private final List<BlockPos> midSafety = new ArrayList<BlockPos>();
-	private final List<BlockPos> holes = new ArrayList<BlockPos>();
+	private List<BlockPos> holes = new ArrayList<BlockPos>();
 	
 	public List<BlockPos> getHoles() {
         return this.holes;

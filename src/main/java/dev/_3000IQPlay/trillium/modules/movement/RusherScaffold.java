@@ -1,5 +1,6 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
+import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
@@ -41,7 +42,7 @@ public class RusherScaffold extends Module {
     private final Setting<Float> lineWidth = this.register(new Setting<Float>("LineWidth", 1.0f, 0.1f, 5.0f));
     public final Setting<ColorSetting> Color2 = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
 
-    private final Timer timer;
+    private Timer timer;
     private BlockPosWithFacing currentblock;
 
     private boolean isBlockValid(Block block) {

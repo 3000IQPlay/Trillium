@@ -1,8 +1,6 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */
-
-import java.awt.*;
+/*     */ import java.awt.Rectangle;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -42,7 +40,7 @@ import java.awt.*;
 /*     */ 
 /*     */ 
 /*     */   
-/*  43 */   private final int sum = 16;
+/*  43 */   private int sum = 16;
 /*     */   
 /*     */   private boolean dither;
 /*  46 */   private int numColors = 256;

@@ -4,7 +4,7 @@ import dev._3000IQPlay.trillium.event.events.EventPostMotion;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.InteractionUtil;
+import dev._3000IQPlay.trillium.util.*;
 import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.block.BlockEnderChest;
 import net.minecraft.init.Blocks;
@@ -32,8 +32,8 @@ public class EChestFarmer extends Module{
 
 
 
-    private final Timer timer = new Timer();
-    private final Timer breakTimer = new Timer();
+    private Timer timer = new Timer();
+    private Timer breakTimer = new Timer();
     private InteractionUtil.Placement placement = null;
 
 

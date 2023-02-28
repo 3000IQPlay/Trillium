@@ -2,6 +2,7 @@ package dev._3000IQPlay.trillium.modules.render;
 
 import dev._3000IQPlay.trillium.event.events.EventEntityMove;
 import dev._3000IQPlay.trillium.event.events.PreRenderEvent;
+import dev._3000IQPlay.trillium.event.events.Render3DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.combat.Aura;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
@@ -30,7 +31,7 @@ public class BackTrack extends Module {
         super("BackTrack", "Smthing like CSGO backtrack but in Mc", Module.Category.RENDER, true, false, false);
     }
 	
-	private final Setting<RenderMode> renderMode = register(new Setting<>("RenderMode", RenderMode.Chams));
+	private Setting<RenderMode> renderMode = register(new Setting<>("RenderMode", RenderMode.Chams));
     public Setting<Integer> btticks = register(new Setting<>("TrackTicks", 5, 1, 15));
 	public final Setting<ColorSetting> color2 = this.register(new Setting<>("Color", new ColorSetting(-2009289807)));
     public Setting<Boolean> hlaura = register(new Setting<>("HighLightAura", false));
@@ -39,7 +40,7 @@ public class BackTrack extends Module {
     public  Map<EntityPlayer, List<Box> > entAndTrail = new HashMap<>();
 
     public enum RenderMode {
-        Box, Chams, None
+        Box, Chams, None;
     }
 
     @SubscribeEvent
@@ -151,13 +152,10 @@ public class BackTrack extends Module {
     }
 
     public static class Box {
-        private final Vec3d position;
-        private final float limbSwing;
-        private final float limbSwingAmount;
-        private final float Yaw;
-        private final float Pitch;
+        private Vec3d position;
+        private float limbSwing, limbSwingAmount,  Yaw,  Pitch;
         private final ModelPlayer modelPlayer;
-        private final EntityPlayer ent;
+        private EntityPlayer ent;
 
         public int getTicks() {
             return ticks;

@@ -44,15 +44,15 @@ public class ItemESP extends Module{
 
 
 
-    private final Setting<mode> Mode = register(new Setting("Render Mode", mode.render2D));
+    private Setting<mode> Mode = register(new Setting("Render Mode", mode.render2D));
 
     public enum mode {
-        render2D, render3D, Circle
+        render2D, render3D, Circle;
     }
-    private final Setting<mode2> Mode2 = register(new Setting("Color Mode", mode2.Rainbow));
+    private Setting<mode2> Mode2 = register(new Setting("Color Mode", mode2.Rainbow));
 
     public enum mode2 {
-        Custom, Rainbow, Astolfo
+        Custom, Rainbow, Astolfo;
     }
 
 

@@ -1,9 +1,7 @@
 /*    */ package com.jhlabs.image;
 /*    */ 
-/*    */
-
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
+/*    */ import java.awt.image.BufferedImage;
+/*    */ import java.awt.image.BufferedImageOp;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -31,8 +29,8 @@ import java.awt.image.BufferedImageOp;
 /*    */ public class IteratedFilter
 /*    */   extends AbstractBufferedImageOp
 /*    */ {
-/*    */   private final BufferedImageOp filter;
-/*    */   private final int iterations;
+/*    */   private BufferedImageOp filter;
+/*    */   private int iterations;
 /*    */   
 /*    */   public IteratedFilter(BufferedImageOp filter, int iterations) {
 /* 36 */     this.filter = filter;

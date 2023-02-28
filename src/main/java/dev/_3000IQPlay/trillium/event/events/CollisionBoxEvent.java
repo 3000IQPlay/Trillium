@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 
 public class CollisionBoxEvent  extends EventStage {
-    private static final CollisionBoxEvent INSTANCE = new CollisionBoxEvent();
+    private static CollisionBoxEvent INSTANCE = new CollisionBoxEvent();
 
     private Block block;
     private BlockPos pos;

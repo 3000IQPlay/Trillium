@@ -16,7 +16,7 @@ import java.text.NumberFormat;
 
 public class DrawHelper{
 
-    private static final Minecraft mc = Minecraft.getMinecraft();
+    private static Minecraft mc = Minecraft.getMinecraft();
 
     public static void drawTriangle(float cx,  float r, int color) {
         float x = r * 3.0f;

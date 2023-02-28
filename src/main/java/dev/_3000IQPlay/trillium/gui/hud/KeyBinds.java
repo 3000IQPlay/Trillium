@@ -33,7 +33,7 @@ public class KeyBinds extends Module{
     public final Setting<ColorSetting> oncolor = this.register(new Setting<>("OnColor", new ColorSetting(0xBEBEBE)));
     public final Setting<ColorSetting> offcolor = this.register(new Setting<>("OffColor", new ColorSetting(0x646464)));
 
-    private final Setting<Float> psize = this.register( new Setting<>("Size", 1f, 0.1f, 2f));
+    private Setting<Float> psize = this.register( new Setting<>("Size", 1f, 0.1f, 2f));
 
 
     float x1 =0;

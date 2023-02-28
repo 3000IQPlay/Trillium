@@ -2,11 +2,13 @@ package dev._3000IQPlay.trillium.modules.combat;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
+import dev._3000IQPlay.trillium.gui.hud.RadarRewrite;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.movement.ElytraFlight;
 import dev._3000IQPlay.trillium.modules.player.FastPlace2;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.InvStack;
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.enchantment.Enchantment;
@@ -26,7 +28,10 @@ import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+
+import java.util.List;
 import java.util.*;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -38,7 +43,7 @@ public class AutoArmor
     }
 
 
-    private final Setting<Mode> mode = register(new Setting<>("Mode", Mode.NCP));
+    private Setting<Mode> mode = register(new Setting<>("Mode", Mode.NCP));
 
 
     public enum Mode {
@@ -46,18 +51,18 @@ public class AutoArmor
         Default
     }
 
-    private final Setting<Boolean> armorSaver = register(new Setting<>("ArmorSaver", false));
-    private final Setting<Integer> delay = register(new Setting<>("Delay", 1, 1, 10));
+    private Setting<Boolean> armorSaver = register(new Setting<>("ArmorSaver", false));
+    private Setting<Integer> delay = register(new Setting<>("Delay", 1, 1, 10));
     public Setting<Float> depletion = register(new Setting("Depletion", 0.75F, 0.5F, 0.95F, v-> armorSaver.getValue()));
-    private final Setting<Boolean> elytraPrio = register(new Setting<>("ElytraPrio", false));
-    private final Setting<Boolean> smart = register(new Setting<>("Smart", false, v-> elytraPrio.getValue()));
-    private final Setting<Boolean> strict = register(new Setting<>("Strict", false));
-    private final Setting<Boolean> pauseWhenSafe = register(new Setting<>("PauseWhenSafe", false));
-    private final Setting<Boolean> allowMend = register(new Setting<>("AllowMend", false));
+    private Setting<Boolean> elytraPrio = register(new Setting<>("ElytraPrio", false));
+    private Setting<Boolean> smart = register(new Setting<>("Smart", false, v-> elytraPrio.getValue()));
+    private Setting<Boolean> strict = register(new Setting<>("Strict", false));
+    private Setting<Boolean> pauseWhenSafe = register(new Setting<>("PauseWhenSafe", false));
+    private Setting<Boolean> allowMend = register(new Setting<>("AllowMend", false));
 
 
 
-    private final Timer rightClickTimer = new Timer();
+    private Timer rightClickTimer = new Timer();
 
     private boolean sleep;
 

@@ -105,7 +105,7 @@
 /*     */       int x;
 /* 106 */       for (x = 0; x < this.width; x += tileWidth)
 /*     */       {
-/* 108 */         g.drawImage(src, null, x, y);
+/* 108 */         g.drawImage(src, (BufferedImageOp)null, x, y);
 /*     */       }
 /*     */     } 
 /*     */     

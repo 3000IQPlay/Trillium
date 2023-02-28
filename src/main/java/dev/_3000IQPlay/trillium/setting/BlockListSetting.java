@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class BlockListSetting {
-    private final List<Block> blocks;
+    private List<Block> blocks;
 
-    private final List<String> blocksString;
+    private List<String> blocksString;
 
     public BlockListSetting(String... blockNames) {
         blocks = new ArrayList<>();

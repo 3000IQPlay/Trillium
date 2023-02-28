@@ -1,11 +1,11 @@
 package dev._3000IQPlay.trillium.modules.player;
 
-import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
+import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.Timer;
 import dev._3000IQPlay.trillium.util.TrilliumUtils;
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.CPacketChatMessage;
@@ -21,7 +21,7 @@ public class AntiTPhere extends Module {
         super("AntiTPhere", "AntiTPhere", Category.PLAYER, true, false, false);
     }
 
-    private final Setting<Modes> mode = register(new Setting("Mode", Modes.Back));
+    private Setting<Modes> mode = register(new Setting("Mode", Modes.Back));
 
     public enum Modes {
         Back, Home, RTP, Spawn
@@ -33,7 +33,7 @@ public class AntiTPhere extends Module {
             SPacketChat packet = event.getPacket();
             if(packet.getChatComponent().getFormattedText().contains("Teleportation...") && check(packet.getChatComponent().getFormattedText())){
 
-                StringBuilder log = new StringBuilder("You have been teleported to X: " + mc.player.posX + " Z: " + mc.player.posZ +
+                StringBuilder log = new StringBuilder("You have been teleported to X: " + (int)mc.player.posX + " Z: " + (int) mc.player.posZ +
                         ". Upcoming players : ");
 
                 for(Entity entity : mc.world.loadedEntityList){

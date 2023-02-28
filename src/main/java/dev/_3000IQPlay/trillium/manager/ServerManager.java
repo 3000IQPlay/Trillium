@@ -1,7 +1,7 @@
 package dev._3000IQPlay.trillium.manager;
 
-import dev._3000IQPlay.trillium.modules.Feature;
 import dev._3000IQPlay.trillium.util.Timer;
+import dev._3000IQPlay.trillium.modules.Feature;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;

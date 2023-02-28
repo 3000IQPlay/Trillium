@@ -25,10 +25,10 @@
 /*  25 */   private float yWidth = 16.0F;
 /*  26 */   private float xGap = 6.0F;
 /*  27 */   private float yGap = 6.0F;
-/*  28 */   private final int rows = 4;
-/*  29 */   private final int cols = 4;
-/*  30 */   private final int rgbX = -32640;
-/*  31 */   private final int rgbY = -8355585;
+/*  28 */   private int rows = 4;
+/*  29 */   private int cols = 4;
+/*  30 */   private int rgbX = -32640;
+/*  31 */   private int rgbY = -8355585;
 /*     */   
 /*     */   private boolean useImageColors = true;
 /*     */   private boolean roundThreads = false;

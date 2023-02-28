@@ -8,6 +8,7 @@ import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
+
 import dev._3000IQPlay.trillium.util.PaletteHelper;
 import dev._3000IQPlay.trillium.util.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -29,8 +30,8 @@ public class ArrayList extends Module {
         setInstance();
     }
     public final Setting<ColorSetting> color = register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
-    private final Setting<Boolean> glow = register(new Setting<>("glow", true));
-    private final Setting<Boolean> shadoiw = register(new Setting<>("shadow", true));
+    private   Setting<Boolean> glow = register(new Setting<>("glow", true));
+    private   Setting<Boolean> shadoiw = register(new Setting<>("shadow", true));
 
 
     public static ArrayList getInstance() {
@@ -47,7 +48,7 @@ public class ArrayList extends Module {
     public Setting<Float> saturation = register(new Setting("Saturation", 0.5f, 0.1f, 1.0f));
     public Setting<Integer> gste = register(new Setting("GS", 30, 10, 50));
     private final Setting<PositionSetting> pos = register(new Setting<>("Position", new PositionSetting(0.5f,0.5f)));
-    private final Setting<cMode> cmode = register(new Setting<>("ColorMode", cMode.Rainbow));
+    private Setting<cMode> cmode = register(new Setting<>("ColorMode", cMode.Rainbow));
     private enum cMode {
         Rainbow, Custom
     }

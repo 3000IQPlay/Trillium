@@ -76,7 +76,7 @@ public class WaterMark
     }
 	
 	public Color getColor(int count) {
-        int index = count;
+        int index = (int) (count);
         int val = 1;
         Color analogous = ColorUtil.getAnalogousColor(this.color2.getValue().getColorObject())[val];
         return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index, this.color1.getValue().getColorObject(), analogous, true);

@@ -16,7 +16,7 @@ public class SpecialTagCompound extends NBTTagCompound {
 
 
     private boolean empty;
-    private final int true_damage;
+    private int true_damage;
 
     public SpecialTagCompound(boolean empty, int true_damage) {
         this.empty = empty;

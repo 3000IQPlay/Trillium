@@ -27,28 +27,28 @@ public class ElytraFlight extends Module {
     public ElytraFlight() {
         super("ElytraFlight", "2b2t boost", Category.MOVEMENT,true,false,false);
     }
-    private final Setting<Mode> mode =register( new Setting<>("Mode", Mode.BOOST));
+    private  Setting<Mode> mode =register( new Setting<>("Mode", Mode.BOOST));
 
-    private final Setting<Boolean> groundSafety = register(new Setting<>("GroundSafety", false, v -> mode.getValue() == Mode.FIREWORK));
-    private final Setting<Float> packetDelay = register(new Setting<>("Limit", 1F, 0.1F, 5F, v -> mode.getValue() == Mode.BOOST));
-    private final Setting<Float> staticDelay = register(new Setting<>("Delay", 5F, 0.1F, 20F, v -> mode.getValue() == Mode.BOOST));
-    private final Setting<Float> timeout = register(new Setting<>("Timeout", 0.5F, 0.1F, 1F, v-> mode.getValue() == Mode.BOOST));
+    private  Setting<Boolean> groundSafety = register(new Setting<>("GroundSafety", false,v -> mode.getValue() == Mode.FIREWORK));
+    private  Setting<Float> packetDelay = register(new Setting<>("Limit", 1F, 0.1F, 5F,v -> mode.getValue() == Mode.BOOST));
+    private  Setting<Float> staticDelay = register(new Setting<>("Delay", 5F, 0.1F, 20F,v -> mode.getValue() == Mode.BOOST));
+    private  Setting<Float> timeout = register(new Setting<>("Timeout", 0.5F, 0.1F, 1F,v-> mode.getValue() == Mode.BOOST));
     public  Setting<Boolean> stopMotion = register(new Setting<>("StopMotion", true,v -> mode.getValue() == Mode.BOOST));
     public  Setting<Boolean> freeze = register(new Setting<>("Freeze", false,v -> mode.getValue() == Mode.BOOST));
     public  Setting<Boolean> cruiseControl = register(new Setting<>("CruiseControl", false));
     public  Setting<Float> minUpSpeed = register(new Setting<>("MinUpSpeed", 0.5f, 0.1f, 5.0f,v -> mode.getValue() == Mode.BOOST && cruiseControl.getValue()));
-    private final Setting<Boolean> autoSwitch = register(new Setting<>("AutoSwitch", false, v-> mode.getValue() == Mode.FIREWORK));
+    private  Setting<Boolean> autoSwitch = register(new Setting<>("AutoSwitch", false, v-> mode.getValue() == Mode.FIREWORK));
     public  Setting<Float> factor = register(new Setting<>("Factor", Float.valueOf(1.5f), Float.valueOf(0.1f), Float.valueOf(50.0f)));
-    private final Setting<Integer> minSpeed = register(new Setting<>("MinSpeed", 20, 1, 50, v-> mode.getValue() == Mode.FIREWORK));
+    private  Setting<Integer> minSpeed = register(new Setting<>("MinSpeed", 20, 1, 50, v-> mode.getValue() == Mode.FIREWORK));
     public  Setting<Float> upFactor = register(new Setting<>("UpFactor", Float.valueOf(1.0f), Float.valueOf(0.0f), Float.valueOf(10.0f)));
     public  Setting<Float> downFactor = register(new Setting<>("DownFactor", Float.valueOf(1.0f), Float.valueOf(0.0f), Float.valueOf(10.0f)));
     public  Setting<Boolean> forceHeight = register(new Setting<>("ForceHeight", false, v-> mode.getValue() == Mode.FIREWORK || (mode.getValue() == Mode.BOOST && cruiseControl.getValue())));
-    private final Setting<Integer> manualHeight = register(new Setting<>("Height", 121, 1, 256, v -> (mode.getValue() == Mode.FIREWORK || (mode.getValue() == Mode.BOOST && cruiseControl.getValue())) && forceHeight.getValue()));
-    private final Setting<Float> triggerHeight = register(new Setting<>("TriggerHeight", 0.3F, 0.05F, 1F, v -> mode.getValue() == Mode.FIREWORK && groundSafety.getValue()));
+    private  Setting<Integer> manualHeight = register(new Setting<>("Height", 121, 1, 256,v -> (mode.getValue() == Mode.FIREWORK || (mode.getValue() == Mode.BOOST && cruiseControl.getValue())) && forceHeight.getValue()));
+    private  Setting<Float> triggerHeight = register(new Setting<>("TriggerHeight", 0.3F, 0.05F, 1F, v -> mode.getValue() == Mode.FIREWORK && groundSafety.getValue()));
     public  Setting<Float> speed = register(new Setting<>("Speed", Float.valueOf(1.0f), Float.valueOf(0.1f), Float.valueOf(10.0f), v-> mode.getValue() == Mode.CONTROL));
-    private final Setting<Float> sneakDownSpeed = register(new Setting<>("DownSpeed", 1.0F, 0.1F, 10.0F, v -> mode.getValue() == Mode.CONTROL));
-    private final Setting<Boolean> instantFly = register(new Setting<>("InstantFly", true));
-    private final Setting<Boolean> boostTimer = register(new Setting<>("Timer", true, v -> mode.getValue() == Mode.BOOST));
+    private  Setting<Float> sneakDownSpeed = register(new Setting<>("DownSpeed", 1.0F, 0.1F, 10.0F,v -> mode.getValue() == Mode.CONTROL));
+    private  Setting<Boolean> instantFly = register(new Setting<>("InstantFly", true));
+    private  Setting<Boolean> boostTimer = register(new Setting<>("Timer", true,v -> mode.getValue() == Mode.BOOST));
     public  Setting<Boolean> speedLimit = register(new Setting<>("SpeedLimit", true,v-> mode.getValue() != Mode.FIREWORK));
     public  Setting<Float> maxSpeed = register(new Setting<>("MaxSpeed", Float.valueOf(2.5f), Float.valueOf(0.1f), Float.valueOf(10.0f), v-> speedLimit.getValue() && mode.getValue() != Mode.FIREWORK));
     public  Setting<Boolean> noDrag = (new Setting<>("NoDrag", false,v-> mode.getValue() != Mode.FIREWORK));
@@ -65,12 +65,12 @@ public class ElytraFlight extends Module {
 
     private final Random random = new Random();
 
-    private final Timer instantFlyTimer = new Timer();
-    private final Timer staticTimer = new Timer();
+    private Timer instantFlyTimer = new Timer();
+    private Timer staticTimer = new Timer();
 
-    private final Timer rocketTimer = new Timer();
+    private Timer rocketTimer = new Timer();
 
-    private final Timer strictTimer = new Timer();
+    private Timer strictTimer = new Timer();
 
     private enum Mode {
         BOOST, CONTROL, FIREWORK
@@ -269,7 +269,7 @@ public class ElytraFlight extends Module {
                 // Upwards Movement
                 if (pitch < 0.0F && mode.getValue() != Mode.CONTROL) {
                     // Normal/Boost mode - uses pitch to go up
-                    double rawUpSpeed = motionDist * -MathHelper.sin(pitch) * 0.04D;
+                    double rawUpSpeed = motionDist * (double) (-MathHelper.sin(pitch)) * 0.04D;
                     mc.player.motionY += rawUpSpeed * 3.2D * upFactor.getValue();
                     mc.player.motionX -= lookVec.x * rawUpSpeed / lookDist;
                     mc.player.motionZ -= lookVec.z * rawUpSpeed / lookDist;
@@ -372,7 +372,7 @@ public class ElytraFlight extends Module {
                 }
 
                 if (f < 0.0F) {
-                    double d10 = d8 * -MathHelper.sin(f) * 0.04D;
+                    double d10 = d8 * (double)(-MathHelper.sin(f)) * 0.04D;
                     mc.player.motionY += d10 * 3.2D;
                     mc.player.motionX -= vec3d.x * d10 / d6;
                     mc.player.motionZ -= vec3d.z * d10 / d6;

@@ -1,10 +1,8 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */
-
-import java.awt.*;
-import java.util.Date;
-import java.util.Random;
+/*     */ import java.awt.Rectangle;
+/*     */ import java.util.Date;
+/*     */ import java.util.Random;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -25,7 +23,7 @@ import java.util.Random;
 /*     */ public class QuiltFilter
 /*     */   extends WholeImageFilter
 /*     */ {
-/*     */   private final Random randomGenerator;
+/*     */   private Random randomGenerator;
 /*  27 */   private long seed = 567L;
 /*  28 */   private int iterations = 25000;
 /*  29 */   private float a = -0.59F;

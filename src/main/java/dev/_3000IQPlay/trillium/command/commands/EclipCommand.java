@@ -56,8 +56,8 @@ public class EclipCommand extends Command {
                     break;
                 }
                 if (this.mc.world.getBlockState(new BlockPos((Entity)this.mc.player).add(0, -i, 0)) != Blocks.BEDROCK.getDefaultState()) continue;
-                Command.sendMessage(ChatFormatting.RED + "You can teleport only under the bedrock");
-                Command.sendMessage(ChatFormatting.RED + "eclip bedrock");
+                Command.sendMessage((Object)ChatFormatting.RED + "You can teleport only under the bedrock");
+                Command.sendMessage((Object)ChatFormatting.RED + "eclip bedrock");
                 return;
             }
         }
@@ -69,15 +69,15 @@ public class EclipCommand extends Command {
             }
         }
         if (y == 0.0f) {
-            if (NumberUtils.isNumber(commands[0])) {
+            if (NumberUtils.isNumber((String)commands[0])) {
                 y = Float.parseFloat(commands[0]);
             } else {
-                Command.sendMessage(ChatFormatting.RED + commands[0] + ChatFormatting.GRAY + "не являестя числом");
+                Command.sendMessage((Object)ChatFormatting.RED + commands[0] + (Object)ChatFormatting.GRAY + "не являестя числом");
                 return;
             }
         }
         if ((elytra = getSlotIDFromItem(Items.ELYTRA)) == -1) {
-            Command.sendMessage(ChatFormatting.RED + "You need elytras in your inventory");
+            Command.sendMessage((Object)ChatFormatting.RED + "You need elytras in your inventory");
             return;
         }
         if (elytra != -2) {

@@ -1,31 +1,28 @@
 package dev._3000IQPlay.trillium.modules.combat;
 
 import dev._3000IQPlay.trillium.Trillium;
-import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.events.EventPostMotion;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
+import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.SubBind;
-import dev._3000IQPlay.trillium.util.BlockUtils;
-import dev._3000IQPlay.trillium.util.CrystalUtils;
-import dev._3000IQPlay.trillium.util.InteractionUtil;
-import dev._3000IQPlay.trillium.util.RenderUtil;
+import dev._3000IQPlay.trillium.util.*;
+import net.minecraft.block.BlockObsidian;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockObsidian;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
@@ -40,17 +37,17 @@ public class AutoTrap
         super("AutoTrap", "Traps players in a obsidian trap", Module.Category.COMBAT, true, false, false);
     }
     private  final Setting<Float> placeRange = this.register( new Setting<>("TargetRange", 4.5f, 1f, 16f));
-    private final Setting<Integer> actionShift = this.register(new Setting<>("ActionShift", 3, 1, 8));
-    private final Setting<Integer> actionInterval = this.register(new Setting<>("ActionInterval", 0, 0, 10));
+    private  Setting<Integer> actionShift = this.register(new Setting<>("ActionShift", 3, 1, 8));
+    private  Setting<Integer> actionInterval = this.register(new Setting<>("ActionInterval", 0, 0, 10));
     private  final Setting<Boolean> top =this.register( new Setting<>("Top", true));
     private  final Setting<Boolean> piston = this.register(new Setting<>("Piston", false));
     private  final Setting<SubBind> self = this.register(new Setting<>("Self", new SubBind(Keyboard.KEY_NONE)));
     public final Setting<ColorSetting> Color = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
 
 
-    private final Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
-    private final Setting<Boolean> rotate = this.register(new Setting<>("Rotate", true));
-    private final Setting<Boolean> toggelable = this.register(new Setting<>("DisableWhenDone", false));
+    private  Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
+    private  Setting<Boolean> rotate = this.register(new Setting<>("Rotate", true));
+    private  Setting<Boolean> toggelable = this.register(new Setting<>("DisableWhenDone", false));
 
     private int itemSlot;
     Timer renderTimer = new Timer();
@@ -59,7 +56,7 @@ public class AutoTrap
     private BlockPos playerPos = null;
     private InteractionUtil.Placement placement;
     private InteractionUtil.Placement lastPlacement;
-    private final Timer lastPlacementTimer = new Timer();
+    private Timer lastPlacementTimer = new Timer();
 
     public static ConcurrentHashMap<BlockPos, Long> shiftedBlocks = new ConcurrentHashMap<>();
 
@@ -222,7 +219,9 @@ public class AutoTrap
     private boolean pistonCheck(BlockPos facePos, EnumFacing facing) {
         PistonAura pistonAura = (PistonAura) Trillium.moduleManager.getModuleByClass(PistonAura.class);
         if (pistonAura.facePos != null) {
-            return !pistonAura.faceOffset.equals(facing);
+            if (pistonAura.faceOffset.equals(facing)) {
+                return false;
+            }
         } else {
             pistonAura.evaluateTarget(facePos);
             if (pistonAura.facePos != null) {
@@ -278,7 +277,7 @@ public class AutoTrap
             double furthestDistance = 0D;
             if (canPlaceBlock(playerPos.up().offset(enumFacing), false)) {
                 if (!piston.getValue() || pistonCheck(playerPos.up(), enumFacing)) {
-                    BlockPos tempBlock = playerPos.up().offset(enumFacing);
+                    BlockPos tempBlock = playerPos.up().offset(enumFacing);;
                     double tempDistance = mc.player.getDistance(tempBlock.getX() + 0.5, tempBlock.getY() + 0.5, tempBlock.getZ() + 0.5);
                     if (tempDistance >= furthestDistance) {
                         furthestBlock = tempBlock;

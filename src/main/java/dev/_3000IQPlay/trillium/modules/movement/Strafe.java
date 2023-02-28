@@ -122,8 +122,8 @@ public class Strafe
         return n;
     }
 	
-	public enum Mode {
+	public static enum Mode {
 		Normal,
-		Strict
-    }
+		Strict;
+	}
 }

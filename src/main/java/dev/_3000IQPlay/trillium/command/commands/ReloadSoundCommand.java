@@ -18,7 +18,7 @@ public class ReloadSoundCommand extends Command {
             sndManager.reloadSoundSystem();
             Command.sendMessage(ChatFormatting.GREEN + "Reloaded Sound System.");
         } catch (Exception e) {
-            System.out.println(ChatFormatting.RED + "Could not restart sound manager: " + e);
+            System.out.println(ChatFormatting.RED + "Could not restart sound manager: " + e.toString());
             e.printStackTrace();
             Command.sendMessage(ChatFormatting.RED + "Couldnt Reload Sound System!");
         }

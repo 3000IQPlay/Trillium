@@ -34,10 +34,11 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
 
 public class RenderUtil implements Util {
 	
-	private static final HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
+	private static HashMap<Integer, Integer> shadowCache = new HashMap<Integer, Integer>();
 
     public static double interpolate (double current, double old, double scale) {
         return old + (current - old) * scale;
@@ -341,7 +342,7 @@ public class RenderUtil implements Util {
         float f1 = (float) (color >> 16 & 255) / 255.0f;
         float f2 = (float) (color >> 8 & 255) / 255.0f;
         float f3 = (float) (color & 255) / 255.0f;
-        GL11.glColor4f(f1, f2, f3, f);
+        GL11.glColor4f((float) f1, (float) f2, (float) f3, (float) f);
     }
 
     static {
@@ -359,11 +360,11 @@ public class RenderUtil implements Util {
             GlStateManager.tryBlendFuncSeparate((int)770, (int)771, (int)0, (int)1);
             GlStateManager.disableTexture2D();
             GlStateManager.depthMask((boolean)false);
-            GL11.glEnable(2848);
-            GL11.glHint(3154, 4354);
-            GL11.glLineWidth(lineWidth);
+            GL11.glEnable((int)2848);
+            GL11.glHint((int)3154, (int)4354);
+            GL11.glLineWidth((float)lineWidth);
             renderCrosses(bb, color);
-            GL11.glDisable(2848);
+            GL11.glDisable((int)2848);
             GlStateManager.depthMask((boolean)true);
             GlStateManager.enableDepth();
             GlStateManager.enableTexture2D();

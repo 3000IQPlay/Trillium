@@ -1,8 +1,6 @@
 /*    */ package com.jhlabs.image;
 /*    */ 
-/*    */
-
-import java.awt.*;
+/*    */ import java.awt.Rectangle;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -59,7 +57,7 @@ import java.awt.*;
 /*    */     
 /*    */     } else {
 /*    */       
-/* 60 */       this.lut = null;
+/* 60 */       this.lut = (int[][])null;
 /*    */     } 
 /*    */     
 /* 63 */     int i = 0;
@@ -71,7 +69,7 @@ import java.awt.*;
 /* 69 */         i++;
 /*    */       } 
 /*    */     } 
-/* 72 */     this.lut = null;
+/* 72 */     this.lut = (int[][])null;
 /* 73 */     return inPixels;
 /*    */   }
 /*    */ 

@@ -35,7 +35,7 @@ public class TrueDurability extends Module implements PacketListener  {
 
     @Override
     public void onEnable() {
-        Trillium.networkHandler.registerListener(EnumPacketDirection.CLIENTBOUND, this, 20, 22, 63);
+        Trillium.networkHandler.registerListener(EnumPacketDirection.CLIENTBOUND, this, 20, 22, 63);;
     }
 
     @Override

@@ -40,7 +40,7 @@
 /*     */   protected boolean isGray;
 /*     */   
 /*     */   public Histogram() {
-/*  43 */     this.histogram = null;
+/*  43 */     this.histogram = (int[][])null;
 /*  44 */     this.numSamples = 0;
 /*  45 */     this.isGray = true;
 /*  46 */     this.minValue = null;

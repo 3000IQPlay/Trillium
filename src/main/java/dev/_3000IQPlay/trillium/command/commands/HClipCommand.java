@@ -18,7 +18,7 @@ public class HClipCommand extends Command {
             }
             if (commands.length == 2) {
                 try {
-                    Command.sendMessage(TextFormatting.GREEN + "Clipping on " + Double.valueOf(commands[0]) + " blocks");
+                    Command.sendMessage((Object)TextFormatting.GREEN + "Clipping on " + Double.valueOf(commands[0]) + " blocks");
                     float f = this.mc.player.rotationYaw * ((float)Math.PI / 180);
                     double speed = Double.valueOf(commands[0]);
                     double x = -((double) MathHelper.sin((float)f) * speed);

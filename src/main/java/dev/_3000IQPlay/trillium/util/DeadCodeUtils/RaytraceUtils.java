@@ -1,5 +1,7 @@
 package dev._3000IQPlay.trillium.util.DeadCodeUtils;
 
+import java.util.List;
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EntitySelectors;
@@ -7,8 +9,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.List;
 
 import static dev._3000IQPlay.trillium.util.Util.mc;
 
@@ -74,7 +74,7 @@ public class RaytraceUtils {
     public static Entity a(Entity entity, double d2, Vec3d vec3d, Vec3d vec3d2, Vec3d vec3d3) {
         Entity entity2 = null;
         try {
-            List list = mc.world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().expand(vec3d2.x * d2, vec3d2.y * d2, vec3d2.z * d2).grow(1.0, 1.0, 1.0), Predicates.and(EntitySelectors.NOT_SPECTATING, new H()));
+            List list = mc.world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().expand(vec3d2.x * d2, vec3d2.y * d2, vec3d2.z * d2).grow(1.0, 1.0, 1.0), Predicates.and((Predicate)EntitySelectors.NOT_SPECTATING, (Predicate)new H()));
             for (int i2 = 0; i2 < list.size(); ++i2) {
                 double d3;
                 Entity entity3 = (Entity)list.get(i2);

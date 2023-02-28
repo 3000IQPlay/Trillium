@@ -1,10 +1,12 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */
-
-import java.awt.*;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
+/*     */ import java.awt.AlphaComposite;
+/*     */ import java.awt.Graphics2D;
+/*     */ import java.awt.RenderingHints;
+/*     */ import java.awt.geom.AffineTransform;
+/*     */ import java.awt.geom.Point2D;
+/*     */ import java.awt.image.BufferedImage;
+/*     */ import java.awt.image.ImageObserver;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -281,13 +283,13 @@ import java.awt.image.BufferedImage;
 /* 283 */     if (this.iterations == 0) {
 /*     */       
 /* 285 */       Graphics2D graphics2D = dst.createGraphics();
-/* 286 */       graphics2D.drawRenderedImage(src, null);
+/* 286 */       graphics2D.drawRenderedImage(src, (AffineTransform)null);
 /* 287 */       graphics2D.dispose();
 /* 288 */       return dst;
 /*     */     } 
 /*     */     
 /* 291 */     Graphics2D g = dst.createGraphics();
-/* 292 */     g.drawImage(src, null, null);
+/* 292 */     g.drawImage(src, (AffineTransform)null, (ImageObserver)null);
 /*     */     
 /* 294 */     for (int i = 0; i < this.iterations; i++) {
 /*     */       
@@ -303,7 +305,7 @@ import java.awt.image.BufferedImage;
 /*     */       }
 /*     */       
 /* 307 */       g.translate(-cx, -cy);
-/* 308 */       g.drawImage(src, null, null);
+/* 308 */       g.drawImage(src, (AffineTransform)null, (ImageObserver)null);
 /*     */     } 
 /*     */     
 /* 311 */     g.dispose();

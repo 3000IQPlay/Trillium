@@ -1,12 +1,11 @@
 /*     */ package com.jhlabs.composite;
 /*     */ 
-/*     */
-
-import java.awt.*;
-import java.awt.color.ColorSpace;
-import java.awt.image.ColorModel;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
+/*     */ import java.awt.Color;
+/*     */ import java.awt.CompositeContext;
+/*     */ import java.awt.color.ColorSpace;
+/*     */ import java.awt.image.ColorModel;
+/*     */ import java.awt.image.Raster;
+/*     */ import java.awt.image.WritableRaster;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -30,12 +29,12 @@ import java.awt.image.WritableRaster;
 /*     */ public class MiscCompositeContext
 /*     */   implements CompositeContext
 /*     */ {
-/*     */   private final int rule;
-/*     */   private final float alpha;
-/*     */   private final ColorModel srcColorModel;
-/*     */   private final ColorModel dstColorModel;
-/*     */   private final ColorSpace srcColorSpace;
-/*     */   private final ColorSpace dstColorSpace;
+/*     */   private int rule;
+/*     */   private float alpha;
+/*     */   private ColorModel srcColorModel;
+/*     */   private ColorModel dstColorModel;
+/*     */   private ColorSpace srcColorSpace;
+/*     */   private ColorSpace dstColorSpace;
 /*     */   private boolean srcNeedsConverting;
 /*     */   private boolean dstNeedsConverting;
 /*     */   

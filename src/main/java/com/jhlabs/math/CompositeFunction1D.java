@@ -18,8 +18,8 @@
 /*    */ public class CompositeFunction1D
 /*    */   implements Function1D
 /*    */ {
-/*    */   private final Function1D f1;
-/*    */   private final Function1D f2;
+/*    */   private Function1D f1;
+/*    */   private Function1D f2;
 /*    */   
 /*    */   public CompositeFunction1D(Function1D f1, Function1D f2) {
 /* 25 */     this.f1 = f1;

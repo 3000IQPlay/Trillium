@@ -20,7 +20,7 @@ public class SpeedMeter extends Module{
 
     public final Setting<ColorSetting> color = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
     private final Setting<PositionSetting> pos = this.register(new Setting<>("Position", new PositionSetting(0.5f,0.5f)));
-    private final Setting<Boolean> bps = this.register(new Setting<>("BPS", false));
+    private Setting<Boolean> bps = this.register(new Setting<>("BPS", false));
 
     float x1 =0;
     float y1= 0;

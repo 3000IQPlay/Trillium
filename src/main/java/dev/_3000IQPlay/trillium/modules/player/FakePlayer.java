@@ -1,33 +1,31 @@
 package dev._3000IQPlay.trillium.modules.player;
 
-import com.mojang.authlib.GameProfile;
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.event.events.TotemPopEvent;
-import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.modules.*;
 import dev._3000IQPlay.trillium.util.DamageUtil;
 import dev._3000IQPlay.trillium.util.PositionforFP;
 import net.minecraft.client.entity.*;
-import net.minecraft.entity.*;
+import dev._3000IQPlay.trillium.setting.*;
+import com.mojang.authlib.*;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.*;
 import net.minecraft.network.play.server.SPacketSoundEffect;
-import net.minecraft.potion.*;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.*;
+import net.minecraft.entity.*;
+import net.minecraft.network.*;
+import java.util.*;
+
+import net.minecraft.potion.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 public class FakePlayer extends Module {
 	private static FakePlayer INSTANCE = new FakePlayer();
@@ -38,7 +36,7 @@ public class FakePlayer extends Module {
             new ItemStack(Items.DIAMOND_HELMET)
     };
 
-    private final Setting<movingmode> moving = register(new Setting("Target", movingmode.None));
+    private Setting<movingmode> moving = register(new Setting("Target", movingmode.None));
 
     public Setting <Integer> vulnerabilityTick = this.register ( new Setting <> ( "Vulnerability Tick", 4, 0, 10) );
     public Setting <Integer> resetHealth = this.register ( new Setting <> ( "Reset Health", 10, 0, 36) );
@@ -50,15 +48,15 @@ public class FakePlayer extends Module {
 
 
     public Setting<String> nameFakePlayer = this.register(new Setting<String>("Name FakePlayer", "Ebatte_Sratte"));
-    private final Setting<Boolean> copyInventory = this.register(new Setting<Boolean>("Copy Inventory", false));
-    private final Setting<Boolean> playerStacked = this.register(new Setting<Boolean>("Player Stacked", true, v-> !copyInventory.getValue()));
-    private final Setting<Boolean> onShift = this.register(new Setting<Boolean>("On Shift", false));
-    private final Setting<Boolean> simulateDamage = this.register(new Setting<Boolean>("Simulate Damage", false));
-    private final Setting<Boolean> resistance = this.register(new Setting<Boolean>("Resistance", true));
-    private final Setting<Boolean> pop = this.register(new Setting<Boolean>("Pop", true));
+    private Setting<Boolean> copyInventory = this.register(new Setting<Boolean>("Copy Inventory", false));
+    private Setting<Boolean> playerStacked = this.register(new Setting<Boolean>("Player Stacked", true,v-> !copyInventory.getValue()));
+    private Setting<Boolean> onShift = this.register(new Setting<Boolean>("On Shift", false));
+    private Setting<Boolean> simulateDamage = this.register(new Setting<Boolean>("Simulate Damage", false));
+    private Setting<Boolean> resistance = this.register(new Setting<Boolean>("Resistance", true));
+    private Setting<Boolean> pop = this.register(new Setting<Boolean>("Pop", true));
 
-    private final Setting<Boolean> record2 = this.register(new Setting<Boolean>("Record", true));
-    private final Setting<Boolean> play = this.register(new Setting<Boolean>("Play", true));
+    private Setting<Boolean> record2 = this.register(new Setting<Boolean>("Record", true));
+    private Setting<Boolean> play = this.register(new Setting<Boolean>("Play", true));
 
     public enum movingmode {
         None, Line,Circle,Random

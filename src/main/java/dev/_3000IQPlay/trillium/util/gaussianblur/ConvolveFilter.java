@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.util.gaussianblur;
 
-import java.awt.*;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -39,7 +40,7 @@ public class ConvolveFilter
 
 
 
-    /*  62 */   private final int edgeAction = CLAMP_EDGES;
+    /*  62 */   private int edgeAction = CLAMP_EDGES;
 
 
 
@@ -68,7 +69,7 @@ public class ConvolveFilter
 
         /* 186 */     if (dst == null)
         {
-            /* 188 */       dst = createCompatibleDestImage(src, null);
+            /* 188 */       dst = createCompatibleDestImage(src, (ColorModel)null);
         }
 
         /* 191 */     int[] inPixels = new int[width * height];

@@ -1,11 +1,9 @@
 /*     */ package com.jhlabs.composite;
 /*     */ 
-/*     */
-
-import java.awt.*;
-import java.awt.image.ColorModel;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
+/*     */ import java.awt.CompositeContext;
+/*     */ import java.awt.image.ColorModel;
+/*     */ import java.awt.image.Raster;
+/*     */ import java.awt.image.WritableRaster;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -59,7 +57,7 @@ import java.awt.image.WritableRaster;
 /*     */ class ContourCompositeContext
 /*     */   implements CompositeContext
 /*     */ {
-/*     */   private final int offset;
+/*     */   private int offset;
 /*     */   
 /*     */   public ContourCompositeContext(int offset, ColorModel srcColorModel, ColorModel dstColorModel) {
 /*  63 */     this.offset = offset;

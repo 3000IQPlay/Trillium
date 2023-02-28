@@ -1,9 +1,10 @@
 /*     */ package com.jhlabs.composite;
 /*     */ 
-/*     */
-
-import java.awt.*;
-import java.awt.image.ColorModel;
+/*     */ import java.awt.AlphaComposite;
+/*     */ import java.awt.Composite;
+/*     */ import java.awt.CompositeContext;
+/*     */ import java.awt.RenderingHints;
+/*     */ import java.awt.image.ColorModel;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -231,11 +232,13 @@ import java.awt.image.ColorModel;
 /* 232 */       return false;
 /*     */     }
 /*     */     
-/* 235 */     /*     */     /* 237 */     /*     */
-    return this.extraAlpha == c.extraAlpha;
+/* 235 */     if (this.extraAlpha != c.extraAlpha)
+/*     */     {
+/* 237 */       return false;
+/*     */     }
 /*     */     
-/* 240 */
-    /*     */   }
+/* 240 */     return true;
+/*     */   }
 /*     */ }
 
 

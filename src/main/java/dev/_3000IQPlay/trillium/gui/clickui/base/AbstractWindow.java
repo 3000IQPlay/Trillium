@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public abstract class AbstractWindow {
 
-	private final String name;
+	private String name;
 	public double animationY;
 	protected double prevTargetX;
 

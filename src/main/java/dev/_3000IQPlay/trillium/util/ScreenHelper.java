@@ -1,14 +1,14 @@
 package dev._3000IQPlay.trillium.util;
 
-import dev._3000IQPlay.trillium.util.AnimationHelper;
 import net.minecraft.client.Minecraft;
+import dev._3000IQPlay.trillium.util.AnimationHelper;
 
 
 public class ScreenHelper {
 
     private float x;
     private float y;
-    private final long lastMS;
+    private long lastMS;
 
     public ScreenHelper(float x, float y) {
         this.x = x;

@@ -1,14 +1,14 @@
 /*     */ package com.jhlabs.image;
 /*     */ 
-/*     */
-
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BandCombineOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
+/*     */ import java.awt.AlphaComposite;
+/*     */ import java.awt.Graphics2D;
+/*     */ import java.awt.Rectangle;
+/*     */ import java.awt.geom.AffineTransform;
+/*     */ import java.awt.geom.Point2D;
+/*     */ import java.awt.geom.Rectangle2D;
+/*     */ import java.awt.image.BandCombineOp;
+/*     */ import java.awt.image.BufferedImage;
+/*     */ import java.awt.image.ColorModel;
 /*     */ 
 /*     */ 
 /*     */ 
@@ -284,7 +284,7 @@ import java.awt.image.ColorModel;
 /* 284 */     if (!this.shadowOnly) {
 /*     */       
 /* 286 */       g.setComposite(AlphaComposite.SrcOver);
-/* 287 */       g.drawRenderedImage(src, null);
+/* 287 */       g.drawRenderedImage(src, (AffineTransform)null);
 /*     */     } 
 /*     */     
 /* 290 */     g.dispose();

@@ -40,7 +40,7 @@ public class NewGuiMiddleClickMenu extends GuiScreen {
 
         ScaledResolution sr = new ScaledResolution(mc);
 
-        drawPlayerOnScreen((int) sr.getScaledWidth()/2, ((int) sr.getScaledHeight()/ 2) + 50, 45, -30, 0, player, true, true);
+        drawPlayerOnScreen((int) sr.getScaledWidth()/2, (int) ((int) sr.getScaledHeight()/ 2) + 50, 45, -30, 0, player, true, true);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();

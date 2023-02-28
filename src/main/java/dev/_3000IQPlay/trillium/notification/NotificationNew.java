@@ -16,8 +16,8 @@ public class NotificationNew {
     private final Type type;
 
     private double posY;
-    private final double width;
-    private final double height;
+    private double width;
+    private double height;
     private double animationX;
     private final int imageWidth;
     private final long stayTime;

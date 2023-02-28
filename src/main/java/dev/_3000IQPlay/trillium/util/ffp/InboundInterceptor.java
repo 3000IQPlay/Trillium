@@ -1,11 +1,20 @@
 package dev._3000IQPlay.trillium.util.ffp;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import net.minecraft.network.*;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.network.Packet;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.NettyPacketDecoder;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.EnumConnectionState;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
 
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.buffer.ByteBuf;
+
+import java.lang.Exception;
+import java.lang.IllegalAccessException;
+import java.lang.InstantiationException;
+import java.io.IOException;
 import java.util.List;
 
 /* Intercept packet sent by server to client */
@@ -14,7 +23,7 @@ import java.util.List;
 public class InboundInterceptor extends NettyPacketDecoder {
 
     private final EnumPacketDirection direction;
-    private final NetworkHandler handler;
+    private NetworkHandler handler;
     private boolean isPlay;
 
     public InboundInterceptor(NetworkHandler handler, EnumPacketDirection direction) {
@@ -24,7 +33,7 @@ public class InboundInterceptor extends NettyPacketDecoder {
         this.isPlay = false;
     }
 
-    protected void decode(ChannelHandlerContext context, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext context, ByteBuf in, List<Object> out) throws IOException, InstantiationException, IllegalAccessException, Exception {
         if (in.readableBytes() != 0) {
 
             int start_index = in.readerIndex(); // Mark start index

@@ -1,8 +1,8 @@
 package dev._3000IQPlay.trillium.manager;
 
-import dev._3000IQPlay.trillium.event.events.PacketEvent;
-import dev._3000IQPlay.trillium.mixin.mixins.IPlayerControllerMP;
 import dev._3000IQPlay.trillium.util.Util;
+import dev._3000IQPlay.trillium.mixin.mixins.IPlayerControllerMP;
+import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;

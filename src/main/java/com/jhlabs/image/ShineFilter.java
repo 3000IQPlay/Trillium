@@ -144,17 +144,17 @@
 /* 144 */     g.setColor(new Color(this.shineColor));
 /* 145 */     g.fillRect(0, 0, width, height);
 /* 146 */     g.setComposite(AlphaComposite.DstIn);
-/* 147 */     g.drawRenderedImage(matte, null);
+/* 147 */     g.drawRenderedImage(matte, (AffineTransform)null);
 /* 148 */     g.setComposite(AlphaComposite.DstOut);
 /* 149 */     g.translate(xOffset, yOffset);
-/* 150 */     g.drawRenderedImage(matte, null);
+/* 150 */     g.drawRenderedImage(matte, (AffineTransform)null);
 /* 151 */     g.dispose();
 /* 152 */     shineLayer = (new GaussianFilter(this.radius)).filter(shineLayer, null);
 /* 153 */     shineLayer = (new RescaleFilter(3.0F * this.brightness)).filter(shineLayer, shineLayer);
 /* 154 */     g = dst.createGraphics();
-/* 155 */     g.drawRenderedImage(src, null);
+/* 155 */     g.drawRenderedImage(src, (AffineTransform)null);
 /* 156 */     g.setComposite((Composite)new AddComposite(1.0F));
-/* 157 */     g.drawRenderedImage(shineLayer, null);
+/* 157 */     g.drawRenderedImage(shineLayer, (AffineTransform)null);
 /* 158 */     g.dispose();
 /* 159 */     return dst;
 /*     */   }

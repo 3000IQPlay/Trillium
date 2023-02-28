@@ -1,7 +1,9 @@
 package dev._3000IQPlay.trillium;
 
-import dev._3000IQPlay.trillium.util.protect.WebhookUtil;
+import dev._3000IQPlay.trillium.gui.auth.AuthGui;
+import dev._3000IQPlay.trillium.util.protect.keyauth.api.KeyAuth;
 import dev._3000IQPlay.trillium.util.protect.keyauth.util.HWID;
+import dev._3000IQPlay.trillium.util.protect.WebhookUtil;
 import net.minecraft.client.Minecraft;
 
 import java.awt.*;

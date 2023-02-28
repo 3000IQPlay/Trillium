@@ -1,8 +1,8 @@
 package dev._3000IQPlay.trillium.util;
 
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
-import dev._3000IQPlay.trillium.mixin.mixins.IEntityPlayerSP;
 import dev._3000IQPlay.trillium.modules.combat.PistonAura;
+import dev._3000IQPlay.trillium.mixin.mixins.IEntityPlayerSP;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InteractionUtil {
-    private static final Minecraft mc = Minecraft.getMinecraft();
+    private static Minecraft mc = Minecraft.getMinecraft();
 
     public static boolean canPlaceNormally() {
         return true;

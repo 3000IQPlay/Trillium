@@ -20,7 +20,7 @@ public class VClipCommand extends Command {
         if (commands.length == 2) {
             try {
                 int i;
-                Command.sendMessage(TextFormatting.GREEN + "Clipping on " + Double.valueOf(commands[0]) + " blocks");
+                Command.sendMessage((Object) TextFormatting.GREEN + "Clipping on " + Double.valueOf(commands[0]) + " blocks");
                 for (i = 0; i < 10; ++i) {
                     this.mc.player.connection.sendPacket((Packet)new CPacketPlayer.Position(this.mc.player.posX, this.mc.player.posY, this.mc.player.posZ, false));
                 }

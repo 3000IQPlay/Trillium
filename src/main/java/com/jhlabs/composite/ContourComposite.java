@@ -1,9 +1,9 @@
 /*    */ package com.jhlabs.composite;
 /*    */ 
-/*    */
-
-import java.awt.*;
-import java.awt.image.ColorModel;
+/*    */ import java.awt.Composite;
+/*    */ import java.awt.CompositeContext;
+/*    */ import java.awt.RenderingHints;
+/*    */ import java.awt.image.ColorModel;
 /*    */ 
 /*    */ 
 /*    */ 
@@ -27,7 +27,7 @@ import java.awt.image.ColorModel;
 /*    */ public final class ContourComposite
 /*    */   implements Composite
 /*    */ {
-/*    */   private final int offset;
+/*    */   private int offset;
 /*    */   
 /*    */   public ContourComposite(int offset) {
 /* 33 */     this.offset = offset;
@@ -45,11 +45,13 @@ import java.awt.image.ColorModel;
 /*    */ 
 /*    */   
 /*    */   public boolean equals(Object o) {
-/* 48 */     /*    */     /* 50 */     /*    */
-    return o instanceof ContourComposite;
+/* 48 */     if (!(o instanceof ContourComposite))
+/*    */     {
+/* 50 */       return false;
+/*    */     }
 /*    */     
-/* 53 */
-    /*    */   }
+/* 53 */     return true;
+/*    */   }
 /*    */ }
 
 

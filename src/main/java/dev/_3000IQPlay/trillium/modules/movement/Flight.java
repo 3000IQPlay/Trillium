@@ -1,17 +1,22 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
+import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.event.events.BlockCollisionBoundingBoxEvent;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.DamageUtil;
 import dev._3000IQPlay.trillium.util.EntityUtil;
+import dev._3000IQPlay.trillium.util.MovementUtil;
 import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketKeepAlive;
 import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.network.play.server.SPacketEntityStatus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Flight
@@ -267,7 +272,7 @@ public class Flight
 		super.onDisable();
     }
 	
-	public enum FlyMode {
+	public static enum FlyMode {
 		Vanilla,
 		Motion,
 		VerusBoost,
@@ -275,6 +280,6 @@ public class Flight
 		ACR,
 		Jetpack,
 		Creative,
-		ManualAirJump
-    }
+		ManualAirJump;
+	}
 }

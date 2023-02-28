@@ -3,17 +3,18 @@ package dev._3000IQPlay.trillium.modules.render;
 import dev._3000IQPlay.trillium.event.events.EventJump;
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
+
 import dev._3000IQPlay.trillium.util.AstolfoAnimation;
+import dev._3000IQPlay.trillium.util.Timer;
+
+import java.util.*;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
 
 public class JumpCircle extends Module {
 
@@ -29,7 +30,7 @@ public class JumpCircle extends Module {
     public Setting<mode> Mode = register(new Setting<>("Mode", mode.Jump));
 
     public enum mode {
-        Jump, Landing
+        Jump, Landing;
     }
 
     boolean check = false;

@@ -1,7 +1,11 @@
 package dev._3000IQPlay.trillium.manager;
 
 import dev._3000IQPlay.trillium.modules.Feature;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.HashMap;
 
 public class SpeedManager extends Feature {
 

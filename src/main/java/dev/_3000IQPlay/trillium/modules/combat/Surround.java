@@ -245,9 +245,9 @@ public class Surround
         }
     }
 	
-	public enum CenterType {
+	public static enum CenterType {
         None,
         Instant,
-        Motion
+        Motion;
     }
 }

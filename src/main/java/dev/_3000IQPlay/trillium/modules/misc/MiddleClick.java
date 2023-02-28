@@ -3,14 +3,16 @@ package dev._3000IQPlay.trillium.modules.misc;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.event.EventStage;
+import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.gui.misc.GuiMiddleClickMenu;
 import dev._3000IQPlay.trillium.gui.misc.NewGuiMiddleClickMenu;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.setting.SubBind;
-import dev._3000IQPlay.trillium.util.BlockUtils;
-import dev._3000IQPlay.trillium.util.Timer;
+import dev._3000IQPlay.trillium.util.*;
 import dev._3000IQPlay.trillium.util.phobos.DamageUtil;
+
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -55,8 +57,8 @@ public class MiddleClick extends Module{
     private static MiddleClick INSTANCE = new MiddleClick();
     public Setting<Float> scalefactor = register(new Setting("Raytrace", 2.0F, 0.1F, 4.0F));
 
-    private final Setting<Action> action = register(new Setting<>("Action", Action.MENU));
-    private final Setting<Integer> range = register(new Setting<>("Range", 40, 10, 250, v-> action.getValue() == Action.MENU));
+    private  Setting<Action> action = register(new Setting<>("Action", Action.MENU));
+    private  Setting<Integer> range = register(new Setting<>("Range", 40, 10, 250, v-> action.getValue() == Action.MENU));
 
     public Setting<Float> circus = register(new Setting("circus", 2.0F, 0.1F, 300.0F));
 
@@ -84,7 +86,7 @@ public class MiddleClick extends Module{
 
 
 
-    private final Timer xpTimer = new Timer();
+    private Timer xpTimer = new Timer();
 
     @Override
     public void onUpdate() {

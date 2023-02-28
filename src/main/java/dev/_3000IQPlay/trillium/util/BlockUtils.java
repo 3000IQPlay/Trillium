@@ -25,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
+
 import java.util.*;
 
 public class BlockUtils {
@@ -309,7 +310,7 @@ public class BlockUtils {
 
     public static EntityPlayer getRotationPlayer() {
         final EntityPlayer rotationEntity = (EntityPlayer) Util.mc.player;
-        return (rotationEntity == null) ? Util.mc.player : rotationEntity;
+        return (EntityPlayer) ((rotationEntity == null) ? Util.mc.player : rotationEntity);
     }
 
     public static double getDistanceSq(BlockPos pos) {
@@ -415,7 +416,7 @@ public class BlockUtils {
 
     public static EnumFacing getFacing(BlockPos pos) {
         for (EnumFacing facing : EnumFacing.values()) {
-            RayTraceResult rayTraceResult = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + (double)mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(pos.getX() + 0.5 + (double)facing.getDirectionVec().getX() * 1.0 / 2.0, pos.getY() + 0.5 + (double)facing.getDirectionVec().getY() * 1.0 / 2.0, pos.getZ() + 0.5 + (double)facing.getDirectionVec().getZ() * 1.0 / 2.0), false, true, false);
+            RayTraceResult rayTraceResult = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + (double)mc.player.getEyeHeight(), mc.player.posZ), new Vec3d((double)pos.getX() + 0.5 + (double)facing.getDirectionVec().getX() * 1.0 / 2.0, (double)pos.getY() + 0.5 + (double)facing.getDirectionVec().getY() * 1.0 / 2.0, (double)pos.getZ() + 0.5 + (double)facing.getDirectionVec().getZ() * 1.0 / 2.0), false, true, false);
             if (rayTraceResult != null && (rayTraceResult.typeOfHit != RayTraceResult.Type.BLOCK || !rayTraceResult.getBlockPos().equals((Object)pos))) continue;
             return facing;
         }

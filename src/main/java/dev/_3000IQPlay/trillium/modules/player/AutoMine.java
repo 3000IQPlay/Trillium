@@ -5,6 +5,7 @@ import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.mixin.mixins.AccessorMinecraft;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.exploit.Speedmine;
+import dev._3000IQPlay.trillium.modules.render.CrystalChams;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.InventoryUtil;
 import net.minecraft.block.Block;
@@ -34,7 +35,7 @@ public class AutoMine extends Module {
     }
 
 
-    private final Setting<Mode> mode = register(new Setting("Mode", Mode.FEET));
+    private Setting<Mode> mode = register(new Setting("Mode", Mode.FEET));
     public Setting<Boolean> autodisable =  this.register(new Setting<Boolean>("AutoDisable", true));
     public Setting<Boolean> switchbool = this.register(new Setting<Boolean>("Switch", true));
     public Setting<Boolean> requirepickaxe = this.register(new Setting<Boolean>("RequirePick", true));
@@ -178,7 +179,9 @@ public class AutoMine extends Module {
                         if (checkValidBlock(block2)) {
                             if (checkValidBlock(block3)) {
                                 if (checkValidBlock(block4)) {
-                                    return checkValidBlock(block5);
+                                    if (checkValidBlock(block5)) {
+                                        return true;
+                                    }
                                 }
                             }
                         }

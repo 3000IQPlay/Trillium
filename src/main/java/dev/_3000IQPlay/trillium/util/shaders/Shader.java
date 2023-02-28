@@ -71,7 +71,7 @@ public class Shader {
             if (shader == 0) {
                 return 0;
             }
-            ARBShaderObjects.glShaderSourceARB(shader, shaderSource);
+            ARBShaderObjects.glShaderSourceARB(shader, (CharSequence)shaderSource);
             ARBShaderObjects.glCompileShaderARB(shader);
             if (ARBShaderObjects.glGetObjectParameteriARB(shader, 35713) == 0) {
                 throw new RuntimeException("Error creating shader: " + this.getLogInfo(shader));
@@ -93,7 +93,7 @@ public class Shader {
     }
 
     public void setupUniform(final String uniformName) {
-        this.setUniform(uniformName, GL20.glGetUniformLocation(this.program, uniformName));
+        this.setUniform(uniformName, GL20.glGetUniformLocation(this.program, (CharSequence)uniformName));
     }
 
     public int getUniform(final String uniformName) {

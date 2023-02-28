@@ -47,7 +47,7 @@
 /*  47 */   private float glowFalloff = 0.5F;
 /*  48 */   private float haziness = 0.96F;
 /*  49 */   private float t = 0.0F;
-/*  50 */   private final float sunRadius = 10.0F;
+/*  50 */   private float sunRadius = 10.0F;
 /*  51 */   private int sunColor = -1;
 /*     */   private float sunR;
 /*  53 */   private float sunAzimuth = 0.5F; private float sunG; private float sunB;
