@@ -6,6 +6,7 @@ Advence the GUI little bit
 + New GUI
 + Added AntiInvisible (Done)
 + Added BackTrack (Done)
++ Added New VoidESP (Done)
 
 - Removed LowHPScreen (Done)
 

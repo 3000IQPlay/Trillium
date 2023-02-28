@@ -101,6 +101,27 @@ public class BlockUtils {
 
         return Optional.of(new ClickLocation(neighbour, opposite));
     }
+	
+	public static List<BlockPos> getDisc(BlockPos pos, float r) {
+        ArrayList<BlockPos> circleblocks = new ArrayList<>();
+        int cx = pos.getX();
+        int cy = pos.getY();
+        int cz = pos.getZ();
+        int x = cx - (int) r;
+        while ((float) x <= (float) cx + r) {
+            int z = cz - (int) r;
+            while ((float) z <= (float) cz + r) {
+                double dist = (cx - x) * (cx - x) + (cz - z) * (cz - z);
+                if (dist < (double) (r * r)) {
+                    BlockPos position = new BlockPos(x, cy, z);
+                    circleblocks.add(position);
+                }
+                ++z;
+            }
+            ++x;
+        }
+        return circleblocks;
+    }
 
     public static class ClickLocation {
         public final BlockPos neighbour;
