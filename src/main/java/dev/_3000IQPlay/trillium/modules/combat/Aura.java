@@ -67,7 +67,7 @@ public class Aura extends Module {
     }
 
     public enum rotmod {
-        NCP, AAC, Matrix, Matrix2, Matrix3;
+        None, NCP, AAC, Matrix, Matrix2, Matrix3;
     }
     public enum CritMode {
         WexSide, Simple;
@@ -86,9 +86,9 @@ public class Aura extends Module {
     }
 	
     /*-------------   AntiCheat  ----------*/
-    public final Setting<Float> rotateDistance = register(new Setting("RotateDistance", 0f, 0f, 5f));
     public final Setting<Float> attackDistance = register(new Setting("AttackDistance", 3.4f, 0.0f, 7.0f));
-    private final Setting<rotmod> rotation = register(new Setting("Rotation", rotmod.Matrix));
+	public final Setting<Float> rotateDistance = register(new Setting("RotateDistance", 0f, 0f, 5f, v -> this.rotation.getValue() != rotmod.None));
+    private final Setting<rotmod> rotation = register(new Setting("Rotation", rotmod.None));
     public final Setting<RayTracingMode> rayTracing = register(new Setting("RayTracing", RayTracingMode.NewJitter));
     public final Setting<PointsMode> pointsMode = register(new Setting("PointsSort", PointsMode.Distance));
     public final Setting<TimingMode> timingMode = register(new Setting("Timing", TimingMode.Default));
@@ -200,19 +200,6 @@ public class Aura extends Module {
             if (!isEntityValid(target, false)) {
                 target = null;
                 ResolverUtil.reset();
-            }
-        }
-        if (Crystalsss.getValue()) {
-            for (Entity entity : mc.world.loadedEntityList) {
-                if (entity instanceof EntityEnderCrystal) {
-                    if (getVector(entity) != null && needExplosion(entity.getPositionVector())) {
-                        if(oldTimer.passedMs(100)) {
-                            attack(entity);
-                            oldTimer.reset();
-                        }
-                        return;
-                    }
-                }
             }
         }
 
@@ -865,6 +852,9 @@ public class Aura extends Module {
 
         if (yawDeltaAbs < fov.getValue()) {
             switch (rotation.getValue()) {
+				case None: {
+                    break;
+                }
                 case Matrix: {
                     float pitchDeltaAbs = Math.abs(pitchDelta);
 

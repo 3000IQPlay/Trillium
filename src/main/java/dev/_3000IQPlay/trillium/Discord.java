@@ -54,7 +54,7 @@ public class Discord {
                         Discord.presence.smallImageText = "User: " + mc.session.getUsername();
                         Discord.presence.smallImageKey = "https://minotar.net/helm/" + mc.session.getUsername() + "/100.png";
                     }
-                    Discord.presence.largeImageKey = "trilliumlogo";
+                    Discord.presence.largeImageKey = "https://cdn.discordapp.com/attachments/873253458315214849/1080518441557049416/TrilliumOnTop.png";
                     rpc.Discord_UpdatePresence(presence);
                     try {
                         Thread.sleep(2000L);
