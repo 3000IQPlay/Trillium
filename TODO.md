@@ -10,5 +10,6 @@ Advence the GUI little bit
 
 - Removed LowHPScreen (Done)
 
+* Advenced Security (Done)
 * Advenced KillAura (Done)
 * Transaltions (Done)
