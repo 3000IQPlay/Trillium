@@ -10,9 +10,12 @@ Advence the GUI little bit
 + Added EntitySpeed (Done)
 + Added NoFall Modes: AAC + NCP (Done)
 + Added New VoidESP (Done)
++ Added FadeOut Animation for DamageParticles
++ Added FadeOut Animation for BackTrack
 
 - Removed LowHPScreen (Done)
 
+* Fixed ClickGUI Animations
 * Advenced Security (Done)
 * Advenced KillAura (Done)
 * Transaltions (Done)
