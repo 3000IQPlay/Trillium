@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
+import dev._3000IQPlay.trillium.event.events.UpdateWalkingPlayerEvent;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
@@ -97,6 +98,41 @@ public class NoFall
                 this.currentState = this.currentState.onReceive(event);
             } else {
                 this.gotElytra = true;
+            }
+        }
+    }
+	
+	@SubscribeEvent
+    public void onUpdatePlayerWalkingEvent(UpdateWalkingPlayerEvent event) {
+        if (NoFall.fullNullCheck()) {
+            return;
+        }
+        switch (this.mode.getValue()) {
+			case NCP: {
+                if (!(mc.player.fallDistance > 4.0f)) break;
+                mc.player.fallDistance = 0.0f;
+                mc.player.connection.sendPacket((Packet)new CPacketPlayer.Position(mc.player.posX + 420420.0, mc.player.posY, mc.player.posZ, false));
+                mc.player.connection.sendPacket((Packet)new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 1.0, mc.player.posZ, true));
+				break;
+			}
+			case AAC: {
+                if (mc.player.fallDistance > 3.0f) {
+                    mc.player.fallDistance = 0.0f;
+                    mc.player.onGround = true;
+                    mc.player.capabilities.isFlying = true;
+                    mc.player.capabilities.allowFlying = true;
+                    event.setCanceled(true);
+                    event.setOnGround(false);
+                    mc.player.velocityChanged = true;
+                    mc.player.capabilities.isFlying = false;
+                    mc.player.jump();
+                    break;
+                }
+                event.setCanceled(false);
+                event.setOnGround(true);
+                mc.player.capabilities.isFlying = false;
+                mc.player.capabilities.allowFlying = false;
+                break;
             }
         }
     }
@@ -239,6 +275,8 @@ public class NoFall
 
     public enum Mode {
         AlwaysSpoof,
+		NCP,
+		AAC,
 		Damage,
 		Rubberband,
         Bucket,

@@ -6,6 +6,9 @@ Advence the GUI little bit
 + New GUI
 + Added AntiInvisible (Done)
 + Added BackTrack (Done)
++ Added BoatFly (Done)
++ Added EntitySpeed (Done)
++ Added NoFall Modes: AAC + NCP (Done)
 + Added New VoidESP (Done)
 
 - Removed LowHPScreen (Done)

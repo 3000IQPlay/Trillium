@@ -179,6 +179,8 @@ public class ModuleManager
 		this.modules.add(new AntiAFK());
 		this.modules.add(new AntiInvisible());
 		this.modules.add(new BackTrack());
+		this.modules.add(new EntitySpeed());
+		this.modules.add(new BoatFly());
     }
 
     public Module getModuleByName(String name) {
