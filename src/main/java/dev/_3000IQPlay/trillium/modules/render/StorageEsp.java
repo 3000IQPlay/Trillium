@@ -15,9 +15,11 @@ import dev._3000IQPlay.trillium.util.*;
 import net.minecraft.item.*;
 
 
-public
-class StorageEsp extends Module
-{
+public class StorageEsp extends Module {
+    private Setting<mode> Mode = register(new Setting("Shulker Mode", mode.Rainbow));
+	private final Setting<ColorSetting> chestColor = this.register(new Setting<>("ChestColor", new ColorSetting(0x8800FF00)));
+    private final Setting<ColorSetting> shulkColor = this.register(new Setting<>("ShulkColor", new ColorSetting(0x8800FF00)));
+    private final Setting<ColorSetting> echestColor = this.register(new Setting<>("EchestColor", new ColorSetting(0x8800FF00)));
     private final Setting<Float> range = (Setting<Float>)this.register(new Setting("Range", 50.0f, 1.0f, 300.0f));
     private final Setting<Boolean> chest = (Setting<Boolean>)this.register(new Setting("Chest", true));
     private final Setting<Boolean> dispenser = (Setting<Boolean>)this.register(new Setting("Dispenser", false));
@@ -36,13 +38,6 @@ class StorageEsp extends Module
     public StorageEsp() {
         super("StorageESP", "Highlights Containers.", Module.Category.RENDER, false, false, false);
     }
-
-
-    private final Setting<ColorSetting> chestColor = this.register(new Setting<>("colorImgOutline", new ColorSetting(0x8800FF00)));
-    private final Setting<ColorSetting> shulkColor = this.register(new Setting<>("secondColorImgOutline", new ColorSetting(0x8800FF00)));
-    private final Setting<ColorSetting> echestColor = this.register(new Setting<>("thirdColorImgOutline", new ColorSetting(0x8800FF00)));
-
-    private Setting<mode> Mode = register(new Setting("Shulker Mode", mode.Rainbow));
 
     public enum mode {
         Custom, Rainbow, Astolfo;
