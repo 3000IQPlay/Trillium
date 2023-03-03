@@ -15,7 +15,9 @@ Advence the GUI little bit
 
 - Removed LowHPScreen (Done)
 
+* Hight Security Advencement (Done)
 * Fixed ClickGUI Animations
+* Fixed FreeCam Speed slider (Done)
 * Advenced Security (Done)
 * Advenced KillAura (Done)
 * Transaltions (Done)

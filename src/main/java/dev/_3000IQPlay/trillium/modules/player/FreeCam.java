@@ -22,7 +22,7 @@ public class FreeCam extends Module {
         FreeCam.INSTANCE = new FreeCam();
     }
 
-    public Setting<Double> speed = this.register(new Setting<>("Speed", 0.5D, 0.1D, 5.0D));
+    public Setting<Float> speed = this.register(new Setting<>("Speed", 0.5f, 0.1f, 5.0f));
     public Setting<Boolean> view = this.register(new Setting<>("3D", false));
     public Setting<Boolean> packet = this.register(new Setting<>("Packet", true));
     public Setting<Boolean> disable = this.register(new Setting<>("Logout/Off", true));
