@@ -17,7 +17,7 @@ import java.util.Comparator;
 
 public class AutoSheep extends Module {
     public AutoSheep() {
-        super("AutoSheep", "Gives the sheep cool hair cut", Category.MISC, true, false, false);
+        super("AutoSheep", "Gives the sheep cool hair cut", Module.Category.MISC, true, false, false);
     }
 
     public Setting<Integer> delay = this.register(new Setting<Integer>("Delay", 250, 0, 2000));

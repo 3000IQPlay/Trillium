@@ -181,6 +181,8 @@ public class ModuleManager
 		this.modules.add(new BackTrack());
 		this.modules.add(new EntitySpeed());
 		this.modules.add(new BoatFly());
+		this.modules.add(new FastSleep());
+		this.modules.add(new AutoBreed());
     }
 
     public Module getModuleByName(String name) {
