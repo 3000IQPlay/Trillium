@@ -13,8 +13,6 @@ import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.*;
 import dev._3000IQPlay.trillium.util.Timer;
-import dev._3000IQPlay.trillium.util.ExplosionBuilder;
-import dev._3000IQPlay.trillium.util.MathUtil;
 import dev._3000IQPlay.trillium.util.phobos.IEntityLivingBase;
 import dev._3000IQPlay.trillium.util.rotations.CastHelper;
 import dev._3000IQPlay.trillium.util.rotations.RayTracingUtils;
@@ -65,6 +63,10 @@ public class Aura extends Module {
     public Aura() {
         super("KillAura", "Kills kids in your range", Module.Category.COMBAT, true, false, false);
     }
+	
+	public enum Page {
+        AntiCheat, Exploits, Misc, Targets, Visuals;
+    }
 
     public enum rotmod {
         None, NCP, AAC, Matrix, Matrix2, Matrix3;
@@ -85,28 +87,30 @@ public class Aura extends Module {
         NewJitter, New, Old, OldJitter
     }
 	
+	public final Setting<Page> page = this.register(new Setting<>("Page", Page.AntiCheat));
+	
     /*-------------   AntiCheat  ----------*/
-    public final Setting<Float> attackDistance = register(new Setting("AttackDistance", 3.4f, 0.0f, 7.0f));
-	public final Setting<Float> rotateDistance = register(new Setting("RotateDistance", 0f, 0f, 5f, v -> this.rotation.getValue() != rotmod.None));
-    private final Setting<rotmod> rotation = register(new Setting("Rotation", rotmod.None));
-    public final Setting<RayTracingMode> rayTracing = register(new Setting("RayTracing", RayTracingMode.NewJitter));
-    public final Setting<PointsMode> pointsMode = register(new Setting("PointsSort", PointsMode.Distance));
-    public final Setting<TimingMode> timingMode = register(new Setting("Timing", TimingMode.Default));
-    public final Setting<Boolean> rtx = register(new Setting<>("RTX", true));
-    public final Setting<Integer> minCPS = register(new Setting("MinCPS", 10, 1, 20,v -> timingMode.getValue() == TimingMode.Old));
-    public final Setting<Integer> maxCPS = register(new Setting("MaxCPS", 12, 1, 20,v -> timingMode.getValue() == TimingMode.Old));
-    public final Setting<Float> walldistance = register(new Setting("WallDistance", 3.6f, 0.0f, 7.0f));
-    public final Setting<Integer> fov = register(new Setting("FOV", 180, 5, 180));
-    public final Setting<Integer> yawStep = register(new Setting("YawStep", 80, 5, 180, v-> rotation.getValue() == rotmod.Matrix));
-    public final Setting<Float> hitboxScale = register(new Setting("HitBoxScale", 2.8f, 0.0f, 3.0f));
+    public final Setting<Float> attackDistance = this.register(new Setting("AttackDistance", 3.4f, 0.0f, 7.0f, v -> this.page.getValue() == Page.AntiCheat));
+	public final Setting<Float> rotateDistance = this.register(new Setting("RotateDistance", 0f, 0f, 5f, v -> this.rotation.getValue() != rotmod.None && this.page.getValue() == Page.AntiCheat));
+    private final Setting<rotmod> rotation = this.register(new Setting("Rotation", rotmod.None, v -> this.page.getValue() == Page.AntiCheat));
+    public final Setting<RayTracingMode> rayTracing = this.register(new Setting("RayTracing", RayTracingMode.NewJitter, v -> this.page.getValue() == Page.AntiCheat));
+    public final Setting<PointsMode> pointsMode = this.register(new Setting("PointsSort", PointsMode.Distance, v -> this.page.getValue() == Page.AntiCheat));
+    public final Setting<TimingMode> timingMode = this.register(new Setting("Timing", TimingMode.Default, v -> this.page.getValue() == Page.AntiCheat));
+    public final Setting<Boolean> rtx = this.register(new Setting<>("RTX", true, v -> this.page.getValue() == Page.AntiCheat));
+    public final Setting<Integer> minCPS = this.register(new Setting("MinCPS", 10, 1, 20, v -> timingMode.getValue() == TimingMode.Old && this.page.getValue() == Page.AntiCheat));
+    public final Setting<Integer> maxCPS = this.register(new Setting("MaxCPS", 12, 1, 20, v -> timingMode.getValue() == TimingMode.Old && this.page.getValue() == Page.AntiCheat));
+    public final Setting<Float> walldistance = this.register(new Setting("WallDistance", 3.6f, 0.0f, 7.0f, v -> this.page.getValue() == Page.AntiCheat));
+    public final Setting<Integer> fov = this.register(new Setting("FOV", 180, 5, 180, v -> this.page.getValue() == Page.AntiCheat));
+    public final Setting<Integer> yawStep = this.register(new Setting("YawStep", 80, 5, 180, v-> rotation.getValue() == rotmod.Matrix && this.page.getValue() == Page.AntiCheat));
+    public final Setting<Float> hitboxScale = this.register(new Setting("HitBoxScale", 2.8f, 0.0f, 3.0f, v -> this.page.getValue() == Page.AntiCheat));
     /*-------------------------------------*/
 
 
     /*------------   Exploits  ------------*/
-    public final Setting<Boolean> resolver = register(new Setting<>("Resolver", false));
-    public final Setting<Boolean> shieldDesync = register(new Setting<>("Shield Desync", false));
-    public final Setting<Boolean> backTrack = register(new Setting<>("RotateToBackTrack", true));
-    public final Setting<Boolean> shiftTap = register(new Setting<>("ShiftTap", false));
+    public final Setting<Boolean> resolver = this.register(new Setting<>("Resolver", false, v -> this.page.getValue() == Page.Exploits));
+    public final Setting<Boolean> shieldDesync = this.register(new Setting<>("Shield Desync", false, v -> this.page.getValue() == Page.Exploits));
+    public final Setting<Boolean> backTrack = this.register(new Setting<>("RotateToBackTrack", true, v -> this.page.getValue() == Page.Exploits));
+    public final Setting<Boolean> shiftTap = this.register(new Setting<>("ShiftTap", false, v -> this.page.getValue() == Page.Exploits));
 
     /*-------------------------------------*/
 
@@ -114,48 +118,47 @@ public class Aura extends Module {
 
 
     /*-------------   Misc  ---------------*/
-    public final Setting<Boolean> criticals = register(new Setting<>("OnlyCrits", true));
-    public final Setting<CritMode> critMode = register(new Setting("CritMode", CritMode.WexSide,v -> criticals.getValue()));
-    public final Setting<Float> critdist = register(new Setting("FallDistance", 0.15f, 0.0f, 1.0f,v -> criticals.getValue() && critMode.getValue() == CritMode.Simple));
-    public final Setting<Boolean> criticals_autojump = register(new Setting<>("AutoJump", false,v-> criticals.getValue()));
-    public final Setting<Boolean> smartCrit = register(new Setting<>("SpaceOnly", true,v-> criticals.getValue()));
-    public final Setting<Boolean> watercrits = register(new Setting<>("WaterCrits", false,v-> criticals.getValue()));
-    public final Setting<Boolean> weaponOnly = register(new Setting<>("WeaponOnly", true));
-    public final Setting<AutoSwitch> autoswitch = register(new Setting("AutoSwitch", AutoSwitch.None));
-    public final Setting<Boolean> firstAxe = register(new Setting<>("FirstAxe", false,v -> autoswitch.getValue() != AutoSwitch.None));
-    public final Setting<Boolean> shieldDesyncOnlyOnAura = register(new Setting<>("Wait Target", true, v->shieldDesync.getValue()));
-    public final Setting<Boolean> clientLook = register(new Setting<>("ClientLook", false));
-    public final Setting<Boolean> snap = register(new Setting<>("Snap", false));
-    public final Setting<Boolean> shieldBreaker = register(new Setting<>("ShieldBreaker", true));
-    public final Setting<Boolean> offhand = register(new Setting<>("OffHandAttack", false));
-    public final Setting<Boolean> teleport = register(new Setting<>("TP", false));
-    public final Setting<Float> tpY = register(new Setting("TPY", 3f, -5.0f, 5.0f,v-> teleport.getValue()));
-    public final Setting<Boolean> Debug = register(new Setting<>("HitsDebug", false));
+    public final Setting<Boolean> criticals = this.register(new Setting<>("OnlyCrits", true, v -> this.page.getValue() == Page.Misc));
+    public final Setting<CritMode> critMode = this.register(new Setting("CritMode", CritMode.WexSide,v -> criticals.getValue() && this.page.getValue() == Page.Misc));
+    public final Setting<Float> critdist = this.register(new Setting("FallDistance", 0.15f, 0.0f, 1.0f,v -> criticals.getValue() && critMode.getValue() == CritMode.Simple && this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> criticals_autojump = this.register(new Setting<>("AutoJump", false,v-> criticals.getValue() && this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> smartCrit = this.register(new Setting<>("SpaceOnly", true,v-> criticals.getValue() && this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> watercrits = this.register(new Setting<>("WaterCrits", false,v-> criticals.getValue() && this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> weaponOnly = this.register(new Setting<>("WeaponOnly", true, v -> this.page.getValue() == Page.Misc));
+    public final Setting<AutoSwitch> autoswitch = this.register(new Setting("AutoSwitch", AutoSwitch.None, v -> this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> firstAxe = this.register(new Setting<>("FirstAxe", false,v -> autoswitch.getValue() != AutoSwitch.None && this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> shieldDesyncOnlyOnAura = this.register(new Setting<>("Wait Target", true, v->shieldDesync.getValue() && this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> clientLook = this.register(new Setting<>("ClientLook", false, v -> this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> snap = this.register(new Setting<>("Snap", false, v -> this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> shieldBreaker = this.register(new Setting<>("ShieldBreaker", true, v -> this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> offhand = this.register(new Setting<>("OffHandAttack", false, v -> this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> teleport = this.register(new Setting<>("TP", false, v -> this.page.getValue() == Page.Misc));
+    public final Setting<Float> tpY = this.register(new Setting("TPY", 3f, -5.0f, 5.0f,v-> teleport.getValue() && this.page.getValue() == Page.Misc));
+    public final Setting<Boolean> Debug = this.register(new Setting<>("HitsDebug", false, v -> this.page.getValue() == Page.Misc));
     /*-------------------------------------*/
 
 
 
     /*-------------   Targets  ------------*/
-    public final Setting<Boolean> Playersss = register(new Setting<>("Players", true));
-    public final Setting<Boolean> Mobsss = register(new Setting<>("Mobs", true));
-    public final Setting<Boolean> Animalsss = register(new Setting<>("Animals", true));
-    public final Setting<Boolean> Villagersss = register(new Setting<>("Villagers", true));
-    public final Setting<Boolean> Slimesss = register(new Setting<>("Slimes", true));
-    public final Setting<Boolean> Crystalsss = register(new Setting<>("Crystals", true));
-    public final Setting<Boolean> ignoreNaked = register(new Setting<>("IgnoreNaked", false));
-    public final Setting<Boolean> ignoreInvisible = register(new Setting<>("IgnoreInvis", false));
-    public final Setting<Boolean> ignoreCreativ = register(new Setting<>("IgnoreCreativ", true));
+    public final Setting<Boolean> Playersss = this.register(new Setting<>("Players", true, v -> this.page.getValue() == Page.Targets));
+    public final Setting<Boolean> Mobsss = this.register(new Setting<>("Mobs", true, v -> this.page.getValue() == Page.Targets));
+    public final Setting<Boolean> Animalsss = this.register(new Setting<>("Animals", true, v -> this.page.getValue() == Page.Targets));
+    public final Setting<Boolean> Villagersss = this.register(new Setting<>("Villagers", true, v -> this.page.getValue() == Page.Targets));
+    public final Setting<Boolean> Slimesss = this.register(new Setting<>("Slimes", true, v -> this.page.getValue() == Page.Targets));
+    public final Setting<Boolean> ignoreNaked = this.register(new Setting<>("IgnoreNaked", false, v -> this.page.getValue() == Page.Targets));
+    public final Setting<Boolean> ignoreInvisible = this.register(new Setting<>("IgnoreInvis", false, v -> this.page.getValue() == Page.Targets));
+    public final Setting<Boolean> ignoreCreativ = this.register(new Setting<>("IgnoreCreativ", true, v -> this.page.getValue() == Page.Targets));
     /*-------------------------------------*/
 
 
     /*-------------   Visual  -------------*/
-    public final Setting<Boolean> RTXVisual = register(new Setting<>("RTXVisual", false));
-    public final Setting<Boolean> targetesp = register(new Setting<>("Target Esp", true));//(visual);
-    public final Setting<ColorSetting> shitcollor = this.register(new Setting<>("TargetColor", new ColorSetting(-2009289807)));
+    public final Setting<Boolean> RTXVisual = this.register(new Setting<>("RTXVisual", false, v -> this.page.getValue() == Page.Visuals));
+    public final Setting<Boolean> targetesp = this.register(new Setting<>("TargetCircle", true, v -> this.page.getValue() == Page.Visuals));//(visual);
     /*-------------------------------------*/
 
 
     public static EntityLivingBase target;
+	public static AstolfoAnimation astolfo = new AstolfoAnimation();
     private float prevCircleStep, circleStep, prevAdditionYaw;
     private final Timer oldTimer = new Timer();
     private final Timer hitttimer = new Timer();
@@ -252,7 +255,8 @@ public class Aura extends Module {
 
 
     @Override
-    public void onUpdate(){
+    public void onUpdate() {
+		astolfo.update();
         if (mc.player.onGround && !isInLiquid() && !mc.player.isOnLadder() && !mc.player.isInWeb && !mc.player.isPotionActive(MobEffects.SLOWNESS) && target != null && criticals_autojump.getValue()) {
             mc.player.jump();
         }
@@ -311,13 +315,14 @@ public class Aura extends Module {
 
                 GL11.glBegin(GL11.GL_QUAD_STRIP);
                 for (int i = 0; i <= 360; i++) {
-                    int clr = shitcollor.getValue().getColor();
+				    double stage = (i + 90) / 360.;
+                    int clr = astolfo.getColor(stage);
                     int red = ((clr >> 16) & 255);
                     int green = ((clr >> 8) & 255);
                     int blue = ((clr & 255));
-                    GL11.glColor4f(red, green, blue, 0.6F);
+                    GL11.glColor4f(red / 255f, green / 255f, blue / 255f, 0.8f);
                     GL11.glVertex3d(x + Math.cos(Math.toRadians(i)) * entity.width * 0.8, nextY, z + Math.sin(Math.toRadians(i)) * entity.width * 0.8);
-                    GL11.glColor4f(red, green, blue, 0.01F);
+                    GL11.glColor4f(red / 255f, green / 255f, blue / 255f, 0.21f);
                     GL11.glVertex3d(x + Math.cos(Math.toRadians(i)) * entity.width * 0.8, y, z + Math.sin(Math.toRadians(i)) * entity.width * 0.8);
                 }
 
@@ -325,11 +330,12 @@ public class Aura extends Module {
                 GL11.glEnable(GL11.GL_LINE_SMOOTH);
                 GL11.glBegin(GL11.GL_LINE_LOOP);
                 for (int i = 0; i <= 360; i++) {
-                    int clr = shitcollor.getValue().getColor();
+			    	double stage = (i + 90) / 360.;
+                    int clr = astolfo.getColor(stage);
                     int red = ((clr >> 16) & 255);
                     int green = ((clr >> 8) & 255);
                     int blue = ((clr & 255));
-                    GL11.glColor4f(red, green, blue, 0.8F);
+                    GL11.glColor4f(red / 255f, green / 255f, blue / 255f, 1.0f);
                     GL11.glVertex3d(x + Math.cos(Math.toRadians(i)) * entity.width * 0.8, nextY, z + Math.sin(Math.toRadians(i)) * entity.width * 0.8);
                 }
                 GL11.glEnd();
