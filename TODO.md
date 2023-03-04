@@ -15,9 +15,10 @@ Advence the GUI little bit
 
 - Removed LowHPScreen (Done)
 
-* Hight Security Advencement (Done)
+* Advenced AutoFish (Done)
+* Advenced KillAura (Done)
+* Advenced Security (Done)
+* Hight Security Advencements (Done)
 * Fixed ClickGUI Animations
 * Fixed FreeCam Speed slider (Done)
-* Advenced Security (Done)
-* Advenced KillAura (Done)
 * Transaltions (Done)
