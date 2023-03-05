@@ -1,22 +1,7 @@
-**Trillium b1.6.4 Changes**
+**Trillium b1.7.8 Changes**
 + New GUI
-+ Added AntiInvisible (Done)
-+ Added BackTrack (Done)
-+ Added BoatFly (Done)
-+ Added EntitySpeed (Done)
-+ Added FastSleep (Done)
-+ Added NoFall Modes: AAC + NCP (Done)
-+ Added New VoidESP (Done)
 + Added LoadingScreen
 + Added FadeOut Animation for DamageParticles
 + Added FadeOut Animation for BackTrack
 
-- Removed LowHPScreen (Done)
-
-* Advenced AutoFish (Done)
-* Advenced KillAura (Done)
-* Advenced Security (Done)
-* Hight Security Advencements (Done)
 * Fixed ClickGUI Animations
-* Fixed FreeCam Speed slider (Done)
-* Transaltions (Done)
