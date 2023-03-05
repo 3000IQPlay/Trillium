@@ -1,7 +1,3 @@
-Maybe add loading screen?
-
-Advence the GUI little bit
-
 **Trillium b1.6.4 Changes**
 + New GUI
 + Added AntiInvisible (Done)
@@ -11,6 +7,7 @@ Advence the GUI little bit
 + Added FastSleep (Done)
 + Added NoFall Modes: AAC + NCP (Done)
 + Added New VoidESP (Done)
++ Added LoadingScreen
 + Added FadeOut Animation for DamageParticles
 + Added FadeOut Animation for BackTrack
 
