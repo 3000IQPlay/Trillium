@@ -5,7 +5,6 @@ Advence the GUI little bit
 **Trillium b1.6.4 Changes**
 + New GUI
 + Added AntiInvisible (Done)
-+ Added AutoBreed (Done)
 + Added BackTrack (Done)
 + Added BoatFly (Done)
 + Added EntitySpeed (Done)
