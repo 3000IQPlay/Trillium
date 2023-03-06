@@ -3,6 +3,7 @@ package dev._3000IQPlay.trillium.gui.fonttwo.fontstuff;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.util.Util;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -12,7 +13,10 @@ public class FontRender{
     public static boolean isCustomFontEnabled() {
             return true;
     }
-
+	
+	public void init() {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
 
     public static float drawStringWithShadow(String text, float x, float y, int color) {
         return drawStringWithShadow(text, (int) x, (int) y, color);

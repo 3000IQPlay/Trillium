@@ -2,7 +2,7 @@ package dev._3000IQPlay.trillium.gui.auth;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.TrilliumSpy;
-import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
+import dev._3000IQPlay.trillium.gui.font.CustomFont;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.protect.keyauth.KeyAuthApp;
 import net.minecraft.client.Minecraft;
@@ -13,6 +13,7 @@ import java.awt.*;
 import java.io.*;
 
 public class AuthGui extends GuiScreen {
+	private static final CustomFont cFont = new CustomFont(new Font("Calibri", 0, 25), true, false);
     private GuiTextField keyField;
     private String key = "";
     private int statusTime;
@@ -25,17 +26,13 @@ public class AuthGui extends GuiScreen {
 			new Color(0, 0, 0, 255).getRGB(),
 	        new Color(100, 100, 100, 255).getRGB()
 		);
-        drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5 + 6, new Color(255, 255, 255, 255).getRGB());
+        cFont.drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5f + 6, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();
 
-        drawCenteredStringWithShadow("DM _3000IQPlay#8278 for any type of help", width / 2, 10, new Color(255, 255, 255, 255).getRGB());
+        cFont.drawCenteredStringWithShadow("DM _3000IQPlay#8278 for any type of Help", width / 2, 10, new Color(255, 255, 255, 255).getRGB());
 
         super.drawScreen(mouseX, mouseY, partialTicks);
-    }
-
-    private void drawCenteredStringWithShadow(String text, double x, double y, int color) {
-        fontRenderer.drawStringWithShadow(text,  (int) x - fontRenderer.getStringWidth(text) / 2, (int) y, color);
     }
 
     @Override

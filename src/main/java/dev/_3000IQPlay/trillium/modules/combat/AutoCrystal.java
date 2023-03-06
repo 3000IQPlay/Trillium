@@ -247,7 +247,7 @@ public class AutoCrystal extends Module {
     /* ---------------- SetDead Settings -------------- */
     public Setting<Boolean> setDead = register(new Setting<Boolean>("SetDead", false,v->page.getValue()== pages.SetDead));
     public Setting<Boolean> instantSetDead =register(new Setting<Boolean>("Instant-Dead", false,v->page.getValue()== pages.SetDead));;
-    public Setting<Boolean> pseudoSetDead =register(new Setting<Boolean>("Pseudo-Dead", true,v->page.getValue()== pages.SetDead));;
+    public Setting<Boolean> pseudoSetDead =register(new Setting<Boolean>("Pseudo-Dead", false,v->page.getValue()== pages.SetDead));;
     public Setting<Boolean> simulateExplosion = register(new Setting<Boolean>("SimulateExplosion", false,v->page.getValue()== pages.SetDead));
     public Setting<Boolean> soundRemove = register(new Setting<Boolean>("SoundRemove", true,v->page.getValue()== pages.SetDead));;
     public Setting<Boolean> useSafeDeathTime =register(new Setting<Boolean>("UseSafeDeathTime", false,v->page.getValue()== pages.SetDead));

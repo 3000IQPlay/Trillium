@@ -30,19 +30,10 @@ public class CustomFont extends CFont {
         return Math.max(shadowWidth, drawString(text, x, y, color, false));
     }
 
-
     public float drawStringWithShadowForCompass(String text, double x, double y, int color) {
         float shadowWidth = drawString(text, x + 1D, y + 1D, color, true);
         return Math.max(shadowWidth, drawString(text, x, y, color, false));
     }
-
-
-
-
-
-
-
-
 
     public float drawString(String text, float x, float y, int color) {
         return drawString(text, x, y, color, false);

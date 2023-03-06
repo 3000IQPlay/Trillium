@@ -11,7 +11,7 @@ public class TpsSync
 
     @Override
     public void onUpdate(){
-        if(Trillium.serverManager.getTPS() > 1) {
+        if (Trillium.serverManager.getTPS() > 1) {
             TpsSync.mc.timer.tickLength = 50.0f / (Trillium.serverManager.getTPS() / 20f);
         } else {
             TpsSync.mc.timer.tickLength = 50.0f / 1f;

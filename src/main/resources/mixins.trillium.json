@@ -34,6 +34,7 @@
     "MixinEntityPlayerSP",
     "MixinEntityRenderer",
 	"MixinFontRenderer",
+	"MixinFMLClientHandler",
     "MixinGuiIngame",
     "MixinGuiMainMenu",
     "MixinGuiMultiplayer",
