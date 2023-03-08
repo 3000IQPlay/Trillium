@@ -28,8 +28,6 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 public class ClickGui
         extends Module {
     private static ClickGui INSTANCE = new ClickGui();
-    private long fadeinn;
-    private long fadeinnn;
     private int n;
     public int i = 85;
     private final Timer timer = new Timer();
@@ -39,10 +37,7 @@ public class ClickGui
 	public Setting<Boolean> showBinds = this.register(new Setting<Boolean>("ShowBinds", true));
 	public Setting<Boolean> scroll = this.register(new Setting<Boolean>("Scroll", true));
     public Setting<Integer> scrollval = this.register(new Setting<Integer>("Scroll Speed", 10, 1, 30, v -> this.scroll.getValue()));
-	public Setting<Integer> fadeintimeout = this.register(new Setting<Integer>("FadeInTimeout", 512, 0, 2048));
-    public Setting<Float> fadeintimespeed = this.register(new Setting<Float>("FadeInSpeed", 0.5f, 0.1f, 5.0f));
     public Setting<Integer> colorSpeed = this.register(new Setting<Integer>("ColorSpeed", 18, 2, 54));
-	public Setting<Integer> hoverAlpha = this.register(new Setting<Integer>("HoverAlpha", 170, 0, 255));
 	public Setting<Boolean> gradientBG = this.register(new Setting<Boolean>("GradientBG", true));
 	
 	public final Setting<ColorSetting> gradientLB = this.register(new Setting<>("GLeftBotom", new ColorSetting(-8453889), v -> this.gradientBG.getValue()));
@@ -104,25 +99,14 @@ public class ClickGui
         }
     }
 
-
     @Override
     public void onEnable() {
         Util.mc.displayGuiScreen(ClickUI.getClickGui());
         timer.reset();
-
     }
+	
     private void setInstance() {
         INSTANCE = this;
-    }
-
-    @SubscribeEvent
-    public void onRender2D(Render2DEvent event) {
-        float mouseposx = (float) Mouse.getX() / 100;
-        float mouseposy = (float) Mouse.getY() / 100;
-        fadeinn = (long) (timer.getPassedTimeMs() / fadeintimespeed.getValue());
-		if (fadeinn < fadeintimeout.getValue()) {
-			fadeinnn = fadeinn;
-		}
     }
 
     @Override
