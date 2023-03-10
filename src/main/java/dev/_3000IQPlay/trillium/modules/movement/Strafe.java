@@ -4,13 +4,14 @@ import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.EventMove;
 import dev._3000IQPlay.trillium.event.events.UpdateWalkingPlayerEvent;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
 import dev._3000IQPlay.trillium.modules.movement.ElytraFlight;
 import dev._3000IQPlay.trillium.modules.movement.ElytraFly2b2tNew;
 import dev._3000IQPlay.trillium.modules.movement.HoleSnap;
 import dev._3000IQPlay.trillium.modules.movement.Speed;
 import dev._3000IQPlay.trillium.modules.player.FreeCam;
-import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.MovementUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.math.BlockPos;
@@ -21,13 +22,23 @@ import java.util.Objects;
 public class Strafe
         extends Module {
 	public Setting<Mode> mode = this.register(new Setting<Mode>("Strafe", Mode.Normal));
+	public Setting<Boolean> sprintCheck = this.register(new Setting<Boolean>("SprintCheck", false, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Boolean> customBaseSpeed = this.register(new Setting<Boolean>("CustomBaseSpeed", false, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Float> customBaseSpeedVal = this.register(new Setting<Float>("SpeedFactor", 0.29f, 0.1f, 1.5f, v -> this.mode.getValue() == Mode.Custom && this.customBaseSpeed.getValue()));
+	public Setting<Boolean> slowerBaseSpeed = this.register(new Setting<Boolean>("SlowerBaseSpeed", false, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Boolean> ground = this.register(new Setting<Boolean>("Ground", true, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Float> strafeFactorAir = this.register(new Setting<Float>("StrafeFactorAir", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Float> strafeFactorGround = this.register(new Setting<Float>("StrafeFactorGround", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Float> reverseFactorAir = this.register(new Setting<Float>("ReverseFactorAir", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Float> reverseFactorGround = this.register(new Setting<Float>("ReverseFactorGround", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Boolean> speedPotion = this.register(new Setting<Boolean>("SpeedPotionBoost", true, v -> this.mode.getValue() == Mode.Custom));
     private static Strafe INSTANCE = new Strafe();
     private double lastDist;
     private double moveSpeed;
     int stage;
 
     public Strafe() {
-		super("Strafe", "Makes you go from side to side", Category.MOVEMENT, true, false, false);
+		super("Strafe", "Makes you go from side to side", Module.Category.MOVEMENT, true, false, false);
         this.setInstance();
     }
 
@@ -48,8 +59,10 @@ public class Strafe
         if (event.getStage() == 1 && Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled()) {
             return;
         }
-        this.lastDist = Math.sqrt((mc.player.posX - mc.player.prevPosX) * (mc.player.posX - mc.player.prevPosX) + (mc.player.posZ - mc.player.prevPosZ) * (mc.player.posZ - mc.player.prevPosZ));
-    }
+		if (this.mode.getValue() == Mode.Normal || this.mode.getValue() == Mode.Strict) {
+            this.lastDist = Math.sqrt((mc.player.posX - mc.player.prevPosX) * (mc.player.posX - mc.player.prevPosX) + (mc.player.posZ - mc.player.prevPosZ) * (mc.player.posZ - mc.player.prevPosZ));
+        }    
+	}
 
     @SubscribeEvent
     public void onStrafe(EventMove event) {
@@ -62,6 +75,32 @@ public class Strafe
         if (mc.player.isInLava()) {
             return;
         }
+		if (this.mode.getValue() == Mode.Custom) {
+			if (!MovementUtil.isMoving()) {
+                event.setX(0.0);
+                event.setZ(0.0);
+                mc.player.motionX = 0.0;
+                mc.player.motionZ = 0.0;
+                event.setCanceled(true);
+                return;
+            }
+			if (this.ground.getValue() || !mc.player.onGround) {
+				double speedus = customBaseSpeed.getValue() ? customBaseSpeedVal.getValue() : 0.2873;
+                double speed = Strafe.speedPotionModify(speedPotion.getValue(), slowerBaseSpeed.getValue() ? 0.272 : speedus);
+                if (!mc.player.isSprinting() && sprintCheck.getValue()) {
+                    speed /= 1.2308;
+                }
+                if (mc.player.movementInput.moveForward == 0.0) {
+                    speed *= mc.player.onGround ? strafeFactorGround.getValue() : strafeFactorAir.getValue();
+                }
+                speed = Math.max(speed, Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ));
+                if (mc.player.movementInput.moveForward < 0.0) {
+                    speed *= mc.player.onGround ? reverseFactorGround.getValue() : reverseFactorAir.getValue();
+                }
+				Strafe.setStrafe(event, speed, mc.player.onGround ? strafeFactorGround.getValue() : strafeFactorAir.getValue());
+            }
+		}
+		if (this.mode.getValue() == Mode.Normal || this.mode.getValue() == Mode.Strict) {
         if (mc.player.onGround) {
             this.stage = 2;
         }
@@ -111,6 +150,42 @@ public class Strafe
         event.setZ((n * this.moveSpeed * Math.cos(Math.toRadians(n3)) - n2 * this.moveSpeed * -Math.sin(Math.toRadians(n3))) * n4);
         ++this.stage;
         event.setCanceled(true);
+		}
+    }
+	
+	public static void setStrafe(EventMove event, double speed, float strafeFactor) {
+        double yaw = getMovementYaw(strafeFactor);
+        event.setX(-Math.sin(yaw) * speed);
+        event.setZ(Math.cos(yaw) * speed);
+        event.setCanceled(true);
+    }
+	
+	public static double getMovementYaw(float strafeFactor) {
+        float forward = mc.player.movementInput.moveForward > 0.0f ? 1.0f :
+                        mc.player.movementInput.moveForward < 0.0f ? -1.0f : 0.0f;
+        float strafe = mc.player.movementInput.moveStrafe > 0.0f ? 1.0f :
+                        mc.player.movementInput.moveStrafe < 0.0f ? -1.0f : 0.0f;
+
+        if (forward > 0.0f)
+            strafe *= strafeFactor;
+
+        float moveAngle = 90.0f * strafe;
+        moveAngle *= forward != 0.0f ? forward * 0.5f : 1.0f;
+        moveAngle = mc.player.rotationYaw - moveAngle;
+
+        if (forward == -1.0f) moveAngle -= 180.0f;
+
+        return moveAngle * (Math.PI / 180.0f);
+    }
+	
+	public static double speedPotionModify(boolean speedPotion, double speedIn) {
+        if (speedPotion && mc.player.isPotionActive(MobEffects.SPEED))
+            return speedIn + speedIn * (Objects.requireNonNull(mc.player.getActivePotionEffect(MobEffects.SPEED)).getAmplifier() + 1.0) * 0.2;
+
+        if (mc.player.isPotionActive(MobEffects.SLOWNESS))
+            return speedIn - speedIn * (Objects.requireNonNull(mc.player.getActivePotionEffect(MobEffects.SLOWNESS)).getAmplifier() + 1.0) * 0.15;
+
+        return speedIn;
     }
 
     public double getBaseMoveSpeed() {
@@ -123,6 +198,7 @@ public class Strafe
     }
 	
 	public static enum Mode {
+		Custom,
 		Normal,
 		Strict;
 	}
