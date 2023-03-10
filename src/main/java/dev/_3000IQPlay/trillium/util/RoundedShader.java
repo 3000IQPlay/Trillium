@@ -47,8 +47,7 @@ public class RoundedShader {
         drawGradientRound(x, y, width, height, radius, bottomLeft, mixedColor, mixedColor, topRight);
     }
 
-    public static void drawGradientRound(float x, float y, float width, float height, float radius, Color bottomLeft,
-                                         Color topLeft, Color bottomRight, Color topRight) {
+    public static void drawGradientRound(float x, float y, float width, float height, float radius, Color bottomLeft, Color topLeft, Color bottomRight, Color topRight) {
         GlStateManager.resetColor();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

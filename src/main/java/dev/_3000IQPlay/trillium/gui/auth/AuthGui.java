@@ -3,7 +3,9 @@ package dev._3000IQPlay.trillium.gui.auth;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.TrilliumSpy;
 import dev._3000IQPlay.trillium.gui.font.CustomFont;
+import dev._3000IQPlay.trillium.util.Drawable;
 import dev._3000IQPlay.trillium.util.RenderUtil;
+import dev._3000IQPlay.trillium.util.RoundedShader;
 import dev._3000IQPlay.trillium.util.protect.keyauth.KeyAuthApp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -20,12 +22,11 @@ public class AuthGui extends GuiScreen {
 	
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        RenderUtil.draw2DGradientRect(0, 0, width, height,
-			new Color(0, 0, 0, 255).getRGB(),
-	        new Color(70, 70, 70, 255).getRGB(),
-			new Color(0, 0, 0, 255).getRGB(),
-	        new Color(100, 100, 100, 255).getRGB()
-		);
+		Drawable.horizontalGradient(0, 0, width, height, new Color(33, 0, 127, 255).getRGB(), new Color(212, 0, 255, 255).getRGB());
+		int containerWidth = 200;
+		int containerHeight = 125;
+
+		RoundedShader.drawRound((width - containerWidth) / 2, height / 3.5f - 6.0f, containerWidth, containerHeight, 2, false, new Color(24, 24, 24, 255));
         cFont.drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5f + 6, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();
