@@ -29,4 +29,3 @@ public class ClientEvent
         return this.setting;
     }
 }
-
