@@ -27,6 +27,7 @@ public class Strafe
 	public Setting<Float> customBaseSpeedVal = this.register(new Setting<Float>("SpeedFactor", 0.29f, 0.1f, 1.5f, v -> this.mode.getValue() == Mode.Custom && this.customBaseSpeed.getValue()));
 	public Setting<Boolean> slowerBaseSpeed = this.register(new Setting<Boolean>("SlowerBaseSpeed", false, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Boolean> ground = this.register(new Setting<Boolean>("Ground", true, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Boolean> inLiquid = this.register(new Setting<Boolean>("InLiquid", true, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Float> strafeFactorAir = this.register(new Setting<Float>("StrafeFactorAir", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Float> strafeFactorGround = this.register(new Setting<Float>("StrafeFactorGround", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Float> reverseFactorAir = this.register(new Setting<Float>("ReverseFactorAir", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
@@ -69,10 +70,10 @@ public class Strafe
         if (Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled()) {
             return;
         }
-        if (mc.player.isInWater()) {
+        if (mc.player.isInWater() && !this.inLiquid.getValue() && this.mode.getValue() == Mode.Custom) {
             return;
         }
-        if (mc.player.isInLava()) {
+        if (mc.player.isInLava() && !this.inLiquid.getValue() && this.mode.getValue() == Mode.Custom) {
             return;
         }
 		if (this.mode.getValue() == Mode.Custom) {
