@@ -43,7 +43,7 @@ public class ModuleManager
         this.modules.add(new PvPResources());
         this.modules.add(new ElytraFly2b2tNew());
         this.modules.add(new CivBreaker());
-        this.modules.add(new LiquidBoost());
+        this.modules.add(new FastSwim());
         this.modules.add(new AntiTPhere());
         this.modules.add(new PearlBait());
         this.modules.add(new AutoSheep());
