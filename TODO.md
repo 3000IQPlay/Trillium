@@ -1,9 +1,12 @@
 **Trillium b1.7.8 Changes**
 + New GUI
++ Added RemoveXPDesync (Done)
 + Added FastSwim (Done)
 + Added Strafe Custom Mode (Done)
++ Added New Scaffold
 + Added LoadingScreen (Done)
 + Added MainMenu Shaders
++ Added XCarry (Done)
 + Added Custom Font to AuthGUI Texts (Done)
 + Added Auto ClickGUI Scale Optimization
 + Added FadeOut Animation for DamageParticles

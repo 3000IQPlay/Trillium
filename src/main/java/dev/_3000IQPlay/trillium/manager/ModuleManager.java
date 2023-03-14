@@ -182,6 +182,8 @@ public class ModuleManager
 		this.modules.add(new EntitySpeed());
 		this.modules.add(new BoatFly());
 		this.modules.add(new FastSleep());
+		this.modules.add(new RemoveXPDesync());
+		this.modules.add(new XCarry());
     }
 
     public Module getModuleByName(String name) {
