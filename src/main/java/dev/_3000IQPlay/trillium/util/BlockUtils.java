@@ -14,6 +14,7 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 
 
 import java.util.*;
@@ -451,6 +453,27 @@ public class BlockUtils {
             return 3;
         }
         return 2;
+    }
+	
+	public static boolean placeBlockBetter(BlockPos pos, EnumHand hand, boolean rotate, boolean packet, boolean altRotate) {
+        EnumFacing side = BlockUtils.getFirstFacing(pos);
+        if (side == null) {
+            return false;
+        }
+        BlockPos neighbour = pos.offset(side);
+        EnumFacing opposite = side.getOpposite();
+        Vec3d hitVec = new Vec3d((Vec3i)neighbour).add(0.5, 0.5, 0.5).add(new Vec3d(opposite.getDirectionVec()).scale(0.5));
+        Block neighbourBlock = BlockUtils.mc.world.getBlockState(neighbour).getBlock();
+        if (!BlockUtils.mc.player.isSneaking() && (blackList.contains(neighbourBlock) || shulkerList.contains(neighbourBlock))) {
+            BlockUtils.mc.player.connection.sendPacket((Packet)new CPacketEntityAction((Entity)BlockUtils.mc.player, CPacketEntityAction.Action.START_SNEAKING));
+            BlockUtils.mc.player.setSneaking(true);
+        }
+        if (rotate) {
+            RotationUtil.faceVector(altRotate ? new Vec3d((Vec3i)pos) : hitVec, true);
+        }
+        BlockUtils.rightClickBlock(neighbour, hitVec, hand, opposite, packet);
+        BlockUtils.mc.player.swingArm(EnumHand.MAIN_HAND);
+        return true;
     }
 
     public static void rightClickBlock2(BlockPos pos, Vec3d vec, EnumHand hand, EnumFacing direction, boolean packet) {

@@ -184,6 +184,15 @@ public class InventoryUtil
         }
         return stack1.getItemDamage() == stack2.getItemDamage();
     }
+	
+	public static int findAnyBlock() {
+        for (int i = 0; i < 9; ++i) {
+            ItemStack stack = InventoryUtil.mc.player.inventory.getStackInSlot(i);
+            if (stack == ItemStack.EMPTY || !(stack.getItem() instanceof ItemBlock)) continue;
+            return i;
+        }
+        return -1;
+    }
 
     public static EnumHand getHand(int slot)
     {
@@ -275,7 +284,6 @@ public class InventoryUtil
             }
 
     }
-
 
     public static int findEmptyHotbarSlot()
     {

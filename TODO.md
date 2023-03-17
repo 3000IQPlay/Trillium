@@ -1,7 +1,9 @@
 **Trillium b1.7.8 Changes**
 + New GUI
++ Added AutoBuilder (Done)
 + Added RemoveXPDesync (Done)
 + Added FastSwim (Done)
++ Added HoleFiller
 + Added Strafe Custom Mode (Done)
 + Added New Scaffold
 + Added LoadingScreen (Done)
@@ -13,6 +15,7 @@
 + Added FadeOut Animation for BackTrack
 
 * Better AuthGUI Look (Done)
+* Fixed AutoFish RClick Issue (Done)
 * Fixed ClickGUI Animations
 
 - Removed LiquidBoost (Done)

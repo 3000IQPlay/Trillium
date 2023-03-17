@@ -184,6 +184,7 @@ public class ModuleManager
 		this.modules.add(new FastSleep());
 		this.modules.add(new RemoveXPDesync());
 		this.modules.add(new XCarry());
+		this.modules.add(new AutoBuilder());
     }
 
     public Module getModuleByName(String name) {

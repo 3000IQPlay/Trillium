@@ -52,6 +52,7 @@ public class AutoFish
     }
 
     public void rightClick() {
+		if (AutoFish.fullNullCheck() || !(mc.player.inventory.getCurrentItem().getItem() instanceof ItemFishingRod)) return;
         if (this.cDelay <= 0) {
             AutoFish.mc.rightClickMouse();
             this.cDelay = (Integer)this.castingDelay.getValue();
@@ -60,7 +61,7 @@ public class AutoFish
 
     @SubscribeEvent
     public void onPacketReceive(PacketEvent.Receive event) {
-		if (AutoFish.fullNullCheck()) return;
+		if (AutoFish.fullNullCheck() || !(mc.player.inventory.getCurrentItem().getItem() instanceof ItemFishingRod)) return;
         SPacketSoundEffect sPacketSoundEffect;
         if (event.getPacket() instanceof SPacketSoundEffect && this.getSoundEffect(sPacketSoundEffect = (SPacketSoundEffect)event.getPacket())) {
             this.rightClick();
@@ -69,7 +70,7 @@ public class AutoFish
 
     @SubscribeEvent
     public void onMouseInputEvent(InputEvent.MouseInputEvent event) {
-		if (AutoFish.fullNullCheck()) return;
+		if (AutoFish.fullNullCheck() || !(mc.player.inventory.getCurrentItem().getItem() instanceof ItemFishingRod)) return;
         if (AutoFish.mc.gameSettings.keyBindUseItem.isKeyDown() && this.Field1602 > 0) {
             this.cDelay = (Integer)this.castingDelay.getValue();
         }
@@ -77,7 +78,7 @@ public class AutoFish
 
     @SubscribeEvent
     public void onPlayerUpdateEvent(PlayerUpdateEvent event) {
-		if (AutoFish.fullNullCheck()) return;
+		if (AutoFish.fullNullCheck() || !(mc.player.inventory.getCurrentItem().getItem() instanceof ItemFishingRod)) return;
         EntityPlayerSP entityPlayerSP = AutoFish.mc.player;
         ItemStack itemStack = entityPlayerSP.getHeldItemMainhand();
         if (this.cDelay > (Integer)this.castingDelay.getValue()) {

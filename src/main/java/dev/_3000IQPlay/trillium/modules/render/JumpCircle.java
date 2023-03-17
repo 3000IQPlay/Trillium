@@ -11,6 +11,7 @@ import dev._3000IQPlay.trillium.util.Timer;
 
 import java.util.*;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,6 +41,9 @@ public class JumpCircle extends Module {
 
     @Override
     public void onUpdate() {
+		if (Minecraft.getMinecraft().isSingleplayer()) {
+			return;
+		}
         if(mc.player.collidedVertically && Mode.getValue() == mode.Landing && check){
             circles.add(new JumpCircle.Circle(new Vec3d(mc.player.posX, mc.player.posY + renderingFix() + ypos.getValue(), mc.player.posZ)));
             check = false;
@@ -55,6 +59,9 @@ public class JumpCircle extends Module {
 
     @SubscribeEvent
     public void onJump(EventJump e){
+		if (Minecraft.getMinecraft().isSingleplayer()) {
+			return;
+		}
         if(Mode.getValue() == mode.Jump) {
             circles.add(new JumpCircle.Circle(new Vec3d(mc.player.posX, mc.player.posY + renderingFix() + ypos.getValue(), mc.player.posZ)));
         }
@@ -65,6 +72,9 @@ public class JumpCircle extends Module {
 
     @SubscribeEvent
     public void onRender3D(Render3DEvent event) {
+		if (Minecraft.getMinecraft().isSingleplayer()) {
+			return;
+		}
         GlStateManager.pushMatrix();
         preRender();
         for (Circle c : circles) {
