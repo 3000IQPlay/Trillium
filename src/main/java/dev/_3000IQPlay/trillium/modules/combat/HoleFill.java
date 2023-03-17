@@ -34,10 +34,10 @@ public class HoleFill extends Module {
     }
 
     private  Setting<Mode> mode =register( new Setting<>("Mode", Mode.Web));
+	
     private enum Mode {
         Obby, Echest, Web,Plate,Skull,Both
     }
-
 
     private  Setting<Integer> bpc = register(new Setting<>("BPS", 2, 1, 5));
     private  Setting<Integer> retryDelay = register(new Setting<>("RetryDelay", 10, 0, 50));

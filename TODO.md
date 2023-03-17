@@ -3,10 +3,9 @@
 + Added AutoBuilder (Done)
 + Added RemoveXPDesync (Done)
 + Added FastSwim (Done)
-+ Added HoleFiller
 + Added Strafe Custom Mode (Done)
-+ Added New Scaffold
 + Added LoadingScreen (Done)
++ Added Jesus NCP Mode (Done)
 + Added MainMenu Shaders
 + Added XCarry (Done)
 + Added Custom Font to AuthGUI Texts (Done)
@@ -14,7 +13,9 @@
 + Added FadeOut Animation for DamageParticles
 + Added FadeOut Animation for BackTrack
 
-* Better AuthGUI Look (Done)
+* Rewrote AuthGUI Look (Done)
+* Rewrote BowKiller (Done)
+* Rewrote Scaffold
 * Fixed AutoFish RClick Issue (Done)
 * Fixed ClickGUI Animations
 

@@ -3,6 +3,7 @@ package dev._3000IQPlay.trillium.modules.movement;
 import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.MovementUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
@@ -10,39 +11,29 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class Jesus extends Module {
-
-
-    public Jesus() {
-        super("Jesus", "Jesus", Category.MOVEMENT, true, false  , false);
-    }
-
-
-    private  Setting<Mode> mode = this.register(new Setting<>("Mode", Mode.SOLID));
+public class Jesus
+        extends Module {
+	private  Setting<Mode> mode = this.register(new Setting<>("Mode", Mode.Solid));
     private  Setting<Boolean> glide = this.register(new Setting<>("Glide", false));
     private  Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
     private  Setting<Boolean> boost = this.register(new Setting<>("Boost", false));
-
     private boolean jumping;
-
     private int glideCounter = 0;
-
     private float lastOffset;
 
-    private enum Mode {
-        SOLID, TRAMPOLINE
+    public Jesus() {
+        super("Jesus", "Lets you walk on water", Module.Category.MOVEMENT, true, false  , false);
     }
-
-
 
     @Override
     public void onUpdate() {
-        if (mode.getValue() == Mode.TRAMPOLINE) return;
+        if (mode.getValue() == Mode.Tramploine) return;
         if (!mc.player.movementInput.sneak && !mc.player.movementInput.jump && isInLiquid()) {
             mc.player.motionY = 0.1D;
         }
@@ -94,7 +85,68 @@ public class Jesus extends Module {
 
     @SubscribeEvent
     public void onWalkingPlayerUpdatePre(EventPreMotion event) {
-        if (mode.getValue() == Mode.TRAMPOLINE) {
+		if (mode.getValue() == Mode.NCP/* && isOnLiquid() || isInLiquid()*/) {
+            double x = mc.player.posX;
+            double y = mc.player.posY;
+            double z = mc.player.posZ;
+            mc.timer.tickLength = 50.0f;
+            if (
+                    mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x + 0.3, y, z)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x - 0.3, y, z)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x, y, z + 0.3)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x, y, z - 0.3)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x + 0.3, y, z + 0.3)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x - 0.3, y, z - 0.3)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x - 0.3, y, z + 0.3)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x + 0.3, y, z - 0.3)).getBlock() == Blocks.WATER ||
+                            mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() == Blocks.LAVA ||
+                            mc.world.getBlockState(new BlockPos(x + 0.3, y, z)).getBlock() == Blocks.LAVA ||
+                            mc.world.getBlockState(new BlockPos(x - 0.3, y, z)).getBlock() == Blocks.LAVA ||
+                            mc.world.getBlockState(new BlockPos(x, y, z + 0.3)).getBlock() == Blocks.LAVA ||
+                            mc.world.getBlockState(new BlockPos(x, y, z - 0.3)).getBlock() == Blocks.LAVA ||
+                            mc.world.getBlockState(new BlockPos(x + 0.3, y, z + 0.3)).getBlock() == Blocks.LAVA ||
+                            mc.world.getBlockState(new BlockPos(x - 0.3, y, z - 0.3)).getBlock() == Blocks.LAVA ||
+                            mc.world.getBlockState(new BlockPos(x - 0.3, y, z + 0.3)).getBlock() == Blocks.LAVA ||
+                            mc.world.getBlockState(new BlockPos(x + 0.3, y, z - 0.3)).getBlock() == Blocks.LAVA
+            ) {
+                if (mc.player.movementInput.jump || mc.player.collidedHorizontally) {
+                    if (mc.player.collidedHorizontally) {
+                        mc.player.setPosition(x, y + 0.2, z);
+                    }
+                    mc.player.onGround = true;
+                }
+
+                mc.player.motionX = 0;
+                mc.player.motionY = 0.04;
+                mc.player.motionZ = 0;
+
+                if (!(mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() == Blocks.LAVA)) {
+                    if (mc.player.fallDistance != 0 && mc.player.motionX == 0 && mc.player.motionZ == 0) {
+                        mc.player.setPosition(x, y - 0.0400005, z);
+                        if (mc.player.fallDistance < 0.08) {
+                            mc.player.setPosition(x, y + 0.2, z);
+                        }
+                    }
+                }
+
+                if (mc.player.isPotionActive(Potion.getPotionById(1))) {
+                    mc.player.jumpMovementFactor = 0.4005f;
+                } else {
+                    mc.player.jumpMovementFactor = 0.2865f;
+                }
+            }
+            MovementUtil.forward((float) MovementUtil.getSpeed());
+            if (!mc.gameSettings.keyBindJump.isKeyDown() && (mc.player.isInWater() || mc.player.isInLava())) {
+                mc.player.motionY = 0.12;
+                mc.timer.tickLength = 50.0f / 1.5f;
+                if (mc.player.isInWater() && mc.world.getBlockState(new BlockPos(x, y + 0.9, z)).getBlock() == Blocks.WATER && mc.world.getBlockState(new BlockPos(x, y + 1, z)).getBlock() == Blocks.AIR && !(mc.world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() == Blocks.WATER)) {
+                    mc.player.posY += 0.1;
+                    mc.player.motionY = 0.42;
+                }
+            }
+        }
+        if (mode.getValue() == Mode.Tramploine) {
             int minY = MathHelper.floor(mc.player.getEntityBoundingBox().minY - 0.2D);
             boolean inLiquid = checkIfBlockInBB(BlockLiquid.class, minY) != null;
 
@@ -125,28 +177,12 @@ public class Jesus extends Module {
         }
     }
 
-    /*
-    @SubscribeEvent
-    public void onBoundingBox(CollisionBoxEvent event) {
-        if (((event.getBlock() instanceof BlockLiquid))
-                && event.getEntity() == mc.player
-                && event.getPos().getY() <= mc.player.posY
-                && checkIfBlockInBB(BlockLiquid.class, MathHelper.floor((mc.player.getEntityBoundingBox().minY + 0.01))) != null
-                && checkIfBlockInBB(BlockLiquid.class, MathHelper.floor((mc.player.getEntityBoundingBox().minY - 0.02))) != null
-                && (mc.player.fallDistance < 3.0F)
-                && (!mc.player.isSneaking())) {
-          //  event.setBoundingBox(Block.FULL_BLOCK_AABB);
-        }
-    }
-
-     */
-
     @SubscribeEvent
     public void onLiquidCollision(final JesusEvent event) {
         if (fullNullCheck()) {
             return;
         }
-        if (event.getStage() == 0 && (this.mode.getValue() == Mode.SOLID) && Jesus.mc.world != null && Jesus.mc.player != null && checkCollide() && Jesus.mc.player.motionY < 0.10000000149011612 && event.getPos().getY() < Jesus.mc.player.posY - 0.05000000074505806) {
+        if (event.getStage() == 0 && (this.mode.getValue() == Mode.Solid) && Jesus.mc.world != null && Jesus.mc.player != null && checkCollide() && Jesus.mc.player.motionY < 0.10000000149011612 && event.getPos().getY() < Jesus.mc.player.posY - 0.05000000074505806) {
             if (Jesus.mc.player.getRidingEntity() != null) {
                 event.setBoundingBox(new AxisAlignedBB(0.0,  0.0,  0.0,  1.0,  0.949999988079071,  1.0));
             }
@@ -160,10 +196,10 @@ public class Jesus extends Module {
     @SubscribeEvent
     public void sendPacket(PacketEvent.Send event) {
         if (mc.world == null || mc.player == null) return;
-        if (mode.getValue() == Mode.SOLID) {
+        if (mode.getValue() == Mode.Solid) {
             if (event.getPacket() instanceof CPacketPlayer
                     && mc.player.ticksExisted > 20
-                    && mode.getValue().equals(Mode.SOLID)
+                    && mode.getValue().equals(Mode.Solid)
                     && mc.player.getRidingEntity() == null
                     && !mc.gameSettings.keyBindJump.isKeyDown()
                     && mc.player.fallDistance < 3.0F) {
@@ -198,7 +234,6 @@ public class Jesus extends Module {
     }
 
     private boolean checkCollide() {
-
         if (mc.player.isSneaking()) {
             return false;
         }
@@ -254,8 +289,9 @@ public class Jesus extends Module {
             }
         }
         return onLiquid;
-
     }
-
+	
+	public static enum Mode {
+        Solid, Tramploine, NCP;
+    }
 }
-

@@ -68,7 +68,7 @@ public class Speed
 	public double defaultBaseSpeed = getBaseMoveSpeed();
     public double distance;
     public int Field2015 = 4;
-    public int FunnyGameStage;
+    public int speedStage;
     public boolean flip;
     int velocity = 0;
     int boostticks = 0;
@@ -181,24 +181,24 @@ public class Speed
                 }
                 if (mc.player.collidedHorizontally) {
                     if (mc.player.onGround && (d = Method5402(1.0)) == 1.0) {
-                        FunnyGameStage++;
+                        speedStage++;
                     }
-                    if (FunnyGameStage > 0) {
-                        switch (FunnyGameStage) {
+                    if (speedStage > 0) {
+                        switch (speedStage) {
                             case 1: {
                                 event.setCanceled(true);
 
                                 event.set_y(0.41999998688698);
-                                int n2 = FunnyGameStage;
-                                FunnyGameStage = n2 + 1;
+                                int n2 = speedStage;
+                                speedStage = n2 + 1;
                                 return;
                             }
                             case 2: {
                                 event.setCanceled(true);
 
                                 event.set_y(0.33319999363422);
-                                int n3 = FunnyGameStage;
-                                FunnyGameStage = n3 + 1;
+                                int n3 = speedStage;
+                                speedStage = n3 + 1;
                                 return;
                             }
                             case 3: {
@@ -206,7 +206,7 @@ public class Speed
                                 event.set_y(0.24813599859094704);
                                 event.set_x((double) (-MathHelper.sin(f)) * 0.2);
                                 event.set_z((double) MathHelper.cos(f) * 0.2);
-                                FunnyGameStage = 0;
+                                speedStage = 0;
                                 mc.player.motionY = 0.0;
                                 event.setCanceled(true);
                                 return;
@@ -215,7 +215,7 @@ public class Speed
                         return;
                     }
                 }
-                FunnyGameStage = 0;
+                speedStage = 0;
                 if (this.Field2015 == 1 && (mc.player.moveForward != 0.0f || mc.player.moveStrafing != 0.0f)) {
                     defaultBaseSpeed = 1.35 * getBaseMoveSpeed() - 0.01;
                 } else if (this.Field2015 == 2 && mc.player.collidedVertically) {
@@ -460,7 +460,7 @@ public class Speed
 		this.defaultBaseSpeed = getBaseMoveSpeed();
         this.Field2015 = 4;
         this.distance = 0.0;
-        this.FunnyGameStage = 0;
+        this.speedStage = 0;
         this.velocity = 0;
 		super.onDisable();
     }
