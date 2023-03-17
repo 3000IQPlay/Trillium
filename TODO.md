@@ -1,6 +1,7 @@
 **Trillium b1.7.8 Changes**
 + New GUI
 + Added AutoBuilder (Done)
++ Added AntiFireBall (Done)
 + Added RemoveXPDesync (Done)
 + Added FastSwim (Done)
 + Added Strafe Custom Mode (Done)

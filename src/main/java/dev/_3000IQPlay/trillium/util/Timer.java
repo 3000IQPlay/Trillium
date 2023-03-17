@@ -22,8 +22,8 @@ public class Timer implements Passable {
         return this.getMs(System.nanoTime() - this.time) >= (long) (ds * 100.0);
     }
 
-    public boolean passedMs(long ms) {
-        return this.getMs(System.nanoTime() - this.time) >= ms;
+    public boolean passedMs(double ms) {
+        return this.getMs(System.nanoTime() - this.time) >=(long) ms;
     }
 	
 	public boolean hasReached(long passedTime) {
@@ -50,12 +50,6 @@ public class Timer implements Passable {
         return time / 1000000L;
     }
 
-    /*
-    public final boolean passed( final long delay ) {
-        return passed( delay, false );
-    }
-
-     */
     public boolean passed( final long delay, final boolean reset ) {
         if ( reset ) this.reset( );
         return System.currentTimeMillis( ) - this.time >= delay;
@@ -73,4 +67,3 @@ public class Timer implements Passable {
         return this.getMs(System.nanoTime() - this.time) >= delay;
     }
 }
-
