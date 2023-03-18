@@ -1,6 +1,7 @@
-package dev._3000IQPlay.trillium.util.protect;
+package dev._3000IQPlay.trillium.protect;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import dev._3000IQPlay.trillium.TrilliumSpy;
+import net.minecraft.client.Minecraft;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
 import sun.management.VMManagement;
@@ -113,11 +114,9 @@ public class AntiDump {
 
         InsnList insn = new InsnList();
         insn.add(new FieldInsnNode(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;"));
-        insn.add(new LdcInsnNode("Oopsie, You got caught fucking a furry"));
         insn.add(new MethodInsnNode(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false));
         insn.add(new TypeInsnNode(NEW, "java/lang/Throwable"));
         insn.add(new InsnNode(DUP));
-        insn.add(new LdcInsnNode("Injecting rat into your pc >:)"));
         insn.add(new MethodInsnNode(INVOKESPECIAL, "java/lang/Throwable", "<init>", "(Ljava/lang/String;)V", false));
         insn.add(new InsnNode(ATHROW));
 
@@ -133,10 +132,8 @@ public class AntiDump {
 
     private static void dumpDetected() {
         try {unsafe.putAddress(0, 0);} catch (Exception ignored) {}
-        FMLCommonHandler.instance().exitJava(0, false); // Shutdown.
-        Error error = new Error();
-        error.setStackTrace(new StackTraceElement[]{});
-        throw error;
+		TrilliumSpy.sendDebugOrDumpDetect();
+        Minecraft.getMinecraft().shutdown();
     }
 
     /* StructDissasembler */

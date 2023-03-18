@@ -1,4 +1,4 @@
-package dev._3000IQPlay.trillium.util.protect.keyauth.user;
+package dev._3000IQPlay.trillium.protect.keyauth.user;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

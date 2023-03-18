@@ -1,4 +1,4 @@
-package dev._3000IQPlay.trillium.util.protect.keyauth.util;
+package dev._3000IQPlay.trillium.protect.keyauth.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

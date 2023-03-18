@@ -14,6 +14,7 @@
 + Added FadeOut Animation for DamageParticles
 + Added FadeOut Animation for BackTrack
 
+* Security Advencements (Done)
 * Rewrote AuthGUI Look (Done)
 * Rewrote BowKiller (Done)
 * Rewrote Scaffold

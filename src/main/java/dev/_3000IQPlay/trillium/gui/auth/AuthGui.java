@@ -6,7 +6,7 @@ import dev._3000IQPlay.trillium.gui.font.CustomFont;
 import dev._3000IQPlay.trillium.util.Drawable;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.RoundedShader;
-import dev._3000IQPlay.trillium.util.protect.keyauth.KeyAuthApp;
+import dev._3000IQPlay.trillium.protect.keyauth.KeyAuthApp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import org.lwjgl.input.Keyboard;

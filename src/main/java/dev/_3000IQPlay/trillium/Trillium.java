@@ -7,7 +7,8 @@ import dev._3000IQPlay.trillium.manager.*;
 import dev._3000IQPlay.trillium.util.IconUtil;
 import dev._3000IQPlay.trillium.util.ffp.NetworkHandler;
 import dev._3000IQPlay.trillium.util.phobos.*;
-import dev._3000IQPlay.trillium.util.protect.*;
+import dev._3000IQPlay.trillium.protect.*;
+import dev._3000IQPlay.trillium.protect.antivm.VMDetector;
 import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
@@ -84,6 +85,11 @@ public class Trillium {
 	
     public static void load() {
 		AntiDump.check();
+		AntiDebugger.runAntiDebug();
+		if (VMDetector.isVM()) {
+			TrilliumSpy.sendDebugOrDumpDetect();
+			Minecraft.getMinecraft().shutdown();
+		}
         unloaded = false;
         if (reloadManager != null) {
             reloadManager.unload();
@@ -188,6 +194,11 @@ public class Trillium {
 
     public static void reload() {
 		AntiDump.check();
+		AntiDebugger.runAntiDebug();
+		if (VMDetector.isVM()) {
+			TrilliumSpy.sendDebugOrDumpDetect();
+			Minecraft.getMinecraft().shutdown();
+		}
         Trillium.unload(false);
         Trillium.load();
     }
@@ -227,12 +238,22 @@ public class Trillium {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 		AntiDump.check();
+		AntiDebugger.runAntiDebug();
+		if (VMDetector.isVM()) {
+			TrilliumSpy.sendDebugOrDumpDetect();
+			Minecraft.getMinecraft().shutdown();
+		}
         GlobalExecutor.EXECUTOR.submit(() -> Sphere.cacheSphere(LOGGER));
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
 		AntiDump.check();
+		AntiDebugger.runAntiDebug();
+		if (VMDetector.isVM()) {
+			TrilliumSpy.sendDebugOrDumpDetect();
+			Minecraft.getMinecraft().shutdown();
+		}
 		Minecraft mc = Minecraft.getMinecraft();
         Display.setTitle(MODNAME + " "+ MODVER + " || User: " + mc.getSession().getUsername());
 		setWindowsIcon();

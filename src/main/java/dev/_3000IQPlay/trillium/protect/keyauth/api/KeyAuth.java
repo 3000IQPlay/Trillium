@@ -1,8 +1,8 @@
-package dev._3000IQPlay.trillium.util.protect.keyauth.api;
+package dev._3000IQPlay.trillium.protect.keyauth.api;
 
 import dev._3000IQPlay.trillium.TrilliumSpy;
-import dev._3000IQPlay.trillium.util.protect.keyauth.user.UserData;
-import dev._3000IQPlay.trillium.util.protect.keyauth.util.HWID;
+import dev._3000IQPlay.trillium.protect.keyauth.user.UserData;
+import dev._3000IQPlay.trillium.protect.keyauth.util.HWID;
 import net.minecraft.client.Minecraft;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;

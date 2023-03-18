@@ -1,6 +1,6 @@
-package dev._3000IQPlay.trillium.util.protect.keyauth;
+package dev._3000IQPlay.trillium.protect.keyauth;
 
-import dev._3000IQPlay.trillium.util.protect.keyauth.api.KeyAuth;
+import dev._3000IQPlay.trillium.protect.keyauth.api.KeyAuth;
 
 /**
  * @author SprayD
