@@ -18,7 +18,9 @@
 * Rewrote AuthGUI Look (Done)
 * Rewrote BowKiller (Done)
 * Rewrote Scaffold
+* Fixed UnicodeLag (Done)
 * Fixed AutoFish RClick Issue (Done)
+* Fixed ModuleCommand (Done)
 * Fixed ClickGUI Animations
 
 - Removed LiquidBoost (Done)

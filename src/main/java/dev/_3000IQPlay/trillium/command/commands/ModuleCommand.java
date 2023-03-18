@@ -39,14 +39,7 @@ public class ModuleCommand
             return;
         }
         if (commands.length == 2) {
-            ModuleCommand.sendMessage(module.getDisplayName() + " : " + module.getDescription());
-            for (Setting setting2 : module.getSettings()) {
-                ModuleCommand.sendMessage(setting2.getName() + " : " + setting2.getValue() + ", " + setting2.getDescription());
-            }
-            return;
-        }
-        if (commands.length == 3) {
-            if (commands[1].equalsIgnoreCase("set")) {
+			if (commands[1].equalsIgnoreCase("set")) {
                 ModuleCommand.sendMessage("Please specify a setting.");
             } else if (commands[1].equalsIgnoreCase("reset")) {
                 for (Setting setting3 : module.getSettings()) {
@@ -54,6 +47,13 @@ public class ModuleCommand
                 }
             } else {
                 ModuleCommand.sendMessage("This command doesnt exist.");
+            }
+            return;
+        }
+        if (commands.length == 3) {
+            ModuleCommand.sendMessage(module.getDisplayName() + " : " + module.getDescription());
+            for (Setting setting2 : module.getSettings()) {
+                ModuleCommand.sendMessage(setting2.getName() + " : " + setting2.getValue() + ", " + setting2.getDescription());
             }
             return;
         }

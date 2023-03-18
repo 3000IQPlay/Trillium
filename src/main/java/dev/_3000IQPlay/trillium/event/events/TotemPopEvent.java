@@ -15,4 +15,3 @@ public class TotemPopEvent
         return this.entity;
     }
 }
-

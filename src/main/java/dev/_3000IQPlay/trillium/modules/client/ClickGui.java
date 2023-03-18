@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.client;
 
-import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.ConnectToServerEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.gui.clickui.ClickUI;
@@ -120,7 +119,6 @@ public class ClickGui
     @Override
     public void onLoad() {
         mainColor.getValue().getColorObject();
-        Trillium.commandManager.setPrefix(Trillium.moduleManager.getModuleByClass(MainSettings.class).prefix.getValue());
     }
 
     @Override

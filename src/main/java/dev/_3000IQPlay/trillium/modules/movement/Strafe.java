@@ -8,6 +8,7 @@ import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.modules.exploit.PacketFly;
 import dev._3000IQPlay.trillium.modules.movement.ElytraFlight;
 import dev._3000IQPlay.trillium.modules.movement.ElytraFly2b2tNew;
+import dev._3000IQPlay.trillium.modules.movement.FastSwim;
 import dev._3000IQPlay.trillium.modules.movement.HoleSnap;
 import dev._3000IQPlay.trillium.modules.movement.Speed;
 import dev._3000IQPlay.trillium.modules.player.FreeCam;
@@ -57,7 +58,7 @@ public class Strafe
 
     @SubscribeEvent
     public void onUpdateWalkingPlayerEvent(UpdateWalkingPlayerEvent event) {
-        if (event.getStage() == 1 && Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled()) {
+        if (event.getStage() == 1 && Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled() || (Trillium.moduleManager.getModuleByClass(FastSwim.class).isEnabled() && mc.player.isInLava() || mc.player.isInWater())) {
             return;
         }
 		if (this.mode.getValue() == Mode.Normal || this.mode.getValue() == Mode.Strict) {
@@ -67,7 +68,7 @@ public class Strafe
 
     @SubscribeEvent
     public void onStrafe(EventMove event) {
-        if (Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled()) {
+        if (Strafe.fullNullCheck() || Trillium.moduleManager.getModuleByClass(HoleSnap.class).isEnabled() || Trillium.moduleManager.getModuleByClass(FreeCam.class).isEnabled() || Trillium.moduleManager.getModuleByClass(PacketFly.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFlight.class).isEnabled() || Trillium.moduleManager.getModuleByClass(ElytraFly2b2tNew.class).isEnabled() || Trillium.moduleManager.getModuleByClass(Speed.class).isEnabled() || (Trillium.moduleManager.getModuleByClass(FastSwim.class).isEnabled() && mc.player.isInLava() || mc.player.isInWater())) {
             return;
         }
         if (mc.player.isInWater() && !this.inLiquid.getValue() && this.mode.getValue() == Mode.Custom) {

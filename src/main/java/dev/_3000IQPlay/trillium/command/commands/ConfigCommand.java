@@ -55,7 +55,7 @@ public class ConfigCommand extends Command {
                     }
                     return;
             }
-            sendMessage("There is no such command! Usage example: <save/load>");
+            sendMessage("There is no such command! Usage example: <save/load/dir>");
         }
     }
 }
