@@ -24,11 +24,12 @@ public class Strafe
         extends Module {
 	public Setting<Mode> mode = this.register(new Setting<Mode>("Strafe", Mode.Normal));
 	public Setting<Boolean> sprintCheck = this.register(new Setting<Boolean>("SprintCheck", false, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Boolean> sneakCheck = this.register(new Setting<Boolean>("SneakCheck", true, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Boolean> ground = this.register(new Setting<Boolean>("Ground", true, v -> this.mode.getValue() == Mode.Custom));
+	public Setting<Boolean> inLiquid = this.register(new Setting<Boolean>("InLiquid", true, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Boolean> customBaseSpeed = this.register(new Setting<Boolean>("CustomBaseSpeed", false, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Float> customBaseSpeedVal = this.register(new Setting<Float>("SpeedFactor", 0.29f, 0.1f, 1.5f, v -> this.mode.getValue() == Mode.Custom && this.customBaseSpeed.getValue()));
 	public Setting<Boolean> slowerBaseSpeed = this.register(new Setting<Boolean>("SlowerBaseSpeed", false, v -> this.mode.getValue() == Mode.Custom));
-	public Setting<Boolean> ground = this.register(new Setting<Boolean>("Ground", true, v -> this.mode.getValue() == Mode.Custom));
-	public Setting<Boolean> inLiquid = this.register(new Setting<Boolean>("InLiquid", true, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Float> strafeFactorAir = this.register(new Setting<Float>("StrafeFactorAir", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Float> strafeFactorGround = this.register(new Setting<Float>("StrafeFactorGround", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
 	public Setting<Float> reverseFactorAir = this.register(new Setting<Float>("ReverseFactorAir", 1.0f, 0.1f, 1.0f, v -> this.mode.getValue() == Mode.Custom));
@@ -75,6 +76,9 @@ public class Strafe
             return;
         }
         if (mc.player.isInLava() && !this.inLiquid.getValue() && this.mode.getValue() == Mode.Custom) {
+            return;
+        }
+		if (mc.player.isSneaking() || mc.gameSettings.keyBindSneak.isKeyDown() && this.sneakCheck.getValue() && this.mode.getValue() == Mode.Custom) {
             return;
         }
 		if (this.mode.getValue() == Mode.Custom) {

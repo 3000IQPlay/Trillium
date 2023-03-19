@@ -2,6 +2,8 @@
 + New GUI
 + Added AutoBuilder (Done)
 + Added AntiFireBall (Done)
++ Added AntiFriendHit (Done)
++ Added BowKiller (Done)
 + Added RemoveXPDesync (Done)
 + Added FastSwim (Done)
 + Added Strafe Custom Mode (Done)

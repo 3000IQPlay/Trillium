@@ -8,7 +8,9 @@ import net.minecraft.entity.Entity;
 
 public class FastSwim
         extends Module {
-	public Setting<Boolean> ncpTiming = this.register(new Setting<Boolean>("NCP-Timing", true));
+	public Setting<Boolean> pulse = this.register(new Setting<Boolean>("Pulse", true));
+	public Setting<Float> fastWhenPassed = this.register(new Setting<Float>("FastWhenPassed", 250.0f, 0.0f, 2000.0f, v -> this.pulse.getValue()));
+	public Setting<Float> fastForTime = this.register(new Setting<Float>("FastForTime", 250.0f, 0.0f, 2000.0f, v -> this.pulse.getValue()));
 	public Setting<Boolean> fall = this.register(new Setting<Boolean>("Fall", false));
     public Setting<Float> waterHorizontal = this.register(new Setting<Float>("WaterHorizontal", 3.0f, 1.0f, 20.0f));
     public Setting<Float> waterUp = this.register(new Setting<Float>("WaterUp", 3.0f, 1.0f, 20.0f));
@@ -22,10 +24,15 @@ public class FastSwim
     public FastSwim() {
         super("FastSwim", "Swim fast", Module.Category.MOVEMENT, true, false, false);
     }
+	
+	@Override
+	public void onDisable() {
+		timer.reset();
+	}
 
     @Override
     public void onUpdate() {
-		if (this.ncpTiming.getValue() && timer.passed(250)) {
+		if (this.pulse.getValue() && timer.passed((long) this.fastWhenPassed.getValue().floatValue())) {
             if (FastSwim.mc.player.isInLava() && !FastSwim.mc.player.onGround) {
 				EntityUtil.moveEntityStrafe(0.05 * this.lavaHorizontal.getValue().floatValue(), (Entity)FastSwim.mc.player);
 			    if (FastSwim.mc.gameSettings.keyBindSneak.isKeyDown()) {
@@ -48,6 +55,9 @@ public class FastSwim
 					    FastSwim.mc.player.motionY = 0.0f;
 					}
                 }
+			}
+			if (timer.passed((long) this.fastForTime.getValue().floatValue())) {
+			    timer.reset();
 			}
         } else {
 			if (FastSwim.mc.player.isInLava() && !FastSwim.mc.player.onGround) {

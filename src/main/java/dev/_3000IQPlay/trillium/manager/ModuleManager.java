@@ -186,6 +186,8 @@ public class ModuleManager
 		this.modules.add(new XCarry());
 		this.modules.add(new AutoBuilder());
 		this.modules.add(new AntiFireBall());
+		this.modules.add(new AntiFriendHit());
+		this.modules.add(new BoatKiller());
     }
 
     public Module getModuleByName(String name) {
