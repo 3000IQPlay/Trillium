@@ -26,7 +26,7 @@ public class AuthGui extends GuiScreen {
 		int containerWidth = 200;
 		int containerHeight = 125;
 
-		RoundedShader.drawRound((width - containerWidth) / 2, height / 3.5f - 6.0f, containerWidth, containerHeight, 2, false, new Color(24, 24, 24, 255));
+		RoundedShader.drawRound((width - containerWidth) / 2, height / 3.5f - 6.0f, containerWidth, containerHeight, 5, false, new Color(24, 24, 24, 255));
         cFont.drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5f + 6, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();

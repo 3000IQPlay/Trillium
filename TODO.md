@@ -11,7 +11,6 @@
 + Added Jesus NCP Mode (Done)
 + Added MainMenu Shaders
 + Added XCarry (Done)
-+ Added Custom Font to AuthGUI Texts (Done)
 + Added Auto ClickGUI Scale Optimization
 + Added FadeOut Animation for DamageParticles
 + Added FadeOut Animation for BackTrack
@@ -20,6 +19,7 @@
 * Rewrote AuthGUI Look (Done)
 * Rewrote BowKiller (Done)
 * Rewrote Scaffold
+* Fixed NoFall NCP + AAC Mode (Done)
 * Fixed UnicodeLag (Done)
 * Fixed AutoFish RClick Issue (Done)
 * Fixed ModuleCommand (Done)

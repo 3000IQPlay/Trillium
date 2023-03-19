@@ -1,7 +1,6 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
-import dev._3000IQPlay.trillium.event.events.UpdateWalkingPlayerEvent;
 import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
@@ -101,13 +100,13 @@ public class NoFall
             }
         }
     }
-	
-	@SubscribeEvent
-    public void onUpdatePlayerWalkingEvent(UpdateWalkingPlayerEvent event) {
+
+    @Override
+    public void onUpdate() {
         if (NoFall.fullNullCheck()) {
             return;
         }
-        switch (this.mode.getValue()) {
+		switch (this.mode.getValue()) {
 			case NCP: {
                 if (!(mc.player.fallDistance > 4.0f)) break;
                 mc.player.fallDistance = 0.0f;
@@ -116,31 +115,13 @@ public class NoFall
 				break;
 			}
 			case AAC: {
-                if (mc.player.fallDistance > 3.0f) {
-                    mc.player.fallDistance = 0.0f;
-                    mc.player.onGround = true;
-                    mc.player.capabilities.isFlying = true;
-                    mc.player.capabilities.allowFlying = true;
-                    event.setCanceled(true);
-                    event.setOnGround(false);
-                    mc.player.velocityChanged = true;
-                    mc.player.capabilities.isFlying = false;
-                    mc.player.jump();
-                    break;
+			    if (mc.player.fallDistance > 2.0f) {
+                    mc.player.motionZ = 0.0;
+                    mc.player.motionX = 0.0;
+                    mc.player.connection.sendPacket((Packet)new CPacketPlayer.Position(mc.player.posX, mc.player.posY - 0.001, mc.player.posZ, mc.player.onGround));
+                    mc.player.connection.sendPacket((Packet)new CPacketPlayer(true));
                 }
-                event.setCanceled(false);
-                event.setOnGround(true);
-                mc.player.capabilities.isFlying = false;
-                mc.player.capabilities.allowFlying = false;
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void onUpdate() {
-        if (NoFall.fullNullCheck()) {
-            return;
+			}
         }
 		if (mc.player.fallDistance > 3 && !mc.player.isSneaking() && this.mode.getValue() == Mode.Rubberband) {
             mc.player.motionY -= 0.1;
