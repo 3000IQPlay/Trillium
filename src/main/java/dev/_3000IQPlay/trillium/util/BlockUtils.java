@@ -7,27 +7,37 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.DestroyBlockProgress;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.*;
 
 public class BlockUtils {
@@ -143,6 +153,27 @@ public class BlockUtils {
         return PlayerUtils.calculateLookAt(x + 0.5 + facing.getDirectionVec().getX() * 0.5, y + 0.5 + facing.getDirectionVec().getY() * 0.5, z + 0.5 + facing.getDirectionVec().getZ() * 0.5, me);
     }
 	
+	public static boolean isBlocking(BlockPos pos, EntityPlayer player) {
+        AxisAlignedBB posBB = new AxisAlignedBB(pos);
+        return player.getEntityBoundingBox().expand(-0.0625, -0.0625, -0.0625).intersects(posBB);
+    }
+	
+	public static float getBlockDamage(BlockPos pos) {
+        try {
+            Field f = ReflectionHelper.findField(RenderGlobal.class, new String[]{"damagedBlocks", "field_72738_E"});
+            f.setAccessible(true);
+            HashMap<BlockPos, DestroyBlockProgress> map = (HashMap<BlockPos, DestroyBlockProgress>)f.get(Minecraft.getMinecraft().renderGlobal);
+            for (DestroyBlockProgress destroyblockprogress : map.values()) {
+                if (!destroyblockprogress.getPosition().equals(pos) || destroyblockprogress.getPartialBlockDamage() < 0 || destroyblockprogress.getPartialBlockDamage() > 10) continue;
+                return (float)destroyblockprogress.getPartialBlockDamage() / 10.0f;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0f;
+    }
+	
 	public static void placeBlock(BlockPos pos, EnumFacing side, boolean packet) {
         BlockPos neighbour = pos.offset(side);
         EnumFacing opposite = side.getOpposite();
@@ -165,7 +196,7 @@ public class BlockUtils {
         }
         BlockPos neighbour = pos.offset(side);
         EnumFacing opposite = side.getOpposite();
-        Vec3d hitVec = new Vec3d(neighbour).add(0.5, 0.5, 0.5).add(new Vec3d(opposite.getDirectionVec()).scale(0.5));
+        Vec3d hitVec = new Vec3d(neighbour).add(0.5D, 0.5D, 0.5D).add(new Vec3d(opposite.getDirectionVec()).scale(0.5D));
         Block neighbourBlock = BlockUtils.mc.world.getBlockState(neighbour).getBlock();
         if (!BlockUtils.mc.player.isSneaking() && (blackList.contains(neighbourBlock) || shulkerList.contains(neighbourBlock))) {
             BlockUtils.mc.player.connection.sendPacket(new CPacketEntityAction(BlockUtils.mc.player, CPacketEntityAction.Action.START_SNEAKING));
@@ -179,6 +210,65 @@ public class BlockUtils {
         BlockUtils.mc.player.swingArm(EnumHand.MAIN_HAND);
         BlockUtils.mc.rightClickDelayTimer = 4;
         return sneaking || isSneaking;
+    }
+	
+	public static boolean placeBlock(BlockPos pos, EnumHand hand, boolean rotate, boolean packet, boolean extraPacket, boolean isSneaking) {
+        boolean sneaking = false;
+        EnumFacing side = BlockUtils.getFirstFacing(pos);
+        if (side == null) {
+            return isSneaking;
+        }
+        BlockPos neighbour = pos.offset(side);
+        EnumFacing opposite = side.getOpposite();
+        Vec3d hitVec = new Vec3d(neighbour).add(0.5D, 0.5D, 0.5D).add(new Vec3d(opposite.getDirectionVec()).scale(0.5D));
+        Block neighbourBlock = BlockUtils.mc.world.getBlockState(neighbour).getBlock();
+        float f = (float)(hitVec.x - (double)pos.getX());
+        float f1 = (float)(hitVec.y - (double)pos.getY());
+        float f2 = (float)(hitVec.z - (double)pos.getZ());
+        if (!BlockUtils.mc.player.isSneaking() && (blackList.contains(neighbourBlock) || shulkerList.contains(neighbourBlock))) {
+            BlockUtils.mc.player.connection.sendPacket(new CPacketEntityAction(BlockUtils.mc.player, CPacketEntityAction.Action.START_SNEAKING));
+            BlockUtils.mc.player.setSneaking(true);
+            sneaking = true;
+        }
+        if (rotate) {
+            RotationUtil.faceVector(hitVec, true);
+        }
+        if (extraPacket) {
+            BlockUtils.mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(neighbour, opposite, hand, f, f1, f2));
+        }
+        BlockUtils.mc.player.connection.sendPacket(new CPacketEntityAction(BlockUtils.mc.player, CPacketEntityAction.Action.START_SNEAKING));
+        BlockUtils.placeClient(neighbour, hand, opposite, (float)hitVec.x, (float)hitVec.y, (float)hitVec.z);
+        BlockUtils.mc.playerController.processRightClickBlock(BlockUtils.mc.player, BlockUtils.mc.world, neighbour, opposite, hitVec, hand);
+        EnumActionResult actionResult = BlockUtils.mc.playerController.processRightClickBlock(BlockUtils.mc.player, BlockUtils.mc.world, neighbour, opposite, hitVec, hand);
+        actionResult = EnumActionResult.SUCCESS;
+        BlockUtils.rightClickBlock(neighbour, hitVec, hand, opposite, packet);
+        BlockUtils.mc.playerController.processRightClickBlock(BlockUtils.mc.player, BlockUtils.mc.world, neighbour, opposite, hitVec, hand);
+        BlockUtils.mc.player.connection.sendPacket(new CPacketEntityAction(BlockUtils.mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+        BlockUtils.mc.player.swingArm(EnumHand.MAIN_HAND);
+        return sneaking || isSneaking;
+    }
+	
+	public static void placeClient(BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack stack = BlockUtils.mc.player.getHeldItemMainhand();
+        if (stack.getItem() instanceof ItemBlock) {
+            int i;
+            IBlockState placeState;
+            ItemBlock itemBlock = (ItemBlock)((Object)stack.getItem());
+            Block block = itemBlock.getBlock();
+            IBlockState iblockstate = BlockUtils.mc.world.getBlockState(pos);
+            Block iBlock = iblockstate.getBlock();
+            if (!iBlock.isReplaceable(BlockUtils.mc.world, pos)) {
+                pos = pos.offset(facing);
+            }
+            if (!stack.isEmpty() && BlockUtils.mc.player.canPlayerEdit(pos, facing, stack) && BlockUtils.mc.world.mayPlace(block, pos, false, facing, null) && itemBlock.placeBlockAt(stack, BlockUtils.mc.player, BlockUtils.mc.world, pos, facing, hitX, hitY, hitZ, placeState = block.getStateForPlacement(BlockUtils.mc.world, pos, facing, hitX, hitY, hitZ, i = itemBlock.getMetadata(stack.getMetadata()), BlockUtils.mc.player, hand))) {
+                placeState = BlockUtils.mc.world.getBlockState(pos);
+                SoundType soundtype = placeState.getBlock().getSoundType(placeState, BlockUtils.mc.world, pos, BlockUtils.mc.player);
+                BlockUtils.mc.world.playSound(BlockUtils.mc.player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0f) / 2.0f, soundtype.getPitch() * 0.8f);
+                if (!BlockUtils.mc.player.isCreative()) {
+                    stack.shrink(1);
+                }
+            }
+        }
     }
 
     public static boolean shouldSneakWhileRightClicking(BlockPos blockPos) {

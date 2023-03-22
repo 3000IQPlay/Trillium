@@ -57,6 +57,31 @@ public class DamageUtil implements Util {
 
         return finalDamage;
     }
+	
+	public static float calculateDamage(Vec3d pos, Entity entity) {
+        return DamageUtil.calculateDamage(pos.x, pos.y, pos.z, entity);
+    }
+	
+	public static float calculateDamage(double posX, double posY, double posZ, Entity entity) {
+        float doubleExplosionSize = 12.0f;
+        double distancedsize = entity.getDistance(posX, posY, posZ) / (double)doubleExplosionSize;
+        Vec3d vec3d = new Vec3d(posX, posY, posZ);
+        double blockDensity = 0.0;
+        try {
+            blockDensity = entity.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
+        }
+        catch (Exception exception) {
+            // empty catch block
+        }
+        double v = (1.0 - distancedsize) * blockDensity;
+        float damage = (int)((v * v + v) / 2.0 * 7.0 * (double)doubleExplosionSize + 1.0);
+        double finald = 1.0;
+        if (entity instanceof EntityLivingBase) {
+            finald = DamageUtil.getBlastReduction((EntityLivingBase)entity, DamageUtil.getDamageMultiplied(damage), new Explosion(DamageUtil.mc.world, null, posX, posY, posZ, 6.0f, false, true));
+        }
+        return (float)finald;
+    }
+	
     public static float ignoreTerrainDecntiy(Vec3d vec, AxisAlignedBB bb, World world) {
         double d0 = 1.0D / ((bb.maxX - bb.minX) * 2.0D + 1.0D);
         double d1 = 1.0D / ((bb.maxY - bb.minY) * 2.0D + 1.0D);

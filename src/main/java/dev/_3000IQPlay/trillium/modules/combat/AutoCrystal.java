@@ -1968,13 +1968,14 @@ public class AutoCrystal extends Module {
                 if (this.getRenderPos() == set.getKey()) {
                     continue;
                 }
-
-                final Color boxColor = this.boxColor.getValue().getColorObject();
+				
+				final Color boxColor = this.boxColor.getValue().getColorObject();
                 final Color outlineColor = this.outLine.getValue().getColorObject();
                 final float maxBoxAlpha = boxColor.getAlpha();
                 final float maxOutlineAlpha = outlineColor.getAlpha();
                 final float alphaBoxAmount = maxBoxAlpha / this.fadeTime.getValue();
                 final float alphaOutlineAmount = maxOutlineAlpha / this.fadeTime.getValue();
+				
                 final int fadeBoxAlpha = MathHelper.clamp((int) (alphaBoxAmount * (set.getValue() + this.fadeTime.getValue() - System.currentTimeMillis())), 0, (int) maxBoxAlpha);
                 final int fadeOutlineAlpha = MathHelper.clamp((int) (alphaOutlineAmount * (set.getValue() + this.fadeTime.getValue() - System.currentTimeMillis())), 0, (int) maxOutlineAlpha);
 
@@ -1984,7 +1985,6 @@ public class AutoCrystal extends Module {
                             new Color(boxColor.getRed(), boxColor.getGreen(), boxColor.getBlue(), fadeBoxAlpha),
                             new Color(outlineColor.getRed(), outlineColor.getGreen(), outlineColor.getBlue(), fadeOutlineAlpha),
                             1.5f);
-
             }
         }
 
@@ -2001,9 +2001,7 @@ public class AutoCrystal extends Module {
                 fadeList.put(pos, System.currentTimeMillis());
         }
 
-        fadeList.entrySet().removeIf(e ->
-                e.getValue() + this.fadeTime.getValue()
-                        < System.currentTimeMillis());
+        fadeList.entrySet().removeIf(e -> e.getValue() + this.fadeTime.getValue() < System.currentTimeMillis());
 
 
         if (this.renderExtrapolation.getValue())
@@ -2064,8 +2062,6 @@ public class AutoCrystal extends Module {
                 RenderUtil.endRender();
             }
         }
-
-
     }
 
     private void renderDamage(BlockPos pos) {

