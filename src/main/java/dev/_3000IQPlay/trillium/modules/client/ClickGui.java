@@ -4,7 +4,6 @@ import dev._3000IQPlay.trillium.event.events.ConnectToServerEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.gui.clickui.ClickUI;
 import dev._3000IQPlay.trillium.gui.clickui.ColorUtil;
-import dev._3000IQPlay.trillium.gui.clickui.Colors;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
@@ -44,19 +43,9 @@ public class ClickGui
 	public final Setting<ColorSetting> gradientRB = this.register(new Setting<>("GRightBottom", new ColorSetting(-16711808), v -> this.gradientBG.getValue()));
     public final Setting<ColorSetting> gradientRT = this.register(new Setting<>("GRightTop", new ColorSetting(-14024449), v -> this.gradientBG.getValue()));
 	
-	public final Setting<ColorSetting> mainColor = this.register(new Setting<>("MainColor", new ColorSetting(-8453889)));
-	public final Setting<ColorSetting> hcolor1 = this.register(new Setting<>("MainColor1", new ColorSetting(-8453889)));
-    public final Setting<ColorSetting> acolor = this.register(new Setting<>("MainColor2", new ColorSetting(-16711681)));
-	public final Setting<ColorSetting> mainColor3 = this.register(new Setting<>("MainColor3", new ColorSetting(-16711808)));
-    public final Setting<ColorSetting> mainColor2 = this.register(new Setting<>("MainColor4", new ColorSetting(-14024449)));
-	
-    public final Setting<ColorSetting> slidercolor = this.register(new Setting<>("SliderColor", new ColorSetting(-16733441)));
-	
-    public final Setting<ColorSetting> gcolor1 = this.register(new Setting<>("gcolor1", new ColorSetting(-4597637)));
-    public final Setting<ColorSetting> gcolor2 = this.register(new Setting<>("gcolor2", new ColorSetting(-16777216)));
-	
-    public final Setting<ColorSetting> topColor = this.register(new Setting<>("TopColor", new ColorSetting(-115042915)));
-    public final Setting<ColorSetting> downColor = this.register(new Setting<>("DownColor", new ColorSetting(-114219739)));
+	public final Setting<ColorSetting> hcolor1 = this.register(new Setting<>("MainColor", new ColorSetting(-8453889), v -> this.colorMode.getValue() == colorModeEn.Fade || this.colorMode.getValue() == colorModeEn.DoubleColor || this.colorMode.getValue() == colorModeEn.Analogous));
+	public final Setting<ColorSetting> hcolor2 = this.register(new Setting<>("MainColor2", new ColorSetting(-16711808), v -> this.colorMode.getValue() == colorModeEn.DoubleColor));
+    public final Setting<ColorSetting> acolor = this.register(new Setting<>("AnalogousColor", new ColorSetting(-16711681), v -> this.colorMode.getValue() == colorModeEn.Analogous));
 
     public String[] myString;
     public ClickGui() {
@@ -88,12 +77,12 @@ public class ClickGui
 
             case DoubleColor:
                 return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index,
-                        hcolor1.getValue().getColorObject(), Colors.ALTERNATE_COLOR, true);
+                        hcolor1.getValue().getColorObject(), hcolor2.getValue().getColorObject(), true);
             case Analogous:
                 int val = 1;
                 Color analogous = ColorUtil.getAnalogousColor(acolor.getValue().getColorObject())[val];
                 return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index, hcolor1.getValue().getColorObject(), analogous, true);
-            default:
+            case Static:
                 return hcolor1.getValue().getColorObject();
         }
     }
@@ -114,11 +103,6 @@ public class ClickGui
         if (ClickGui.mc.entityRenderer.getShaderGroup() != null) {
             ClickGui.mc.entityRenderer.getShaderGroup().deleteShaderGroup();
         }
-    }
-
-    @Override
-    public void onLoad() {
-        mainColor.getValue().getColorObject();
     }
 
     @Override
@@ -149,11 +133,12 @@ public class ClickGui
     }
 
     public enum colorModeEn {
+		Static,
         Sky,
         LightRainbow,
         Rainbow,
         Fade,
         DoubleColor,
-        Analogous
+        Analogous;
     }
 }
