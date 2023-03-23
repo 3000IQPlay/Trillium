@@ -80,10 +80,15 @@ public class Criticals
                             break;
                         }
                     }
-                } else if (this.mode.getValue() == Mode.Strict) {
+				} else if (this.mode.getValue() == Mode.PacketNCP) {
                     Criticals.mc.player.connection.sendPacket(new CPacketPlayer.Position(Criticals.mc.player.posX, Criticals.mc.player.posY + 0.11, Criticals.mc.player.posZ, false));
                     Criticals.mc.player.connection.sendPacket(new CPacketPlayer.Position(Criticals.mc.player.posX, Criticals.mc.player.posY + 0.1100013579, Criticals.mc.player.posZ, false));
                     Criticals.mc.player.connection.sendPacket(new CPacketPlayer.Position(Criticals.mc.player.posX, Criticals.mc.player.posY + 0.1100013579, Criticals.mc.player.posZ, false));
+			    } else if (this.mode.getValue() == Mode.PacketAlt) {
+					Criticals.mc.player.connection.sendPacket(new CPacketPlayer.Position(Criticals.mc.player.posX, Criticals.mc.player.posY + 0.062600301692775, Criticals.mc.player.posZ, false));
+                    Criticals.mc.player.connection.sendPacket(new CPacketPlayer.Position(Criticals.mc.player.posX, Criticals.mc.player.posY + 0.07260029960661, Criticals.mc.player.posZ, false));
+					Criticals.mc.player.connection.sendPacket(new CPacketPlayer.Position(Criticals.mc.player.posX, Criticals.mc.player.posY, Criticals.mc.player.posZ, false));
+					Criticals.mc.player.connection.sendPacket(new CPacketPlayer.Position(Criticals.mc.player.posX, Criticals.mc.player.posY, Criticals.mc.player.posZ, false));
                 } else {
                     Criticals.mc.player.jump();
                     if (this.mode.getValue() == Mode.MiniJump) {
@@ -101,9 +106,10 @@ public class Criticals
     }
 
     public enum Mode {
-        Jump,
-        MiniJump,
         Packet,
-        Strict
+        PacketNCP,
+        PacketAlt,
+        Jump,
+		MiniJump;
     }
 }

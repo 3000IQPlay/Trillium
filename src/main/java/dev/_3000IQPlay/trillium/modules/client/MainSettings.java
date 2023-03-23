@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MainSettings extends Module {
     public MainSettings() {
-        super("MainSettings", "Client settings", Category.CLIENT, true, false, false);
+        super("MainSettings", "Client settings", Module.Category.CLIENT, true, false, false);
     }
 
     public Setting<Boolean> notifyToggles = this.register(new Setting<Boolean>("NotifyToggles", false));

@@ -188,6 +188,7 @@ public class ModuleManager
 		this.modules.add(new AntiFireBall());
 		this.modules.add(new AntiFriendHit());
 		this.modules.add(new BoatKiller());
+		this.modules.add(new UnfocusedCPU());
     }
 
     public Module getModuleByName(String name) {

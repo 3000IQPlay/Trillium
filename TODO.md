@@ -9,8 +9,10 @@
 + Added Strafe Custom Mode (Done)
 + Added LoadingScreen (Done)
 + Added Jesus NCP Mode (Done)
++ Added Criticals PacketAlt Mode (Done)
 + Added MainMenu Shaders
 + Added XCarry (Done)
++ Added UnfocusedCPU (Done)
 + Added Auto ClickGUI Scale Optimization
 + Added FadeOut Animation for DamageParticles
 + Added FadeOut Animation for BackTrack

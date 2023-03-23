@@ -3,6 +3,7 @@ package dev._3000IQPlay.trillium.mixin.mixins;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.modules.client.AntiDisconnect;
+import dev._3000IQPlay.trillium.modules.client.UnfocusedCPU;
 import dev._3000IQPlay.trillium.util.phobos.IMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -13,12 +14,14 @@ import net.minecraft.crash.CrashReport;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 
@@ -47,6 +50,18 @@ public abstract class MixinMinecraft implements IMinecraft {
             MinecraftForge.EVENT_BUS.post(event);
         }
     }
+	
+	@Inject(method = {"getLimitFramerate"}, at = {@At(value = "HEAD")}, cancellable = true)
+    public void getLimitFramerateHook(CallbackInfoReturnable<Integer> callbackInfoReturnable) {
+        try {
+            if (UnfocusedCPU.getInstance().isEnabled() && !Display.isActive()) {
+                callbackInfoReturnable.setReturnValue(1);
+            }
+        } catch (NullPointerException nullPointerException) {
+            // empty catch block
+        }
+    }
+	
     private int gameLoop = 0;
     @Inject(method = "runGameLoop", at = @At("HEAD"))
     private void runGameLoopHead(CallbackInfo callbackInfo)

@@ -115,8 +115,6 @@ public class Aura extends Module {
     /*-------------------------------------*/
 
 
-
-
     /*-------------   Misc  ---------------*/
     public final Setting<Boolean> criticals = this.register(new Setting<>("OnlyCrits", true, v -> this.page.getValue() == Page.Misc));
     public final Setting<CritMode> critMode = this.register(new Setting("CritMode", CritMode.WexSide,v -> criticals.getValue() && this.page.getValue() == Page.Misc));
