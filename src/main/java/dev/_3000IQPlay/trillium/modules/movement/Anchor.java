@@ -1,6 +1,5 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
-
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.EntityUtil;

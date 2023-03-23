@@ -82,7 +82,7 @@ public class ClickGui
                 int val = 1;
                 Color analogous = ColorUtil.getAnalogousColor(acolor.getValue().getColorObject())[val];
                 return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index, hcolor1.getValue().getColorObject(), analogous, true);
-            case Static:
+            default:
                 return hcolor1.getValue().getColorObject();
         }
     }
@@ -133,7 +133,6 @@ public class ClickGui
     }
 
     public enum colorModeEn {
-		Static,
         Sky,
         LightRainbow,
         Rainbow,

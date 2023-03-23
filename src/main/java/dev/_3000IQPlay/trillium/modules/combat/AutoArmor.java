@@ -75,9 +75,7 @@ public class AutoArmor
 
     @Override
     public void onUpdate(){
-
-        if(mode.getValue() == Mode.Default) {
-            //  if (event.getPhase() == TickEvent.Phase.END) return;
+        if (mode.getValue() == Mode.Default) {
             if (mc.world == null || mc.player == null) return;
             if (mc.player.ticksExisted % delay.getValue() != 0) {
                 return;

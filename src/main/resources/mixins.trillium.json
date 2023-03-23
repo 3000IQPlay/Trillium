@@ -9,6 +9,7 @@
     "IChunkProviderClient",
     "ICPacketPlayer",
     "ICPacketUseEntity",
+	"IEntityLivingBase",
     "IEntityPlayer",
     "IEntityPlayerSP",
     "IEntityRenderer",
