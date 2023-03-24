@@ -21,19 +21,15 @@ public class RoundedShader {
         drawRound(x, y, width, height, radius, false, color);
     }
 
-    public static void drawRoundScale(float x, float y, float width, float height, float radius, Color color,
-                                      float scale) {
-        drawRound(x + width - width * scale, y + height / 2f - ((height / 2f) * scale),
-                width * scale, height * scale, radius, false, color);
+    public static void drawRoundScale(float x, float y, float width, float height, float radius, Color color, float scale) {
+        drawRound(x + width - width * scale, y + height / 2f - ((height / 2f) * scale), width * scale, height * scale, radius, false, color);
     }
 
-    public static void drawGradientHorizontal(float x, float y, float width, float height, float radius, Color left,
-                                              Color right) {
+    public static void drawGradientHorizontal(float x, float y, float width, float height, float radius, Color left, Color right) {
         drawGradientRound(x, y, width, height, radius, left, left, right, right);
     }
 
-    public static void drawGradientVertical(float x, float y, float width, float height, float radius, Color top,
-                                            Color bottom) {
+    public static void drawGradientVertical(float x, float y, float width, float height, float radius, Color top, Color bottom) {
         drawGradientRound(x, y, width, height, radius, bottom, top, bottom, top);
     }
 
@@ -70,7 +66,6 @@ public class RoundedShader {
         GlStateManager.disableBlend();
     }
 
-
     public static void drawRound(float x, float y, float width, float height, float radius, boolean blur, Color color) {
         GlStateManager.resetColor();
         GlStateManager.enableBlend();
@@ -86,7 +81,6 @@ public class RoundedShader {
         roundedShader.unload();
         GlStateManager.disableBlend();
     }
-
 
     public static void drawRoundOutline(float x, float y, float width, float height, float radius,
                                         float outlineThickness, Color color, Color outlineColor) {
@@ -109,8 +103,7 @@ public class RoundedShader {
         roundedOutlineShader.unload();
         GlStateManager.disableBlend();
     }
-
-
+	
     public static void drawRoundTextured(float x, float y, float width, float height, float radius, float alpha) {
         GlStateManager.resetColor();
         roundedTexturedShader.init();
@@ -122,14 +115,91 @@ public class RoundedShader {
         GlStateManager.disableBlend();
     }
 
-    private static void setupRoundedRectUniforms(float x, float y, float width, float height, float radius,
-                                                 ShaderUtil roundedTexturedShader) {
+    private static void setupRoundedRectUniforms(float x, float y, float width, float height, float radius, ShaderUtil roundedTexturedShader) {
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
         roundedTexturedShader.setUniformf("location", x * sr.getScaleFactor(),
                 (Minecraft.getMinecraft().displayHeight - (height * sr.getScaleFactor())) - (y * sr.getScaleFactor()));
         roundedTexturedShader.setUniformf("rectSize", width * sr.getScaleFactor(), height * sr.getScaleFactor());
         roundedTexturedShader.setUniformf("radius", radius * sr.getScaleFactor());
     }
+	
+	
+	
+	
+	
+	
+	public static void drawGradientHorizontal(float x, float y, float width, float height, float radius, int left, int right) {
+        drawGradientRound(x, y, width, height, radius, left, left, right, right);
+    }
 
+    public static void drawGradientVertical(float x, float y, float width, float height, float radius, int top, int bottom) {
+        drawGradientRound(x, y, width, height, radius, bottom, top, bottom, top);
+    }
+	
+	public static void drawGradientRound(float x, float y, float width, float height, float radius, int bottomLeft, int topLeft, int bottomRight, int topRight) {
+		float alpha1 = (float) (bottomLeft >> 24 & 255) / 255.0F;
+        float red1 = (float) (bottomLeft >> 16 & 255) / 255.0F;
+        float green1 = (float) (bottomLeft >> 8 & 255) / 255.0F;
+        float blue1 = (float) (bottomLeft & 255) / 255.0F;
+		
+		float alpha2 = (float) (topLeft >> 24 & 255) / 255.0F;
+        float red2 = (float) (topLeft >> 16 & 255) / 255.0F;
+        float green2 = (float) (topLeft >> 8 & 255) / 255.0F;
+        float blue2 = (float) (topLeft & 255) / 255.0F;
+		
+		float alpha3 = (float) (bottomRight >> 24 & 255) / 255.0F;
+        float red3 = (float) (bottomRight >> 16 & 255) / 255.0F;
+        float green3 = (float) (bottomRight >> 8 & 255) / 255.0F;
+        float blue3 = (float) (bottomRight & 255) / 255.0F;
+		
+		float alpha4 = (float) (topRight >> 24 & 255) / 255.0F;
+        float red4 = (float) (topRight >> 16 & 255) / 255.0F;
+        float green4 = (float) (topRight >> 8 & 255) / 255.0F;
+        float blue4 = (float) (topRight & 255) / 255.0F;
+		
+        GlStateManager.resetColor();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        roundedGradientShader.init();
+        setupRoundedRectUniforms(x, y, width, height, radius, roundedGradientShader);
+        // Bottom Left
+        roundedGradientShader.setUniformf("color1", red1, green1, blue1, alpha1);
+        //Top left
+        roundedGradientShader.setUniformf("color2", red2, green2, blue2, alpha2);
+        //Bottom Right
+        roundedGradientShader.setUniformf("color3", red3, green3, blue3, alpha3);
+        //Top Right
+        roundedGradientShader.setUniformf("color4", red4, green4, blue4, alpha4);
+        ShaderUtil.drawQuads(x - 1, y - 1, width + 2, height + 2);
+        roundedGradientShader.unload();
+        GlStateManager.disableBlend();
+    }
+	
+	public static void drawRoundOutline(float x, float y, float width, float height, float radius, float outlineThickness, int color, int outlineColor) {
+		float alpha1 = (float) (color >> 24 & 255) / 255.0F;
+        float red1 = (float) (color >> 16 & 255) / 255.0F;
+        float green1 = (float) (color >> 8 & 255) / 255.0F;
+        float blue1 = (float) (color & 255) / 255.0F;
+		
+		float alpha2 = (float) (outlineColor >> 24 & 255) / 255.0F;
+        float red2 = (float) (outlineColor >> 16 & 255) / 255.0F;
+        float green2 = (float) (outlineColor >> 8 & 255) / 255.0F;
+        float blue2 = (float) (outlineColor & 255) / 255.0F;
+		
+        GlStateManager.resetColor();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        roundedOutlineShader.init();
 
+        ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+        setupRoundedRectUniforms(x, y, width, height, radius, roundedOutlineShader);
+        roundedOutlineShader.setUniformf("outlineThickness", outlineThickness * sr.getScaleFactor());
+        roundedOutlineShader.setUniformf("color", red1, green1, blue1, alpha1);
+        roundedOutlineShader.setUniformf("outlineColor", red2, green2, blue2, alpha2);
+
+        ShaderUtil.drawQuads(x - (2 + outlineThickness), y - (2 + outlineThickness), width + (4 + outlineThickness * 2),
+                height + (4 + outlineThickness * 2));
+        roundedOutlineShader.unload();
+        GlStateManager.disableBlend();
+    }
 }

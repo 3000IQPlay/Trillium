@@ -10,16 +10,18 @@
 + Added LoadingScreen (Done)
 + Added Jesus NCP Mode (Done)
 + Added Criticals PacketAlt Mode (Done)
-+ Added MainMenu Shaders
 + Added XCarry (Done)
 + Added UnfocusedCPU (Done)
 + Added Auto ClickGUI Scale Optimization
 + Added FadeOut Animation for DamageParticles
 + Added FadeOut Animation for BackTrack
+
 + Added Troubleshooting into TrilliumSpy (Done)
++ Added MainMenu Shaders
++ Added Widgets
 
 * Security Advencements (Done)
-* Rewrote AuthGUI Look (Done)
+* Rewrote Auth UI (Done)
 * Rewrote BowKiller (Done)
 * Rewrote Surround (Done)
 * Rewrote Scaffold

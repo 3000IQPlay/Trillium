@@ -3,6 +3,7 @@ package dev._3000IQPlay.trillium.gui.auth;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.TrilliumSpy;
 import dev._3000IQPlay.trillium.gui.font.CustomFont;
+import dev._3000IQPlay.trillium.gui.widgets.TGuiButton;
 import dev._3000IQPlay.trillium.util.Drawable;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.RoundedShader;
@@ -27,7 +28,7 @@ public class AuthGui extends GuiScreen {
 		int containerHeight = 125;
 
 		RoundedShader.drawRound((width - containerWidth) / 2, height / 3.5f - 6.0f, containerWidth, containerHeight, 5, false, new Color(24, 24, 24, 255));
-        cFont.drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5f + 6, new Color(255, 255, 255, 255).getRGB());
+        cFont.drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5f + 2, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();
 
@@ -58,11 +59,11 @@ public class AuthGui extends GuiScreen {
         super.initGui();
         KeyAuthApp.keyAuth.init();
         Keyboard.enableRepeatEvents(true);
-        keyField = new GuiTextField(2, Minecraft.getMinecraft().fontRenderer, width / 2 - 70, height / 4 + 50, 140, 22);
+        keyField = new GuiTextField(2, Minecraft.getMinecraft().fontRenderer, width / 2 - 70, height / 4 + 45, 140, 22);
 		key = loadKey();
         if(key != null && !key.isEmpty()) keyField.setText(key);
 		keyField.setMaxStringLength(31);
-        buttonList.add(new GuiButton(0, width / 2 - 50, height / 4 + 100, 100, 21, "Login"));
+        buttonList.add(new TGuiButton(0, width / 2 - 54, height / 4 + 85, 107, 27, true, true, "Login"));
     }
 
     @Override
