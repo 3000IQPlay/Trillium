@@ -25,6 +25,7 @@
 * Rewrote Scaffold
 * Fixed AutoFish RClick (Done)
 * Fixed NoFall NCP + AAC Mode (Done)
+* Fixed Strafe compatibility with Anchor (Done)
 * Fixed UnicodeLag (Done)
 * Fixed AutoFish RClick Issue (Done)
 * Fixed ModuleCommand (Done)

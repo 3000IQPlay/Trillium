@@ -6,16 +6,30 @@ import dev._3000IQPlay.trillium.util.EntityUtil;
 import net.minecraft.init.*;
 import net.minecraft.util.math.*;
 
-public class Anchor extends Module
-{
-    public static boolean Anchoring;
+public class Anchor
+        extends Module {
+	private static Anchor INSTANCE = new Anchor();
     private final Setting<Integer> pitch = this.register(new Setting<>("Pitch", 60, 0, 90));
     private final Setting<Boolean> disable  = this.register(new Setting<>("AutoDisable", true));
-    private final Setting<Boolean> pull = this.register(new Setting<>("Pull", true));;
+    private final Setting<Boolean> pull = this.register(new Setting<>("Pull", true));
+	public static boolean Anchoring;
     int holeblocks;
 
     public Anchor() {
-        super("Anchor",  "Pulls you into hole",  Module.Category.MOVEMENT,  false,  false,  false);
+        super("Anchor", "Pulls you into hole",  Module.Category.MOVEMENT,  false,  false,  false);
+		this.setInstance();
+    }
+	
+	private void setInstance() {
+        INSTANCE = this;
+    }
+
+    public static Anchor getInstance() {
+        if (INSTANCE != null) {
+            return INSTANCE;
+        }
+        INSTANCE = new Anchor();
+        return INSTANCE;
     }
 
     public boolean isBlockHole(final BlockPos blockPos) {
