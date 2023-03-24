@@ -3,7 +3,6 @@
 + Added AutoBuilder (Done)
 + Added AntiFireBall (Done)
 + Added AntiFriendHit (Done)
-+ Added BowKiller (Done)
 + Added RemoveXPDesync (Done)
 + Added FastSwim (Done)
 + Added Strafe Custom Mode (Done)
@@ -17,8 +16,9 @@
 + Added FadeOut Animation for BackTrack
 
 + Added Troubleshooting into TrilliumSpy (Done)
++ Added GuiButton Widget into MainMenu
 + Added MainMenu Shaders
-+ Added Widgets
++ Added Widgets (Done)
 
 * Security Advencements (Done)
 * Rewrote Auth UI (Done)
@@ -29,6 +29,7 @@
 * Fixed NoFall NCP + AAC Mode (Done)
 * Fixed Strafe compatibility with Anchor (Done)
 * Fixed UnicodeLag (Done)
+* Fixed Prefix Not Saving Issue (Done)
 * Fixed AutoFish RClick Issue (Done)
 * Fixed ModuleCommand (Done)
 * Fixed ClickGUI Animations
