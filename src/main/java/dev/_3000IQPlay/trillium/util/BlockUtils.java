@@ -160,7 +160,7 @@ public class BlockUtils {
 	
 	public static float getBlockDamage(BlockPos pos) {
         try {
-            Field f = ReflectionHelper.findField(RenderGlobal.class, new String[]{"damagedBlocks", "field_72738_E"});
+            Field f = ReflectionHelper.findField(RenderGlobal.class, new String[]{"damagedBlocks", "damagedBlocks"});
             f.setAccessible(true);
             HashMap<BlockPos, DestroyBlockProgress> map = (HashMap<BlockPos, DestroyBlockProgress>)f.get(Minecraft.getMinecraft().renderGlobal);
             for (DestroyBlockProgress destroyblockprogress : map.values()) {

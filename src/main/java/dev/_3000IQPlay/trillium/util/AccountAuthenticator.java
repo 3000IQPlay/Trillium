@@ -77,7 +77,7 @@ public class AccountAuthenticator {
         }
     }
 
-    public static String fieldSession = isInstanceNotNull() ? "session" : "field_71449_j";
+    public static String fieldSession = isInstanceNotNull() ? "session" : "session";
 
     public static boolean isInstanceNotNull() {
         try {

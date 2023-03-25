@@ -238,9 +238,9 @@ class MixinItemRenderer {
     }
 
     @Overwrite
-    private void transformFirstPerson(EnumHandSide p_187453_1_, float p_187453_2_) {
+    private void transformFirstPerson(EnumHandSide hand, float p_187453_2_) {
         float angle = System.currentTimeMillis() / 3L % 360L;
-        int i = p_187453_1_ == EnumHandSide.RIGHT ? 1 : -1;
+        int i = hand == EnumHandSide.RIGHT ? 1 : -1;
         float f = MathHelper.sin(p_187453_2_ * p_187453_2_ * (float) Math.PI);
         GlStateManager.rotate(i * (45.0F + f * -20.0F), 0.0F, 1.0F, 0.0F);
         float f1 = MathHelper.sin(MathHelper.sqrt(p_187453_2_) * (float) Math.PI);

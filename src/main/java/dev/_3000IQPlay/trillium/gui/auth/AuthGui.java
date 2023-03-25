@@ -3,7 +3,7 @@ package dev._3000IQPlay.trillium.gui.auth;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.TrilliumSpy;
 import dev._3000IQPlay.trillium.gui.font.CustomFont;
-import dev._3000IQPlay.trillium.gui.widgets.TGuiButton;
+import dev._3000IQPlay.trillium.gui.widgets.*;
 import dev._3000IQPlay.trillium.util.Drawable;
 import dev._3000IQPlay.trillium.util.RenderUtil;
 import dev._3000IQPlay.trillium.util.RoundedShader;
@@ -59,11 +59,11 @@ public class AuthGui extends GuiScreen {
         super.initGui();
         KeyAuthApp.keyAuth.init();
         Keyboard.enableRepeatEvents(true);
-        keyField = new GuiTextField(2, Minecraft.getMinecraft().fontRenderer, width / 2 - 70, height / 4 + 45, 140, 22);
+        keyField = new TGuiTextField(2, Minecraft.getMinecraft().fontRenderer, width / 2 - 70, height / 4 + 45, 140, 22, true, true, 5.0f);
 		key = loadKey();
         if(key != null && !key.isEmpty()) keyField.setText(key);
 		keyField.setMaxStringLength(31);
-        buttonList.add(new TGuiButton(0, width / 2 - 54, height / 4 + 85, 107, 27, true, true, "Login"));
+        buttonList.add(new TGuiButton(0, width / 2 - 54, height / 4 + 85, 107, 27, true, true, 7.0f, "Login"));
     }
 
     @Override

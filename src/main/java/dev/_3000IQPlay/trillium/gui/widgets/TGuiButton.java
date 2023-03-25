@@ -22,15 +22,17 @@ public class TGuiButton extends GuiButton {
     static ScaledResolution sr;
 	boolean outline;
 	boolean coolWave;
+	float rectRound;
     String name;
 
-    public TGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, boolean outline, boolean coolWave, String name) {
+    public TGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, boolean outline, boolean coolWave, float rectRound, String name) {
         super(buttonId, x, y, name);
         sr = new ScaledResolution(mc);
 		this.width = widthIn;
 		this.height = heightIn;
 		this.outline = outline;
 		this.coolWave = coolWave;
+		this.rectRound = rectRound;
         this.name = name;
     }
 
@@ -51,18 +53,18 @@ public class TGuiButton extends GuiButton {
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             GlStateManager.blendFunc(770, 771);
 
-            Color color = new Color(24, 24, 27, 180);
+            Color color = new Color(24, 24, 27, 185);
 			Color color1 = new Color(5, 5, 5, 255);
 
             GlStateManager.pushMatrix();
 			if (outline) {
 				if (coolWave) {
-					RoundedShader.drawGradientHorizontal(hovered ? x : x - 1, hovered ? y: y - 1, hovered ? this.width : this.width + 2, hovered ? this.height : this.height + 2, 7f, ColorUtil.applyOpacity(ClickGui.getInstance().getColor(200), 0.9f).getRGB(), ColorUtil.applyOpacity(ClickGui.getInstance().getColor(0), 0.9f).getRGB());
+					RoundedShader.drawGradientHorizontal(hovered ? x : x - 1, hovered ? y: y - 1, hovered ? this.width : this.width + 2, hovered ? this.height : this.height + 2, rectRound, ColorUtil.applyOpacity(ClickGui.getInstance().getColor(200), 0.9f).getRGB(), ColorUtil.applyOpacity(ClickGui.getInstance().getColor(0), 0.9f).getRGB());
 			    } else {
-					RoundedShader.drawGradientRound(hovered ? x : x - 1, hovered ? y + 1 : y, hovered ? this.width : this.width + 2, hovered ? this.height : this.height + 2, 7f, color1, color1, color1, color1);
+					RoundedShader.drawGradientRound(hovered ? x : x - 1, hovered ? y + 1 : y, hovered ? this.width : this.width + 2, hovered ? this.height : this.height + 2, rectRound, color1, color1, color1, color1);
 				}
 			}
-            RoundedShader.drawGradientRound(hovered ? x + 1 : x, hovered ? y + 1 : y, hovered ? this.width - 2 : this.width, hovered ? this.height - 2 : this.height, 7f, color, color, color, color);
+            RoundedShader.drawGradientRound(hovered ? x + 1 : x, hovered ? y + 1 : y, hovered ? this.width - 2 : this.width, hovered ? this.height - 2 : this.height, rectRound, color, color, color, color);
 			
             FontRender.drawCentString6(name, x + this.width / 2, y + 5f + this.height / 4, hovered ? new Color(0x7A7A7A).getRGB() : -1);
 			

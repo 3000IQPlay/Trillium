@@ -19,8 +19,8 @@ import net.minecraft.util.math.MathHelper;
 
 @Mixin(ModelPlayer.class)
 public class MixinPlayerModel extends ModelBiped {
-    public MixinPlayerModel(float p_i1148_1_) {
-        super(p_i1148_1_);
+    public MixinPlayerModel(float modelSize) {
+        super(modelSize);
     }
 
     @Shadow
