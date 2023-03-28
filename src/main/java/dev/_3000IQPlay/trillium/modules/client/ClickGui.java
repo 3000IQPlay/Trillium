@@ -60,7 +60,6 @@ public class ClickGui
         return INSTANCE;
     }
 
-
     public Color getColor(int count) {
         int index = (int) (count);
         switch (colorMode.getValue()) {
@@ -132,7 +131,7 @@ public class ClickGui
         Vertical;
     }
 
-    public enum colorModeEn {
+    public static enum colorModeEn {
         Sky,
         LightRainbow,
         Rainbow,

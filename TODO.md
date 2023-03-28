@@ -22,9 +22,10 @@
 
 * Security Advencements (Done)
 * Rewrote Auth UI (Done)
+* Rewrote TargetHud (Done)
 * Rewrote BowKiller (Done)
-* Rewrote Surround (Done)
 * Rewrote Scaffold
+* Fixed mcmod.info (Done)
 * Fixed AutoFish RClick (Done)
 * Fixed NoFall NCP + AAC Mode (Done)
 * Fixed Strafe compatibility with Anchor (Done)

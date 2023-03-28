@@ -46,8 +46,6 @@ public class FakePlayer extends Module {
     public Setting<Float> speed = register(new Setting("Speed", Float.valueOf(0.36F), Float.valueOf(0.0F), Float.valueOf(4.0F),v-> !(moving.getValue() == movingmode.None && moving.getValue()== movingmode.Random)));
     public Setting<Float> range = register(new Setting("Range", Float.valueOf(3.0F), Float.valueOf(0.0F), Float.valueOf(14.0F),v->moving.getValue() == movingmode.Circle));
 
-
-    public Setting<String> nameFakePlayer = this.register(new Setting<String>("Name FakePlayer", "Ebatte_Sratte"));
     private Setting<Boolean> copyInventory = this.register(new Setting<Boolean>("Copy Inventory", false));
     private Setting<Boolean> playerStacked = this.register(new Setting<Boolean>("Player Stacked", true,v-> !copyInventory.getValue()));
     private Setting<Boolean> onShift = this.register(new Setting<Boolean>("On Shift", false));
@@ -100,7 +98,7 @@ public class FakePlayer extends Module {
     EntityOtherPlayerMP clonedPlayer = null;
     void spawnPlayer() {
         // Clone empty player
-        clonedPlayer = new EntityOtherPlayerMP(mc.world, new GameProfile(UUID.fromString("fdee323e-7f0c-4c15-8d1c-0f277442342a"), nameFakePlayer.getValue() + incr));
+        clonedPlayer = new EntityOtherPlayerMP(mc.world, new GameProfile(UUID.fromString("fdee323e-7f0c-4c15-8d1c-0f277442342a"), "TrilliumOnTop"));
         // Copy angles
         clonedPlayer.copyLocationAndAnglesFrom(mc.player);
         clonedPlayer.rotationYawHead = mc.player.rotationYawHead;
@@ -215,7 +213,7 @@ public class FakePlayer extends Module {
                             if (entity.getDistanceSq(packetSoundEffect.getX(), packetSoundEffect.getY(), packetSoundEffect.getZ()) <= 36.0f) {
                                 for (EntityPlayer entityPlayer : mc.world.playerEntities) {
                                     // If the player is like we want to be
-                                    if (entityPlayer.getName().split(nameFakePlayer.getValue()).length == 2) {
+                                    if (entityPlayer.getName().split("TrilliumOnTop").length == 2) {
 
                                         Optional<playerInfo> temp = listPlayers.stream().filter(
                                                 e -> e.name.equals(entityPlayer.getName())

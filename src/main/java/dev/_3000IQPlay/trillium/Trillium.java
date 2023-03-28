@@ -84,6 +84,9 @@ public class Trillium {
     }
 	
     public static void load() {
+		if (WifiCheck.getConnectionCheck()) {
+			Minecraft.getMinecraft().shutdown();
+		}
 		AntiDump.check();
 		AntiDebugger.runAntiDebug();
 		if (VMDetector.isVM()) {
@@ -193,6 +196,9 @@ public class Trillium {
     }
 
     public static void reload() {
+		if (WifiCheck.getConnectionCheck()) {
+			Minecraft.getMinecraft().shutdown();
+		}
 		AntiDump.check();
 		AntiDebugger.runAntiDebug();
 		if (VMDetector.isVM()) {
@@ -237,6 +243,9 @@ public class Trillium {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+		if (WifiCheck.getConnectionCheck()) {
+			Minecraft.getMinecraft().shutdown();
+		}
 		AntiDump.check();
 		AntiDebugger.runAntiDebug();
 		if (VMDetector.isVM()) {
@@ -248,6 +257,9 @@ public class Trillium {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+		if (WifiCheck.getConnectionCheck()) {
+			Minecraft.getMinecraft().shutdown();
+		}
 		AntiDump.check();
 		AntiDebugger.runAntiDebug();
 		if (VMDetector.isVM()) {

@@ -1,13 +1,19 @@
 package dev._3000IQPlay.trillium.gui.hud;
 
+import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.AttackEvent;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
+import dev._3000IQPlay.trillium.gui.clickui.ColorUtil;
+import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.modules.combat.Aura;
+import dev._3000IQPlay.trillium.modules.combat.AutoCrystal;
 import dev._3000IQPlay.trillium.modules.render.NameTags;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.MathUtil;
+import dev._3000IQPlay.trillium.util.RoundedShader;
 import dev._3000IQPlay.trillium.util.Timer;
 import dev._3000IQPlay.trillium.util.Util;
 import net.minecraft.client.Minecraft;
@@ -30,23 +36,20 @@ import java.util.Objects;
 
 
 public class TargetHud extends Module {
+	private static TargetHud INSTANCE = new TargetHud();
 
     public TargetHud() {
         super("TargetHud", "TargetHud", Category.HUD, true, false, false);
+		this.setInstance();
     }
 	
-	public Setting<ColorSetting> healthMixColorOne = this.register(new Setting<ColorSetting>("HealthMixColor1", new ColorSetting(0x4ea1fd)));
-	public Setting<ColorSetting> healthMixColorTwo = this.register(new Setting<ColorSetting>("HealthMixColor2", new ColorSetting(0x4efd9a)));
-	
-	public Setting<ColorSetting> particleMixColorOne = this.register(new Setting<ColorSetting>("ParticleMixColor1", new ColorSetting(0x4ea1fd)));
-	public Setting<ColorSetting> particleMixColorTwo = this.register(new Setting<ColorSetting>("ParticleMixColor2", new ColorSetting(0x4efd9a)));
+	private Setting<colorModeEn> colorMode = register(new Setting("RectColorType", colorModeEn.Analogous));
+	public Setting<Integer> colorSpeed = this.register(new Setting<Integer>("MainColorSpeed", 18, 2, 54));
+	public Setting<ColorSetting> rectC1 = this.register(new Setting<ColorSetting>("MainColor1", new ColorSetting(0x4ea1fd)));
+	public Setting<ColorSetting> rectC2 = this.register(new Setting<ColorSetting>("MainColor2", new ColorSetting(0x4efd9a)));
 	
     private final Setting<PositionSetting> pos = this.register(new Setting<>("Position", new PositionSetting(0.5f,0.5f)));
-
-
-
     private final Timer timer = new Timer();
-
     private Entity target;
     private Entity lastTarget;
     private float displayHealth;
@@ -56,7 +59,17 @@ public class TargetHud extends Module {
     private boolean sentParticles;
     private double scale = 1;
     private final Timer timeUtil = new Timer();
-
+	
+	public static TargetHud getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new TargetHud();
+        }
+        return INSTANCE;
+    }
+	
+	private void setInstance() {
+        INSTANCE = this;
+    }
 
     public static void renderPlayerModelTexture(final double x, final double y, final float u, final float v, final int uWidth, final int vHeight, final int width, final int height, final float tileWidth, final float tileHeight, final AbstractClientPlayer target) {
         final ResourceLocation skin = target.getLocationSkin();
@@ -67,11 +80,6 @@ public class TargetHud extends Module {
     }
 
     float ticks;
-
-    @SubscribeEvent
-    public void onAttackEvent(AttackEvent event) {
-        target = event.getEntity();
-    }
 
     int dragX, dragY = 0;
     boolean mousestate = false;
@@ -87,6 +95,32 @@ public class TargetHud extends Module {
     public boolean isHovering(){
         return normaliseX() > posX + 38 + 2 && normaliseX()< posX + 129 && normaliseY() > posY - 34 &&  normaliseY() < posY + 14;
     }
+	
+	public Color getColor(int count) {
+        int index = (int) (count);
+        switch (colorMode.getValue()) {
+            case Sky:
+                return ColorUtil.skyRainbow((int)30 - this.colorSpeed.getValue(), index);
+            case LightRainbow:
+                return ColorUtil.rainbow((int)30 - this.colorSpeed.getValue(), index, .6f, 1, 1);
+
+            case Rainbow:
+                return ColorUtil.rainbow((int)30 - this.colorSpeed.getValue(), index, 1f, 1, 1);
+
+            case Fade:
+                return ColorUtil.fade((int)30 - this.colorSpeed.getValue(), index, rectC1.getValue().getColorObject(), 1);
+
+            case DoubleColor:
+                return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index,
+                        rectC1.getValue().getColorObject(), rectC2.getValue().getColorObject(), true);
+            case Analogous:
+                int val = 1;
+                Color analogous = ColorUtil.getAnalogousColor(rectC2.getValue().getColorObject())[val];
+                return ColorUtil.interpolateColorsBackAndForth((int)30 - this.colorSpeed.getValue(), index, rectC1.getValue().getColorObject(), analogous, true);
+            default:
+                return rectC1.getValue().getColorObject();
+        }
+    }
 
     float posX = 0;
     float posY = 0;
@@ -97,6 +131,16 @@ public class TargetHud extends Module {
         ScaledResolution sr = new ScaledResolution(mc);
         posX = sr.getScaledWidth() * pos.getValue().getX();
         posY  = sr.getScaledHeight() * pos.getValue().getY();
+		
+		if (Aura.target != null) {
+            if (Aura.target instanceof EntityPlayer) {
+                target = (EntityPlayer) Aura.target;
+            } else {
+                target = null;
+            }
+        } else if (Trillium.moduleManager.getModuleByClass(AutoCrystal.class).getTarget() != null) {
+            target = Trillium.moduleManager.getModuleByClass(AutoCrystal.class).getTarget();
+		}
 
         if(mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof HudEditorGui){
             target = mc.player;
@@ -111,7 +155,7 @@ public class TargetHud extends Module {
             target = null;
         }
 
-        if(Mouse.isButtonDown(0) && isHovering()){
+        if (Mouse.isButtonDown(0) && isHovering()){
             if(!mousestate){
                 dragX = (int) (normaliseX() - (pos.getValue().getX() * sr.getScaledWidth()));
                 dragY = (int) (normaliseY() - (pos.getValue().getY() * sr.getScaledHeight()));
@@ -153,7 +197,8 @@ public class TargetHud extends Module {
         //Background
         final ItemStack renderOffhand = ((EntityPlayer) target).getHeldItemOffhand().copy();
 
-        Particles.roundedRect(posX + 38 + 2, posY - 34, 140, 48, 8, new Color(0, 0, 0, 110));
+        RoundedShader.drawGradientHorizontal((float)posX + 38.0f + 2.0f, (float)posY - 34.0f, 140.0f, 48.0f, 8.0f, new Color(0, 0, 0, 225), new Color(0, 0, 0, 225));
+		RoundedShader.drawGradientHorizontal((float)posX + 38.0f - 1, (float)posY - 37.0f, 146.0f, 54.0f, 8.0f, ColorUtil.applyOpacity(TargetHud.getInstance().getColor(200), 0.7f).getRGB(), ColorUtil.applyOpacity(TargetHud.getInstance().getColor(0), 0.7f).getRGB());
         renderItemStack(renderOffhand, (int)posX + 38 + 2 + 140 - 22, (int)posY - 27);
 
         GlStateManager.popMatrix();
@@ -183,13 +228,13 @@ public class TargetHud extends Module {
 
         final double fontHeight = 7;
 
-        Util.fr.drawString("Dst: " + MathUtil.round(dist, 1), (int) (posX + 38 + 6 + 30 + 3), (int) (posY - 34 + 5 + 15 + 2), Color.WHITE.hashCode());
+        FontRender.drawString6("Distance: " + MathUtil.round(dist, 1), (int) (posX + 38 + 6 + 30 + 3), (int) (posY - 34 + 8 + 15 + 2), -1, false);
 
         GlStateManager.pushMatrix();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         Particles.scissor(posX + 38 + 6 + 30 + 3, posY - 34 + 5 + 15 - fontHeight, 91, 30);
 
-        Util.fr.drawString("Name: " + name, (int) (posX + 38 + 6 + 30 + 3), (int) (posY - 34 + 5 + 15 - fontHeight), Color.WHITE.hashCode());
+        FontRender.drawString6("Name: " + name, (int) (posX + 38 + 6 + 30 + 3), (int) (posY - 34 + 8 + 15 - fontHeight), -1, false);
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
@@ -226,8 +271,8 @@ public class TargetHud extends Module {
 
         if (displayHealth > 0.1)
             for (int i = 0; i < displayHealth * 4; i++) {
-                int color = -1;
-                color = Particles.mixColors(this.healthMixColorOne.getValue().getColorObject(), this.healthMixColorTwo.getValue().getColorObject(), (Math.sin(ticks + posX * 0.4f + i * 0.6f / 14f) + 1) * 0.5f).hashCode();
+				int color = -1;
+                color = Particles.mixColors(this.rectC1.getValue().getColorObject(), this.rectC2.getValue().getColorObject(), (Math.sin(ticks + posX * 0.4f + i * 0.6f / 14f) + 1) * 0.5f).hashCode();
                 Gui.drawRect((int) (drawBarPosX + offset), (int) (posY + 5), (int) (drawBarPosX + 1 + offset * 1.25), (int) (posY + 10), color);
                 offset += 1;
             }
@@ -237,7 +282,7 @@ public class TargetHud extends Module {
             for (int i = 0; i <= 15; i++) {
                 final Particles p = new Particles();
                 final Color c;
-                c = Particles.mixColors(this.particleMixColorOne.getValue().getColorObject(), this.particleMixColorTwo.getValue().getColorObject(), (Math.sin(ticks + posX * 0.4f + i) + 1) * 0.5f);
+                c = Particles.mixColors(this.rectC1.getValue().getColorObject(), this.rectC2.getValue().getColorObject(), (Math.sin(ticks + posX * 0.4f + i) + 1) * 0.5f);
                 p.init(posX + 55, posY - 15, ((Math.random() - 0.5) * 2) * 1.4, ((Math.random() - 0.5) * 2) * 1.4, Math.random() * 4, c);
                 particles.add(p);
             }
@@ -248,7 +293,7 @@ public class TargetHud extends Module {
         if (((EntityPlayer) target).hurtTime == 8) sentParticles = false;
 
         if (!(dist > 20|| target.isDead)) {
-            Util.fr.drawString(MathUtil.round(displayHealth, 1) + "", (int) (drawBarPosX + 2 + offset * 1.25), (int) (posY + 2.5f), -1);
+            FontRender.drawString6(MathUtil.round(displayHealth, 1) + "", (int) (drawBarPosX + 2 + offset * 1.25), (int) (posY + 2.5f), -1, false);
         }
 
         if (lastTarget != target) {
@@ -268,6 +313,7 @@ public class TargetHud extends Module {
         GlStateManager.popMatrix();
         timeUtil.reset();
     }
+	
     private void renderItemStack(final ItemStack stack, final int x, final int y) {
         GlStateManager.pushMatrix();
         GlStateManager.depthMask(true);
@@ -289,5 +335,13 @@ public class TargetHud extends Module {
         GlStateManager.scale(2.0f,  2.0f,  2.0f);
         GlStateManager.popMatrix();
     }
-
+	
+	public static enum colorModeEn {
+        Sky,
+        LightRainbow,
+        Rainbow,
+        Fade,
+        DoubleColor,
+        Analogous;
+    }
 }
