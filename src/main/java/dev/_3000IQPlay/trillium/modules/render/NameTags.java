@@ -249,7 +249,7 @@ public class NameTags extends Module
         GlStateManager.disableCull ( );
         mc.getRenderItem ( ).renderItemAndEffectIntoGUI ( stack , x , - 26 );
         mc.getRenderItem ( ).renderItemOverlays ( mc.fontRenderer , stack , x , - 26 );
-       mc.getRenderItem ( ).zLevel = 0.0f;
+        mc.getRenderItem ( ).zLevel = 0.0f;
         RenderHelper.disableStandardItemLighting ( );
         GlStateManager.enableCull ( );
         GlStateManager.enableAlpha ( );

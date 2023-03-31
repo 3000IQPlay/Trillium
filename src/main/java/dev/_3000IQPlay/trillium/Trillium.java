@@ -88,7 +88,6 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
 		AntiDump.check();
-		AntiDebugger.runAntiDebug();
 		if (VMDetector.isVM()) {
 			TrilliumSpy.sendDebugOrDumpDetect();
 			Minecraft.getMinecraft().shutdown();
@@ -200,7 +199,6 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
 		AntiDump.check();
-		AntiDebugger.runAntiDebug();
 		if (VMDetector.isVM()) {
 			TrilliumSpy.sendDebugOrDumpDetect();
 			Minecraft.getMinecraft().shutdown();
@@ -247,7 +245,6 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
 		AntiDump.check();
-		AntiDebugger.runAntiDebug();
 		if (VMDetector.isVM()) {
 			TrilliumSpy.sendDebugOrDumpDetect();
 			Minecraft.getMinecraft().shutdown();
@@ -261,7 +258,6 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
 		AntiDump.check();
-		AntiDebugger.runAntiDebug();
 		if (VMDetector.isVM()) {
 			TrilliumSpy.sendDebugOrDumpDetect();
 			Minecraft.getMinecraft().shutdown();

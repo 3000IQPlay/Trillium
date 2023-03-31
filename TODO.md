@@ -24,6 +24,7 @@
 * Rewrote Auth UI (Done)
 * Rewrote TargetHud (Done)
 * Rewrote BowKiller (Done)
+* Rewrote NameTags
 * Rewrote Scaffold
 * Fixed mcmod.info (Done)
 * Fixed AutoFish RClick (Done)

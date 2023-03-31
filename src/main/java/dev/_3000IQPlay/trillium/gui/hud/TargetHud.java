@@ -43,7 +43,7 @@ public class TargetHud extends Module {
 		this.setInstance();
     }
 	
-	private Setting<colorModeEn> colorMode = register(new Setting("RectColorType", colorModeEn.Analogous));
+	private Setting<colorModeEn> colorMode = register(new Setting("RectColorType", colorModeEn.Sky));
 	public Setting<Integer> colorSpeed = this.register(new Setting<Integer>("MainColorSpeed", 18, 2, 54));
 	public Setting<ColorSetting> rectC1 = this.register(new Setting<ColorSetting>("MainColor1", new ColorSetting(0x4ea1fd)));
 	public Setting<ColorSetting> rectC2 = this.register(new Setting<ColorSetting>("MainColor2", new ColorSetting(0x4efd9a)));
@@ -197,7 +197,10 @@ public class TargetHud extends Module {
         //Background
         final ItemStack renderOffhand = ((EntityPlayer) target).getHeldItemOffhand().copy();
 
-        RoundedShader.drawGradientHorizontal((float)posX + 38.0f + 2.0f, (float)posY - 34.0f, 140.0f, 48.0f, 8.0f, new Color(0, 0, 0, 225), new Color(0, 0, 0, 225));
+        RoundedShader.drawGradientHorizontal((float)posX + 38.0f + 2.0f, (float)posY - 34.0f, 140.0f, 48.0f, 8.0f, new Color(0, 0, 0, 255), new Color(0, 0, 0, 255));
+		RoundedShader.drawGradientHorizontal((float)posX + 38.0f + 2.0f, (float)posY - 34.0f, 140.0f, 48.0f, 8.0f, new Color(0, 0, 0, 255), new Color(0, 0, 0, 255));
+		RoundedShader.drawGradientHorizontal((float)posX + 38.0f + 2.0f, (float)posY - 34.0f, 140.0f, 48.0f, 8.0f, new Color(0, 0, 0, 255), new Color(0, 0, 0, 255));
+		RoundedShader.drawGradientHorizontal((float)posX + 38.0f + 2.0f, (float)posY - 34.0f, 140.0f, 48.0f, 8.0f, new Color(0, 0, 0, 255), new Color(0, 0, 0, 255));
 		RoundedShader.drawGradientHorizontal((float)posX + 38.0f - 1, (float)posY - 37.0f, 146.0f, 54.0f, 8.0f, ColorUtil.applyOpacity(TargetHud.getInstance().getColor(200), 0.7f).getRGB(), ColorUtil.applyOpacity(TargetHud.getInstance().getColor(0), 0.7f).getRGB());
         renderItemStack(renderOffhand, (int)posX + 38 + 2 + 140 - 22, (int)posY - 27);
 
