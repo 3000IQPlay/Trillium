@@ -93,6 +93,7 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
         unloaded = false;
+		Display.setTitle("Loading " + MODNAME + MODVER);
         if (reloadManager != null) {
             reloadManager.unload();
             reloadManager = null;
@@ -263,10 +264,10 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
 		Minecraft mc = Minecraft.getMinecraft();
-        Display.setTitle(MODNAME + " "+ MODVER + " || User: " + mc.getSession().getUsername());
 		setWindowsIcon();
         Trillium.load();
 		TrilliumSpy.sendLaunch();
+		Display.setTitle(MODNAME + " "+ MODVER + " || User: " + mc.getSession().getUsername());
         MinecraftForge.EVENT_BUS.register(networkHandler);
 		eventProcessor = new EventProcessor();
         eventProcessor.onInit();
