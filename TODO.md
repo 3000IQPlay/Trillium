@@ -1,5 +1,6 @@
 **Trillium b1.7.8 Changes**
 + New GUI
++ Added Flatten (Done)
 + Added ClickGUI Scale Option
 + Added FadeOut Animation for DamageParticles
 + Added FadeOut Animation for BackTrack

