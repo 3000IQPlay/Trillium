@@ -1,5 +1,6 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
+import dev._3000IQPlay.trillium.modules.client.MainSettings;
 import dev._3000IQPlay.trillium.gui.mainmenu.GLSLShader;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -21,7 +22,8 @@ public class MixinGuiMainMenu extends GuiScreen {
     @Inject(method = { "drawPanorama" }, at = { @At("TAIL") })
     public void drawPanoramaTailHook(final int mouseX, final int mouseY, final float partialTicks, final CallbackInfo info) {
         try {
-            this.shader = new GLSLShader("/assets/minecraft/mainmenu/shader.fsh");
+			if (MainSettings.getInstance().menuShader.getValue() == MainSettings.MS.BlueAurora) this.shader = new GLSLShader("/assets/minecraft/mainmenu/blueaurora.fsh");
+			if (MainSettings.getInstance().menuShader.getValue() == MainSettings.MS.PurpleGradient) this.shader = new GLSLShader("/assets/minecraft/mainmenu/purplegradient.fsh");
         }
         catch (final IOException ex) {}
         GlStateManager.disableCull();

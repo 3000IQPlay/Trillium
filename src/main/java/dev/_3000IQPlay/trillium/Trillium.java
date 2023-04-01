@@ -93,7 +93,6 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
         unloaded = false;
-		Display.setTitle("Loading " + MODNAME + MODVER);
         if (reloadManager != null) {
             reloadManager.unload();
             reloadManager = null;
@@ -251,6 +250,7 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
         GlobalExecutor.EXECUTOR.submit(() -> Sphere.cacheSphere(LOGGER));
+		Display.setTitle("Loading " + MODNAME + MODVER);
     }
 
     @Mod.EventHandler
