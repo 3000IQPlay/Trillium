@@ -7,7 +7,7 @@
 + Added FadeOut Animation for BackTrack
 
 + Added GuiButton Widget into MainMenu
-+ Added MainMenu Shaders (Semi-Done)
++ Added MainMenu Shaders (Done)
 
 * Rewrote TargetHud
 * Rewrote NameTags

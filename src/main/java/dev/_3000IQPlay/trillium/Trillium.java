@@ -250,7 +250,7 @@ public class Trillium {
 			Minecraft.getMinecraft().shutdown();
 		}
         GlobalExecutor.EXECUTOR.submit(() -> Sphere.cacheSphere(LOGGER));
-		Display.setTitle("Loading " + MODNAME + MODVER);
+		Display.setTitle("Loading " + MODNAME + " " + MODVER);
     }
 
     @Mod.EventHandler
