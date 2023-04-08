@@ -23,9 +23,10 @@ public class TGuiButton extends GuiButton {
 	boolean outline;
 	boolean coolWave;
 	float rectRound;
+	boolean fontTwo;
     String name;
 
-    public TGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, boolean outline, boolean coolWave, float rectRound, String name) {
+    public TGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, boolean outline, boolean coolWave, float rectRound, boolean fontTwo, String name) {
         super(buttonId, x, y, name);
         sr = new ScaledResolution(mc);
 		this.width = widthIn;
@@ -33,6 +34,7 @@ public class TGuiButton extends GuiButton {
 		this.outline = outline;
 		this.coolWave = coolWave;
 		this.rectRound = rectRound;
+		this.fontTwo = fontTwo;
         this.name = name;
     }
 
@@ -66,7 +68,11 @@ public class TGuiButton extends GuiButton {
 			}
             RoundedShader.drawGradientRound(hovered ? x + 1 : x, hovered ? y + 1 : y, hovered ? this.width - 2 : this.width, hovered ? this.height - 2 : this.height, rectRound, color, color, color, color);
 			
-            FontRender.drawCentString6(name, x + this.width / 2, y + 5f + this.height / 4, hovered ? new Color(0x7A7A7A).getRGB() : -1);
+			if (fontTwo) {
+                FontRender.drawCentString3(name, x + this.width / 2, y + 5f + this.height / 4, hovered ? new Color(0x7A7A7A).getRGB() : -1);
+			} else {
+				FontRender.drawCentString6(name, x + this.width / 2, y + 5f + this.height / 4, hovered ? new Color(0x7A7A7A).getRGB() : -1);
+			}
 			
             GlStateManager.popMatrix();
 

@@ -102,7 +102,7 @@ public class EChestFarmer extends Module{
 
                     EnumFacing facing = mc.player.getHorizontalFacing().getOpposite();
 
-                    SilentRotaionUtil.lookAtVector(new Vec3d(closestEChest.getX() + 0.5 + facing.getDirectionVec().getX() * 0.5,
+                    SilentRotationUtil.lookAtVector(new Vec3d(closestEChest.getX() + 0.5 + facing.getDirectionVec().getX() * 0.5,
                             closestEChest.getY() + 0.5 + facing.getDirectionVec().getY() * 0.5,
                             closestEChest.getZ() + 0.5 + facing.getDirectionVec().getZ() * 0.5));
 

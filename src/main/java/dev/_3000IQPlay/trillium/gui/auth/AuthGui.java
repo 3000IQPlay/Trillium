@@ -14,10 +14,11 @@ import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.io.*;
+import java.net.*;
 
 public class AuthGui extends GuiScreen {
 	private static final CustomFont cFont = new CustomFont(new Font("Calibri", 0, 25), true, false);
-    private GuiTextField keyField;
+	private GuiTextField keyField;
     private String key = "";
     private int statusTime;
 	
@@ -28,7 +29,7 @@ public class AuthGui extends GuiScreen {
 		int containerHeight = 125;
 
 		RoundedShader.drawRound((width - containerWidth) / 2, height / 3.5f - 6.0f, containerWidth, containerHeight, 5, false, new Color(24, 24, 24, 255));
-        cFont.drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5f + 2, new Color(255, 255, 255, 255).getRGB());
+		cFont.drawCenteredStringWithShadow("Trillium Auth", width / 2, height / 3.5f + 2, new Color(255, 255, 255, 255).getRGB());
 
         keyField.drawTextBox();
 
@@ -63,7 +64,8 @@ public class AuthGui extends GuiScreen {
 		key = loadKey();
         if(key != null && !key.isEmpty()) keyField.setText(key);
 		keyField.setMaxStringLength(31);
-        buttonList.add(new TGuiButton(0, width / 2 - 54, height / 4 + 85, 107, 27, true, true, 7.0f, "Login"));
+        buttonList.add(new TGuiButton(0, width / 2 - 54, height / 4 + 85, 107, 27, true, true, 7.0f, false, "Login"));
+		//buttonList.add(new TGuiButton(1, 10, 10, 90, 20, true, true, 7.0f, true, "Discord"));
     }
 
     @Override
@@ -77,6 +79,14 @@ public class AuthGui extends GuiScreen {
                 }
                 statusTime = 50;
                 break;
+			/*case 1:
+                String url = "https://discord.gg/84J4mhnS35";
+                try {
+                    Desktop.getDesktop().browse(new URI(url));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                break;*/
         }
     }
 	

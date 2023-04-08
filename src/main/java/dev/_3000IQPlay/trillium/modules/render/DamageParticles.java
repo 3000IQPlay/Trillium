@@ -1,10 +1,13 @@
 package dev._3000IQPlay.trillium.modules.render;
 
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
+import dev._3000IQPlay.trillium.mixin.mixins.IRenderManager;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.Util;
 import dev._3000IQPlay.trillium.util.MathUtil;
+import dev._3000IQPlay.trillium.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -16,13 +19,18 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
-public class DamageParticles extends Module {
-    ArrayList<Particle> particles = new ArrayList<>();
-    public Setting<ColorSetting> particleColor = this.register(new Setting<ColorSetting>("ParticleColor", new ColorSetting(0x8800FF00)));
-    public Setting<Boolean> selfp = this.register(new Setting<Boolean>("Self", false));
-    public Setting<Integer> dissapearTime = this.register(new Setting<Integer>("Time", 1500, 1, 10000));
-	public Setting<Integer> particleSpeed = this.register(new Setting<Integer>("Speed", 20, 1, 1000));
+import static dev._3000IQPlay.trillium.util.DrawHelper.injectAlpha;
 
+public class DamageParticles extends Module {
+
+    public final Setting<ColorSetting> colorLight = this.register(new Setting<>("Color", new ColorSetting(-1)));
+    public final Setting<ColorSetting> colorLight2 = this.register(new Setting<>("Color2", new ColorSetting(-1)));
+    public final Setting<ColorSetting> colorLight3 = this.register(new Setting<>("Color3", new ColorSetting(-1)));
+    public Setting<Boolean> selfp = register(new Setting("Self", false));
+    public Setting<Integer> speedor = this.register(new Setting<>("Time", 8000, 1, 10000));
+    public Setting<Integer> speedor2 = this.register(new Setting<>("Speed", 20, 1, 1000));
+    ArrayList<Particle> particles = new ArrayList<>();
+	
     public DamageParticles() {
         super("DamageParticles", "Spawns particles when someone takes damage", Module.Category.RENDER, true, false, false);
     }
@@ -31,16 +39,28 @@ public class DamageParticles extends Module {
     public void onUpdate() {
         if (mc.world != null && mc.player != null) {
             for (EntityPlayer player : mc.world.playerEntities) {
-                if (!this.selfp.getValue() && player == mc.player) {
+                if (!selfp.getValue() && player == mc.player) {
                     continue;
                 }
                 if (player.hurtTime > 0) {
-                    particles.add(new Particle(player.posX + MathUtil.random(-0.05f, 0.05f), MathUtil.random((float) (player.posY + player.height), (float) player.posY), player.posZ + MathUtil.random(-0.05f, 0.05f)));
-                    particles.add(new Particle(player.posX, MathUtil.random((float) (player.posY + player.height), (float) (player.posY + 0.1f)), player.posZ));
-                    particles.add(new Particle(player.posX, MathUtil.random((float) (player.posY + player.height), (float) (player.posY + 0.1f)), player.posZ));
+
+                    Color col = null;
+
+                    int i = (int) (MathUtil.random(0,3));
+
+                    switch (i){
+                        case 0: {col = colorLight.getValue().getColorObject();break;}
+                        case 1: {col = colorLight2.getValue().getColorObject();break;}
+                        case 2: {col = colorLight3.getValue().getColorObject();break;}
+                    }
+
+                    particles.add(new Particle(player.posX + MathUtil.random(-0.05f, 0.05f), MathUtil.random((float) (player.posY + player.height), (float) player.posY), player.posZ + MathUtil.random(-0.05f, 0.05f),col));
+                    particles.add(new Particle(player.posX, MathUtil.random((float) (player.posY + player.height), (float) (player.posY + 0.1f)), player.posZ,col));
+                    particles.add(new Particle(player.posX, MathUtil.random((float) (player.posY + player.height), (float) (player.posY + 0.1f)), player.posZ,col));
                 }
+
                 for (int i = 0; i < particles.size(); i++) {
-                    if (System.currentTimeMillis() - particles.get(i).getTime() >= this.dissapearTime.getValue()) {
+                    if (System.currentTimeMillis() - particles.get(i).getTime() >= speedor.getValue()) {
                         particles.remove(i);
                     }
                 }
@@ -48,11 +68,12 @@ public class DamageParticles extends Module {
         }
     }
 
+
     @SubscribeEvent
     public void onRender3D(Render3DEvent event) {
         if (mc.player != null && mc.world != null) {
             for (Particle particle : particles) {
-                particle.render(new Color(this.particleColor.getValue().getRed(), this.particleColor.getValue().getGreen(), this.particleColor.getValue().getBlue(), Math.round(particle.alpha)).getRGB());
+                particle.render();
             }
         }
     }
@@ -66,15 +87,17 @@ public class DamageParticles extends Module {
         double motionY;
         double motionZ;
         long time;
+        Color color;
 
-        public Particle(double x, double y, double z) {
+        public Particle(double x, double y, double z,Color color) {
             this.x = x;
             this.y = y;
             this.z = z;
-            motionX = MathUtil.random(-(float) particleSpeed.getValue() / 1000.0f, (float) particleSpeed.getValue() / 1000.0f);
-            motionY = MathUtil.random(-(float) particleSpeed.getValue() / 1000.0f, (float) particleSpeed.getValue() / 1000.0f);
-            motionZ = MathUtil.random(-(float) particleSpeed.getValue() / 1000.0f, (float) particleSpeed.getValue() / 1000.0f);
+            motionX = MathUtil.random(-(float) speedor2.getValue() / 1000f, (float) speedor2.getValue() / 1000f);
+            motionY = MathUtil.random(-(float) speedor2.getValue() / 1000f, (float) speedor2.getValue() / 1000f);
+            motionZ = MathUtil.random(-(float) speedor2.getValue() / 1000f, (float) speedor2.getValue() / 1000f);
             time = System.currentTimeMillis();
+            this.color = color;
         }
 
 
@@ -83,64 +106,117 @@ public class DamageParticles extends Module {
         }
 
         public void update() {
-            double yEx = 0.0;
-            double sp = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ) * 1.0;
-            this.x += this.motionX;
-            this.y += this.motionY;
-            if (this.posBlock(this.x, this.y, this.z)) {
-                this.motionY = -this.motionY / 1.1;
-            } else if (this.posBlock(this.x, this.y, this.z) || this.posBlock(this.x, this.y - yEx, this.z) || this.posBlock(this.x, this.y + yEx, this.z) || this.posBlock(this.x - sp, this.y, this.z - sp) || this.posBlock(this.x + sp, this.y, this.z + sp) || this.posBlock(this.x + sp, this.y, this.z - sp) || this.posBlock(this.x - sp, this.y, this.z + sp) || this.posBlock(this.x + sp, this.y, this.z) || this.posBlock(this.x - sp, this.y, this.z) || this.posBlock(this.x, this.y, this.z + sp) || this.posBlock(this.x, this.y, this.z - sp) || this.posBlock(this.x - sp, this.y - yEx, this.z - sp) || this.posBlock(this.x + sp, this.y - yEx, this.z + sp) || this.posBlock(this.x + sp, this.y - yEx, this.z - sp) || this.posBlock(this.x - sp, this.y - yEx, this.z + sp) || this.posBlock(this.x + sp, this.y - yEx, this.z) || this.posBlock(this.x - sp, this.y - yEx, this.z) || this.posBlock(this.x, this.y - yEx, this.z + sp) || this.posBlock(this.x, this.y - yEx, this.z - sp) || this.posBlock(this.x - sp, this.y + yEx, this.z - sp) || this.posBlock(this.x + sp, this.y + yEx, this.z + sp) || this.posBlock(this.x + sp, this.y + yEx, this.z - sp) || this.posBlock(this.x - sp, this.y + yEx, this.z + sp) || this.posBlock(this.x + sp, this.y + yEx, this.z) || this.posBlock(this.x - sp, this.y + yEx, this.z) || this.posBlock(this.x, this.y + yEx, this.z + sp) || this.posBlock(this.x, this.y + yEx, this.z - sp)) {
-                this.motionX = -this.motionX + this.motionZ;
-                this.motionZ = -this.motionZ + this.motionX;
+            double yEx = 0;
+
+            double sp = Math.sqrt(motionX * motionX + motionZ * motionZ) * 1;
+            x += motionX;
+
+            y += motionY;
+
+            if (posBlock(x, y, z)) {
+                motionY = -motionY / 1.1;
+            } else {
+                if (
+                        posBlock(x, y, z) ||
+                                posBlock(x, y - yEx, z) ||
+                                posBlock(x, y + yEx, z) ||
+
+                                posBlock(x - sp, y, z - sp) ||
+                                posBlock(x + sp, y, z + sp) ||
+                                posBlock(x + sp, y, z - sp) ||
+                                posBlock(x - sp, y, z + sp) ||
+                                posBlock(x + sp, y, z) ||
+                                posBlock(x - sp, y, z) ||
+                                posBlock(x, y, z + sp) ||
+                                posBlock(x, y, z - sp) ||
+
+                                posBlock(x - sp, y - yEx, z - sp) ||
+                                posBlock(x + sp, y - yEx, z + sp) ||
+                                posBlock(x + sp, y - yEx, z - sp) ||
+                                posBlock(x - sp, y - yEx, z + sp) ||
+                                posBlock(x + sp, y - yEx, z) ||
+                                posBlock(x - sp, y - yEx, z) ||
+                                posBlock(x, y - yEx, z + sp) ||
+                                posBlock(x, y - yEx, z - sp) ||
+
+                                posBlock(x - sp, y + yEx, z - sp) ||
+                                posBlock(x + sp, y + yEx, z + sp) ||
+                                posBlock(x + sp, y + yEx, z - sp) ||
+                                posBlock(x - sp, y + yEx, z + sp) ||
+                                posBlock(x + sp, y + yEx, z) ||
+                                posBlock(x - sp, y + yEx, z) ||
+                                posBlock(x, y + yEx, z + sp) ||
+                                posBlock(x, y + yEx, z - sp)
+
+                ) {
+                    motionX = -motionX + motionZ;
+                    motionZ = -motionZ + motionX;
+                }
+
+
             }
-            this.z += this.motionZ;
-            this.motionX /= 1.005;
-            this.motionZ /= 1.005;
-            this.motionY /= 1.005;
+
+            z += motionZ;
+
+
+            motionX /= 1.005;
+            motionZ /= 1.005;
+            motionY /= 1.005;
         }
 
-        public void render(int color) {
+        public void render() {
+            color = injectAlpha(color, alpha);
             update();
             alpha -= 0.1;
             float scale = 0.07f;
-            GlStateManager.disableDepth();
+            GlStateManager.enableDepth();
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
             try {
-                final double posX = x - (mc.getRenderManager()).renderPosX;
-                final double posY = y - (mc.getRenderManager()).renderPosY;
-                final double posZ = z - (mc.getRenderManager()).renderPosZ;
+
+                final double posX = x - ((IRenderManager) Util.mc.getRenderManager()).getRenderPosX();
+                final double posY = y - ((IRenderManager) Util.mc.getRenderManager()).getRenderPosY();
+                final double posZ = z - ((IRenderManager) Util.mc.getRenderManager()).getRenderPosZ();
+
                 final double distanceFromPlayer = mc.player.getDistance(x, y - 1, z);
                 int quality = (int) (distanceFromPlayer * 4 + 10);
-				
-                if (quality > 350) quality = 350;
-				
+
+                if (quality > 350)
+                    quality = 350;
+
                 GL11.glPushMatrix();
                 GL11.glTranslated(posX, posY, posZ);
+
+
                 GL11.glScalef(-scale, -scale, -scale);
+
                 GL11.glRotated(-(mc.getRenderManager()).playerViewY, 0.0D, 1.0D, 0.0D);
                 GL11.glRotated((mc.getRenderManager()).playerViewX, 1.0D, 0.0D, 0.0D);
 
-                final Color c = new Color(color);
 
-                DamageParticles.drawFilledCircleNoGL(0, 0, 0.7, c.hashCode(), quality);
+                RenderUtil.drawFilledCircleNoGL(0, 0, 0.7, color.hashCode(), quality);
 
-                if (distanceFromPlayer < 4) DamageParticles.drawFilledCircleNoGL(0, 0, 1.4, new Color(c.getRed(), c.getGreen(), c.getBlue(), 50).hashCode(), quality);
+                if (distanceFromPlayer < 4)
+                    RenderUtil.drawFilledCircleNoGL(0, 0, 1.4, new Color(color.getRed(), color.getGreen(), color.getBlue(), 50).hashCode(), quality);
 
-                if (distanceFromPlayer < 20) DamageParticles.drawFilledCircleNoGL(0, 0, 2.3, new Color(c.getRed(), c.getGreen(), c.getBlue(), 30).hashCode(), quality);
+                if (distanceFromPlayer < 20)
+                    RenderUtil.drawFilledCircleNoGL(0, 0, 2.3, new Color(color.getRed(), color.getGreen(), color.getBlue(), 30).hashCode(), quality);
+
 
                 GL11.glScalef(0.8f, 0.8f, 0.8f);
+
                 GL11.glPopMatrix();
+
+
             } catch (final ConcurrentModificationException ignored) {
-				// ignore
             }
 
             GL11.glDisable(GL11.GL_LINE_SMOOTH);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glDisable(GL11.GL_BLEND);
-            GlStateManager.enableDepth();
             GL11.glColor3d(255, 255, 255);
         }
 
@@ -151,7 +227,6 @@ public class DamageParticles extends Module {
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.BED &&
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.CAKE &&
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.TALLGRASS &&
-                    mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.GRASS &&
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.FLOWER_POT &&
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.RED_FLOWER &&
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.YELLOW_FLOWER &&
@@ -187,23 +262,6 @@ public class DamageParticles extends Module {
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.REEDS &&
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() != Blocks.SNOW_LAYER);
         }
-    }
-	
-	public static void drawFilledCircleNoGL(final int x, final int y, final double r, final int c, final int quality) {
-        final float f = ((c >> 24) & 0xff) / 255F;
-        final float f1 = ((c >> 16) & 0xff) / 255F;
-        final float f2 = ((c >> 8) & 0xff) / 255F;
-        final float f3 = (c & 0xff) / 255F;
 
-        GL11.glColor4f(f1, f2, f3, f);
-        GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-
-        for (int i = 0; i <= 360 / quality; i++) {
-            final double x2 = Math.sin(((i * quality * Math.PI) / 180)) * r;
-            final double y2 = Math.cos(((i * quality * Math.PI) / 180)) * r;
-            GL11.glVertex2d(x + x2, y + y2);
-        }
-
-        GL11.glEnd();
     }
 }

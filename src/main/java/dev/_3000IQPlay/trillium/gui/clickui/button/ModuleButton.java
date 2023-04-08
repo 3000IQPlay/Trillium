@@ -8,6 +8,7 @@ import dev._3000IQPlay.trillium.gui.clickui.elements.CheckBoxElement;
 import dev._3000IQPlay.trillium.gui.clickui.elements.ColorPickerElement;
 import dev._3000IQPlay.trillium.gui.clickui.elements.ComboBoxElement;
 import dev._3000IQPlay.trillium.gui.clickui.elements.SliderElement;
+import dev._3000IQPlay.trillium.gui.clickui.elements.StringElement;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.client.ClickGui;
@@ -57,6 +58,8 @@ public class ModuleButton {
 				elements.add(new SliderElement(setting));
 			} else if (setting.isEnumSetting() && !(setting.getValue() instanceof Parent) && !(setting.getValue() instanceof PositionSetting)){
 				elements.add(new ComboBoxElement(setting));
+			} else if ((setting.getValue() instanceof String || setting.getValue() instanceof Character) && !setting.getName().equalsIgnoreCase("displayName")) {
+                elements.add(new StringElement(setting));
 			}
 		}
 	}

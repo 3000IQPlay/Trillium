@@ -37,7 +37,6 @@ public class ModuleManager
         this.modules.add(new ClickGui());
         this.modules.add(new AimAssist());
         this.modules.add(new AntiBadEffects());
-        this.modules.add(new Optimization());
         this.modules.add(new AutoCrystal());
         this.modules.add(new AutoMine());
         this.modules.add(new PvPResources());
@@ -191,6 +190,7 @@ public class ModuleManager
 		this.modules.add(new UnfocusedCPU());
 		this.modules.add(new Flatten());
 		this.modules.add(new TNTTime());
+		this.modules.add(new AutoKit());
     }
 
     public Module getModuleByName(String name) {

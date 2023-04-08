@@ -8,12 +8,10 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class PacketEvent
-        extends EventStage {
+public class PacketEvent extends EventStage {
     private final Packet<?> packet;
 
-    public PacketEvent(int stage, Packet<?> packet) {
-        super(stage);
+    public PacketEvent(Packet<?> packet) {
         this.packet = packet;
     }
 
@@ -24,49 +22,40 @@ public class PacketEvent
     @Cancelable
     public static class Send
             extends PacketEvent {
-        public Send(int stage, Packet<?> packet) {
-            super(stage, packet);
+        public Send(Packet<?> packet) {
+            super(packet);
         }
     }
 
     @Cancelable
-    public static class Receive
-            extends PacketEvent {
-        public Receive(int stage, Packet<?> packet) {
-            super(stage, packet);
-        }
-
+    public static class Receive extends PacketEvent {
         private final Deque<Runnable> postEvents = new ArrayDeque<>();
 
+        public Receive(Packet<?> packet) {
+            super(packet);
+        }
 
-        public void addPostEvent(SafeRunnable runnable)
-        {
+        public void addPostEvent(SafeRunnable runnable) {
             postEvents.add(runnable);
         }
 
-        /**
-         * @return all PostEvents for this event.
-         */
-        public Deque<Runnable> getPostEvents()
-        {
+
+        public Deque<Runnable> getPostEvents() {
             return postEvents;
         }
     }
 
     @Cancelable
-    public static class SendPost
-            extends PacketEvent {
-        public SendPost(int stage, Packet<?> packet) {
-            super(stage, packet);
+    public static class SendPost extends PacketEvent {
+        public SendPost(Packet<?> packet) {
+            super(packet);
         }
     }
 
     @Cancelable
-    public static class ReceivePost
-            extends PacketEvent {
-        public ReceivePost(int stage, Packet<?> packet) {
-            super(stage, packet);
+    public static class ReceivePost extends PacketEvent {
+        public ReceivePost(Packet<?> packet) {
+            super(packet);
         }
     }
 }
-

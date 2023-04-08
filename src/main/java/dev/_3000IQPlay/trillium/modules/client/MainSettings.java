@@ -12,10 +12,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MainSettings extends Module {
     private static MainSettings INSTANCE = new MainSettings();
-	public Setting<Boolean> mainMenuShader = this.register(new Setting<Boolean>("MainMenuShader", true));
-	public Setting<Integer> shaderFPS = this.register(new Setting<Integer>("ShaderFPS", 60, 5, 60, v -> this.mainMenuShader.getValue()));
-	public Setting<Boolean> randomShader = this.register(new Setting<Boolean>("RandomShader", true, v -> this.mainMenuShader.getValue()));
-	public Setting<GLSLShaderList> menuShader = this.register(new Setting<GLSLShaderList>("MenuShader", GLSLShaderList.CoolBlob, v -> this.mainMenuShader.getValue() && !this.randomShader.getValue()));
+	public Setting<Boolean> mainMenu = this.register(new Setting<Boolean>("MainMenu", true));
+	public Setting<Integer> shaderFPS = this.register(new Setting<Integer>("ShaderFPS", 60, 5, 60, v -> this.mainMenu.getValue()));
+	public Setting<Boolean> randomShader = this.register(new Setting<Boolean>("RandomShader", true, v -> this.mainMenu.getValue()));
+	public Setting<GLSLShaderList> menuShader = this.register(new Setting<GLSLShaderList>("MenuShader", GLSLShaderList.CoolBlob, v -> this.mainMenu.getValue() && !this.randomShader.getValue()));
 
     public Setting<Boolean> notifyToggles = this.register(new Setting<Boolean>("NotifyToggles", false));
 	public Setting<Boolean> customFov = this.register(new Setting<Boolean>("CustomFov", false));

@@ -16,6 +16,7 @@
     "IGuiMerchant",
     "IGuiScreen",
     "IItemTool",
+	"IMinecraft",
     "INetworkManager",
     "IPlayerControllerMP",
     "IRenderGlobal",

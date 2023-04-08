@@ -8,10 +8,9 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-
 public class FontRender{
     public static boolean isCustomFontEnabled() {
-            return true;
+        return true;
     }
 	
 	public void init() {
@@ -54,33 +53,17 @@ public class FontRender{
         return Util.mc.fontRenderer.drawString(text, x, y, color);
     }
 
-    public static float drawString2(String text, int x, int y, int color) {
-        if (isCustomFontEnabled())
-            return Trillium.fontRenderer2.drawString(text, x, y, color);
-
-        return Util.mc.fontRenderer.drawString(text, x, y, color);
-    }
-
     public static float drawString3(String text, float x, float y, int color) {
         return Trillium.fontRenderer3.drawString(text, x, y, color);
     }
+	
     public static float drawCentString3(String text, float x, float y, int color) {
         return Trillium.fontRenderer3.drawString(text, x - getStringWidth3(text) / 2f, y - getFontHeight3() / 2f , color);
     }
 
-
-
-
-    public static float drawString4(String text, int x, int y, int color) {
-        if (isCustomFontEnabled())
-            return Trillium.fontRenderer4.drawString(text, x, y, color);
-
-        return Util.mc.fontRenderer.drawString(text, x, y, color);
-    }
     public static float drawString5(String text, float x, float y, int color) {
             return Trillium.fontRenderer5.drawString(text, x, y, color);
     }
-
 
     public static float drawString6(String text, float x, float y, int color,boolean shadow) {
         if (shadow) {
@@ -96,14 +79,11 @@ public class FontRender{
 
     public static float drawCentString6(String text, float x, float y, int color) {
         return Trillium.fontRenderer6.drawString(text, x - getStringWidth6(text) / 2f, y, color);
-
     }
 
     public static float drawCentString5(String text, float x, float y, int color) {
         return Trillium.fontRenderer5.drawString(text, x - getStringWidth5(text) / 2f, y, color);
-
     }
-
 
     public static int getStringWidth(String str) {
         if (isCustomFontEnabled())
@@ -111,7 +91,7 @@ public class FontRender{
 
         return Util.mc.fontRenderer.getStringWidth(str);
     }
-
+	
     public static int getStringWidth6(String str) {
         return Trillium.fontRenderer6.getStringWidth(str);
     }
@@ -124,21 +104,9 @@ public class FontRender{
         return Trillium.fontRenderer3.getStringWidth(str);
     }
 
-
-    public static int getStringWidth4(String str) {
-            return Trillium.fontRenderer4.getStringWidth(str);
-    }
-
     public static int getFontHeight() {
         if (isCustomFontEnabled())
             return Trillium.fontRenderer.getHeight() + 2;
-
-        return Util.mc.fontRenderer.FONT_HEIGHT;
-    }
-
-    public static int getFontHeight2() {
-        if (isCustomFontEnabled())
-            return Trillium.fontRenderer4.getHeight() + 2;
 
         return Util.mc.fontRenderer.FONT_HEIGHT;
     }
@@ -151,7 +119,7 @@ public class FontRender{
     }
 
     public static int getFontHeight6() {
-            return Trillium.fontRenderer6.getHeight();
+        return Trillium.fontRenderer6.getHeight();
     }
     public static int getFontHeight5() {
         return Trillium.fontRenderer5.getHeight() + 2;

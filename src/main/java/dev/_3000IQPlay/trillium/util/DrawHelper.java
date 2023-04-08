@@ -52,11 +52,6 @@ public class DrawHelper{
         GL11.glPopMatrix();
     }
 
-
-
-    
-
-
     public static void drawEntityBox(Entity entity, Color color, boolean fullBox, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -85,13 +80,16 @@ public class DrawHelper{
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     }
+	
     public static Color injectAlpha(final Color color, final int alpha) {
         int alph = (int) MathHelper.clamp(alpha, 0, 255);
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alph);
     }
+	
     public static boolean isInViewFrustum(Entity entity) {
         return (isInViewFrustum(entity.getEntityBoundingBox()) || entity.ignoreFrustumCheck);
     }
+	
     public static Frustum frustum = new Frustum();
     private static boolean isInViewFrustum(AxisAlignedBB bb) {
         Entity current = mc.getRenderViewEntity();
@@ -219,13 +217,13 @@ public class DrawHelper{
         GL11.glHint(3155, 4354);
     }
 
-
     public static void disableStandardItemLighting() {
         GlStateManager.disableLighting();
         GlStateManager.disableLight(0);
         GlStateManager.disableLight(1);
         GlStateManager.disableColorMaterial();
     }
+	
     public static void disableGL2D() {
         GL11.glEnable(3553);
         GL11.glEnable(2929);
@@ -233,8 +231,6 @@ public class DrawHelper{
         GL11.glHint(3154, 4352);
         GL11.glHint(3155, 4352);
     }
-
-
 
     public static void enableSmoothLine(float width) {
         GL11.glDisable(3008);
@@ -270,11 +266,13 @@ public class DrawHelper{
             drawRoundedRect99(X - (GlowRange - i), Y - (GlowRange - i), Width + (GlowRange - i), Height + (GlowRange - i), DrawHelper.injectAlpha(color, (int) (Math.round(i * GlowMultiplier))).getRGB());
         }
     }
+	
     public static void drawRoundedRect99(double x, double y, double x1, double y1, int insideC) {
         RenderUtil.drawRect((float) (x + 0.5),(float)  y, (float) x1 - 0.5f, (float) y + 0.5f, insideC);
         RenderUtil.drawRect((float) (x + 0.5f), (float) y1 - 0.5f, (float) x1 - 0.5f, (float) y1, insideC);
         RenderUtil.drawRect((float) x, (float) y + 0.5f,(float)  x1, (float) y1 - 0.5f, insideC);
     }
+	
     public static void drawGlow(final double x, final double y, final double x1, final double y1, final int color) {
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
@@ -293,6 +291,7 @@ public class DrawHelper{
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
     }
+	
     public static void drawPolygonPart(final double x, final double y, final int radius, final int part, final int color, final int endcolor) {
         final float alpha = (color >> 24 & 0xFF) / 255.0f;
         final float red = (color >> 16 & 0xFF) / 255.0f;
@@ -322,6 +321,7 @@ public class DrawHelper{
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
     }
+	
     public static void drawVGradientRect(final float left, final float top, final float right, final float bottom, final int startColor, final int endColor) {
         final float f = (startColor >> 24 & 0xFF) / 255.0f;
         final float f2 = (startColor >> 16 & 0xFF) / 255.0f;
@@ -350,11 +350,9 @@ public class DrawHelper{
         GlStateManager.enableTexture2D();
     }
 
-
     public static final void color(double red, double green, double blue, double alpha) {
         GL11.glColor4d(red, green, blue, alpha);
     }
-
 
     public static void drawSmoothRect(double left, double top, double right, double bottom, int color) {
         GL11.glEnable(3042);
@@ -373,7 +371,6 @@ public class DrawHelper{
         alpha = (int) MathHelper.clamp(alpha, 0, 255);
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
-
 
     public static void drawNewRect(double left, double top, double right, double bottom, int color) {
         if (left < right) {
@@ -545,6 +542,4 @@ public class DrawHelper{
         hue += 0.5F;
         return Color.HSBtoRGB(hue, 0.6F, 1F);
     }
-
-
 }

@@ -48,15 +48,13 @@ public class PlacementUtil {
         }
     }
 
-
-
     public static boolean place(BlockPos blockPos, EnumHand hand, boolean rotate, ArrayList<EnumFacing> forceSide) {
         return placeBlock(blockPos, hand, rotate, true, forceSide, true);
     }
+	
     public static boolean place(BlockPos blockPos, EnumHand hand, boolean rotate, boolean checkAction) {
         return placeBlock(blockPos, hand, rotate, checkAction, null, true);
     }
-
 
     public static EnumFacing getPlaceableSideExlude(BlockPos pos, ArrayList<EnumFacing> excluding) {
 
@@ -113,7 +111,7 @@ public class PlacementUtil {
         }
 
         if (rotate) {
-            SilentRotaionUtil.lookAtVector(hitVec);
+            SilentRotationUtil.lookAtVector(hitVec);
         }
 
         EnumActionResult action = playerController.processRightClickBlock(player, world, neighbour, opposite, hitVec, hand);

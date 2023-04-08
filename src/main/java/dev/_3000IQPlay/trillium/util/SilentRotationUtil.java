@@ -6,9 +6,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import static dev._3000IQPlay.trillium.util.Util.mc;
 
-
-public class SilentRotaionUtil {
-
+public class SilentRotationUtil {
     public static void lookAtVector(Vec3d vec) {
         float[] angle = calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), vec);
         setPlayerRotations(angle[0], angle[1]);

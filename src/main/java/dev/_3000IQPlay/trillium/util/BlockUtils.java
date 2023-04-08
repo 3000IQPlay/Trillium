@@ -598,7 +598,7 @@ public class BlockUtils {
             mc.player.rotationPitch =(angle[1]);
             mc.player.rotationYaw =(angle[0]);
 
-           // SilentRotaionUtil.lookAtVector( new Vec3d(hitVec.x, hitVec.y, hitVec.z));
+           // SilentRotationUtil.lookAtVector( new Vec3d(hitVec.x, hitVec.y, hitVec.z));
         }
         rightClickBlock2(neighbour, hitVec, hand, opposite, packet);
         mc.player.swingArm(EnumHand.MAIN_HAND);

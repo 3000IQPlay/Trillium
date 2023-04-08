@@ -1,7 +1,7 @@
 package dev._3000IQPlay.trillium.command.commands;
 
 import dev._3000IQPlay.trillium.command.Command;
-import dev._3000IQPlay.trillium.modules.client.Optimization;
+import dev._3000IQPlay.trillium.util.CleanerThread;
 
 public class RamClearCommand extends Command {
     public RamClearCommand() {
@@ -10,6 +10,9 @@ public class RamClearCommand extends Command {
 
     @Override
     public void execute(String[] var1) {
-        Optimization.cleanMemory();
+        Runnable runnable = new CleanerThread();
+        Thread gcThread = new Thread(runnable, "MemoryCleaner GC Thread");
+        gcThread.setDaemon(true);
+        gcThread.start();
     }
 }

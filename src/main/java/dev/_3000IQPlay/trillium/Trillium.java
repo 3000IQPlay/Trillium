@@ -26,12 +26,10 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-
 @Mod(
         modid = "trillium",
         name = "Trillium",
         version = "b1.8.5")
-
 
 public class Trillium {
     public static final String MODID = "trillium";
@@ -102,17 +100,9 @@ public class Trillium {
             verdanapro = verdanapro.deriveFont( 24.f );
             fontRenderer = new CFontRenderer( verdanapro, true, true );
 
-            Font verdanapro2 = Font.createFont( Font.TRUETYPE_FONT, Objects.requireNonNull(Trillium.class.getResourceAsStream("/fonts/TrilliumFont3.ttf")));
-            verdanapro2 = verdanapro2.deriveFont( 36.f );
-            fontRenderer2 = new CFontRenderer2( verdanapro2, true, true );
-
             Font verdanapro3 = Font.createFont( Font.TRUETYPE_FONT, Objects.requireNonNull(Trillium.class.getResourceAsStream("/fonts/TrilliumFont2.ttf")));
             verdanapro3 = verdanapro3.deriveFont( 18.f );
             fontRenderer3 = new CFontRenderer3( verdanapro3, true, true );
-
-            Font verdanapro4 = Font.createFont( Font.TRUETYPE_FONT, Objects.requireNonNull(Trillium.class.getResourceAsStream("/fonts/TrilliumFont2.ttf")));
-            verdanapro4 = verdanapro4.deriveFont( 50.f );
-            fontRenderer4 = new CFontRenderer4( verdanapro4, true, true );
 
             Font verdanapro5 = Font.createFont( Font.TRUETYPE_FONT, Objects.requireNonNull(Trillium.class.getResourceAsStream("/fonts/Monsterrat.ttf")));
             verdanapro5 = verdanapro5.deriveFont( 12.f );

@@ -297,10 +297,10 @@ public class PistonAura extends Module {
                     //TODO ROTATION
                     //
                     if (extra) {
-                        float[] angle = SilentRotaionUtil.calculateAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), new Vec3d(crystalPos.getX() + .5, crystalPos.getY() + .5, crystalPos.getZ() + .5));
+                        float[] angle = SilentRotationUtil.calculateAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), new Vec3d(crystalPos.getX() + .5, crystalPos.getY() + .5, crystalPos.getZ() + .5));
                         updateWithFakeEvent(angle[0], angle[1]);
                     } else {
-                        float[] anglep = SilentRotaionUtil.calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), new Vec3d(crystalPos.getX() + .5, crystalPos.getY() + .5, crystalPos.getZ() + .5));
+                        float[] anglep = SilentRotationUtil.calcAngle(mc.player.getPositionEyes(mc.getRenderPartialTicks()), new Vec3d(crystalPos.getX() + .5, crystalPos.getY() + .5, crystalPos.getZ() + .5));
                         yawToEvent = anglep[0];
                         pitchToEvent = anglep[1];
                     }
@@ -515,7 +515,7 @@ public class PistonAura extends Module {
                 }
                 for (EnumFacing faceTryOffset : EnumFacing.HORIZONTALS) {
                     if (InteractionUtil.canPlaceBlock(candidatePos.offset(faceTryOffset), raytrace.getValue()) && (raytrace.getValue() ? InteractionUtil.canPlaceBlock(candidatePos.offset(faceTryOffset, 2), true) : mc.world.getBlockState(candidatePos.offset(faceTryOffset, 2)).getBlock() == Blocks.AIR)) {
-                        float[] rots = SilentRotaionUtil.calculateAngle(mc.player.getPositionEyes(1F), new Vec3d(candidatePos.offset(faceTryOffset).getX() + 0.5, candidatePos.offset(faceTryOffset).getY() + 1D, candidatePos.offset(faceTryOffset).getZ() + 0.5));
+                        float[] rots = SilentRotationUtil.calculateAngle(mc.player.getPositionEyes(1F), new Vec3d(candidatePos.offset(faceTryOffset).getX() + 0.5, candidatePos.offset(faceTryOffset).getY() + 1D, candidatePos.offset(faceTryOffset).getZ() + 0.5));
                         EnumFacing facing = EnumFacing.fromAngle(rots[0]);
                         if (Math.abs(rots[1]) > 55) continue; // pitch
                         if (facing != faceTryOffset) continue;

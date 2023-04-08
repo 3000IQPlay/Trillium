@@ -51,7 +51,7 @@ public class HoleFill extends Module {
     public Setting<Boolean> disableOnFinish = this.register(new Setting<>("Disable", true));
     public Setting<Boolean> autoSwitch = this.register(new Setting<>("Switch", true));
     public Setting<Boolean> rotate = this.register(new Setting<>("Rotate", true));
-    public Setting<Boolean> onlyPlayer = this.register(new Setting<>("Onl Player", true));
+    public Setting<Boolean> onlyPlayer = this.register(new Setting<>("OnlyPlayer", true));
 
 
     private int delayTicks = 0;

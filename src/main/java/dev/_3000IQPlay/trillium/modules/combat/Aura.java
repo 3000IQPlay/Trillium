@@ -943,7 +943,7 @@ public class Aura extends Module {
                     break;
                 }
                 case NCP: {
-                    float[] ncp = SilentRotaionUtil.calcAngle(getVector(base));
+                    float[] ncp = SilentRotationUtil.calcAngle(getVector(base));
                     if(ncp != null) {
                         mc.player.rotationYaw = ncp[0];
                         mc.player.rotationPitch = ncp[1];
