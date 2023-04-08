@@ -435,7 +435,7 @@ public abstract class AbstractCalculation<T extends CrystalData> extends Finisha
                         || p.getDistanceSq(mc.player) >
                         MathUtil.square(module.targetRange.getValue()),
                 Trillium.friendManager::isFriend,
-                Trillium.enemyManager::isEnemy);
+				Trillium.friendManager::isEnemy);
         // split.get(0) are the invalid players.
         this.friends = split.get(1);
         this.enemies = split.get(2);

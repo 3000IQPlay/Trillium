@@ -2,10 +2,9 @@ package dev._3000IQPlay.trillium.modules.combat;
 
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
-import dev._3000IQPlay.trillium.gui.hud.RadarRewrite;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.movement.ElytraFlight;
-import dev._3000IQPlay.trillium.modules.player.FastPlace2;
+import dev._3000IQPlay.trillium.modules.player.AutoXP;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.InvStack;
 import dev._3000IQPlay.trillium.util.Timer;
@@ -28,43 +27,28 @@ import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-
-import java.util.List;
 import java.util.*;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class AutoArmor
         extends Module {
+    private final Setting<Mode> mode = register(new Setting<>("Mode", Mode.Default));
+    private final Setting<Boolean> armorSaver = register(new Setting<>("ArmorSaver", false));
+    public Setting<Float> depletion = register(new Setting("Depletion", 0.75F, 0.5F, 0.95F, v -> armorSaver.getValue()));
+    private final Setting<Integer> delay = register(new Setting<>("Delay", 1, 1, 10));
+    private final Setting<Boolean> elytraPrio = register(new Setting<>("ElytraPrio", false));
+    private final Setting<Boolean> smart = register(new Setting<>("Smart", false, v -> elytraPrio.getValue()));
+    private final Setting<Boolean> strict = register(new Setting<>("Strict", false));
+    private final Setting<Boolean> pauseWhenSafe = register(new Setting<>("PauseWhenSafe", false));
+    private final Setting<Boolean> allowMend = register(new Setting<>("AllowMend", false));
+    private final Timer rightClickTimer = new Timer();
+    private boolean sleep;
+
 
     public AutoArmor() {
-    super("AutoArmor", "Auto armor", Category.PLAYER, true, false, false);
+        super("AutoArmor", "Puts some drip on you", Module.Category.PLAYER, true, false, false);
     }
-
-
-    private Setting<Mode> mode = register(new Setting<>("Mode", Mode.NCP));
-
-
-    public enum Mode {
-        NCP,
-        Default
-    }
-
-    private Setting<Boolean> armorSaver = register(new Setting<>("ArmorSaver", false));
-    private Setting<Integer> delay = register(new Setting<>("Delay", 1, 1, 10));
-    public Setting<Float> depletion = register(new Setting("Depletion", 0.75F, 0.5F, 0.95F, v-> armorSaver.getValue()));
-    private Setting<Boolean> elytraPrio = register(new Setting<>("ElytraPrio", false));
-    private Setting<Boolean> smart = register(new Setting<>("Smart", false, v-> elytraPrio.getValue()));
-    private Setting<Boolean> strict = register(new Setting<>("Strict", false));
-    private Setting<Boolean> pauseWhenSafe = register(new Setting<>("PauseWhenSafe", false));
-    private Setting<Boolean> allowMend = register(new Setting<>("AllowMend", false));
-
-
-
-    private Timer rightClickTimer = new Timer();
-
-    private boolean sleep;
 
     @SubscribeEvent
     public void onPacketSend(PacketEvent.Send event) {
@@ -74,7 +58,7 @@ public class AutoArmor
     }
 
     @Override
-    public void onUpdate(){
+    public void onUpdate() {
         if (mode.getValue() == Mode.Default) {
             if (mc.world == null || mc.player == null) return;
             if (mc.player.ticksExisted % delay.getValue() != 0) {
@@ -90,8 +74,7 @@ public class AutoArmor
                 if (proximity.isEmpty()) return;
             }
 
-            if (FastPlace2.isMending) return;
-
+            if (AutoXP.isMending) return;
 
             if (allowMend.getValue()) {
                 if (!rightClickTimer.passedMs(500)) {
@@ -238,7 +221,7 @@ public class AutoArmor
                 for (armorType = 0; armorType < 4; ++armorType) {
                     ItemStack oldArmor = this.mc.player.inventory.armorItemInSlot(armorType);
                     if (oldArmor.getItem() instanceof ItemArmor) {
-                        bestArmorValues[armorType] = ((ItemArmor)oldArmor.getItem()).damageReduceAmount;
+                        bestArmorValues[armorType] = ((ItemArmor) oldArmor.getItem()).damageReduceAmount;
                     }
                     bestArmorSlots[armorType] = -1;
                 }
@@ -246,21 +229,23 @@ public class AutoArmor
                     int armorValue;
                     ItemStack stack = this.mc.player.inventory.getStackInSlot(slot);
                     if (stack.getCount() > 1 || !(stack.getItem() instanceof ItemArmor)) continue;
-                    ItemArmor armor = (ItemArmor)stack.getItem();
+                    ItemArmor armor = (ItemArmor) stack.getItem();
                     int armorType2 = armor.armorType.ordinal() - 2;
-                    if (armorType2 == 2 && this.mc.player.inventory.armorItemInSlot(armorType2).getItem().equals(Items.ELYTRA) || (armorValue = armor.damageReduceAmount) <= bestArmorValues[armorType2]) continue;
+                    if (armorType2 == 2 && this.mc.player.inventory.armorItemInSlot(armorType2).getItem().equals(Items.ELYTRA) || (armorValue = armor.damageReduceAmount) <= bestArmorValues[armorType2])
+                        continue;
                     bestArmorSlots[armorType2] = slot;
                     bestArmorValues[armorType2] = armorValue;
                 }
                 for (armorType = 0; armorType < 4; ++armorType) {
                     ItemStack oldArmor;
                     int slot = bestArmorSlots[armorType];
-                    if (slot == -1 || (oldArmor = this.mc.player.inventory.armorItemInSlot(armorType)) == ItemStack.EMPTY && this.mc.player.inventory.getFirstEmptyStack() == -1) continue;
+                    if (slot == -1 || (oldArmor = this.mc.player.inventory.armorItemInSlot(armorType)) == ItemStack.EMPTY && this.mc.player.inventory.getFirstEmptyStack() == -1)
+                        continue;
                     if (slot < 9) {
                         slot += 36;
                     }
-                    this.mc.playerController.windowClick(0, 8 - armorType, 0, ClickType.QUICK_MOVE, (EntityPlayer)this.mc.player);
-                    this.mc.playerController.windowClick(0, slot, 0, ClickType.QUICK_MOVE, (EntityPlayer)this.mc.player);
+                    this.mc.playerController.windowClick(0, 8 - armorType, 0, ClickType.QUICK_MOVE, this.mc.player);
+                    this.mc.playerController.windowClick(0, slot, 0, ClickType.QUICK_MOVE, this.mc.player);
                     break;
                 }
             }
@@ -270,8 +255,8 @@ public class AutoArmor
 
     @SubscribeEvent
     public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
-        if(event.getEntityPlayer() != mc.player) return;
-        if(event.getItemStack().getItem() != Items.EXPERIENCE_BOTTLE) return;
+        if (event.getEntityPlayer() != mc.player) return;
+        if (event.getItemStack().getItem() != Items.EXPERIENCE_BOTTLE) return;
         rightClickTimer.reset();
     }
 
@@ -289,6 +274,8 @@ public class AutoArmor
         mc.playerController.windowClick(mc.player.inventoryContainer.windowId, source, 0, ClickType.QUICK_MOVE, mc.player);
     }
 
-
+    public enum Mode {
+        NCP,
+        Default
+    }
 }
-

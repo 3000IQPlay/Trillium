@@ -1,5 +1,6 @@
 **Trillium b1.7.8 Changes**
 + New GUI
++ Added AutoXP (Done)
 + Added AutoKit (Done)
 + Added Flatten (Done)
 + Added TNTTime (Done)
@@ -9,8 +10,11 @@
 + Added StringElement (Done)
 + Added MainMenu (Done)
 
+* Rewrote FastPlace = FastUse (Done)
 * Rewrote DamageParticles (Done)
+* Rewrote MiddleClick (Done)
 * Rewrote Surround (Done)
+* Rewrote AutoChunkDupe (Done)
 * Rewrote TargetHud
 * Rewrote NameTags
 * Rewrote Scaffold

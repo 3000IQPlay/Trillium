@@ -43,7 +43,6 @@
     "MixinGuiNewChat",
     "MixinGuiScreen",
     "MixinGuiToast",
-    "MixinItemExpBottle",
     "MixinItemRenderer",
     "MixinLayerArmorBase",
     "MixinMinecraft",

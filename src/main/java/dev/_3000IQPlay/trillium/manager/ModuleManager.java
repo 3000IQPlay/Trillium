@@ -112,7 +112,7 @@ public class ModuleManager
         this.modules.add(new Shaders());
         this.modules.add(new Indicators());
         this.modules.add(new ChestStealer());
-        this.modules.add(new FastPlace2());
+        this.modules.add(new FastUse());
         this.modules.add(new AutoArmor());
         this.modules.add(new PacketCounter());
         this.modules.add(new OffHand());
@@ -191,6 +191,7 @@ public class ModuleManager
 		this.modules.add(new Flatten());
 		this.modules.add(new TNTTime());
 		this.modules.add(new AutoKit());
+		this.modules.add(new AutoXP());
     }
 
     public Module getModuleByName(String name) {
