@@ -36,13 +36,7 @@ class ViewModel extends Module {
     public Setting < Float > offScaleX = this.register ( new Setting <> ( "OffScaleX" , 1.0f , 0.1f , 5.0f , v -> settings.getValue ( ) == Settings.SCALE ) );
     public Setting < Float > offScaleY = this.register ( new Setting <> ( "OffScaleY" , 1.0f , 0.1f , 5.0f , v -> settings.getValue ( ) == Settings.SCALE ) );
     public Setting < Float > offScaleZ = this.register ( new Setting <> ( "OffScaleZ" , 1.0f , 0.1f , 5.0f , v -> settings.getValue ( ) == Settings.SCALE ) );
-
-
     public Timer timer2 = new Timer();
-
-
-
-
     public Setting < Boolean > killauraattack = this.register ( new Setting <> ( "KillAura" , false ));
     public Setting < Float > kmainScaleX = this.register ( new Setting <> ( "KMainScaleX" , 1.0f , 0.1f , 5.0f , v -> killauraattack.getValue() ) );
     public Setting < Float > kmainScaleY = this.register ( new Setting <> ( "KMainScaleY" , 1.0f , 0.1f , 5.0f , v -> killauraattack.getValue()) );
@@ -53,19 +47,12 @@ class ViewModel extends Module {
     public Setting < Float > kmainX = this.register ( new Setting <> ( "KMainX" , 1.2f , - 2.0f , 4.0f , v -> killauraattack.getValue()) );
     public Setting < Float > kmainY = this.register ( new Setting <> ( "KMainY" , - 0.95f , - 3.0f , 3.0f , v -> killauraattack.getValue()) );
     public Setting < Float > kmainZ = this.register ( new Setting <> ( "KMainZ" , - 1.45f , - 5.0f , 5.0f , v -> killauraattack.getValue()) );
-
-
-
     public Setting < Boolean > rotatexo = this.register ( new Setting <> ( "RotateX" , false));
     public Setting < Boolean > rotateyo = this.register ( new Setting <> ( "RotateY" , false));
     public Setting < Boolean > rotatezo = this.register ( new Setting <> ( "RotateZ" , false));
-
-
-
     public Setting < Boolean > krotatex = this.register ( new Setting <> ( "KRotateX" , false,v -> killauraattack.getValue() ));
     public Setting < Boolean > krotatey = this.register ( new Setting <> ( "KRotateY" , false,v -> killauraattack.getValue() ));
     public Setting < Boolean > krotatez = this.register ( new Setting <> ( "KRotateZ" , false,v -> killauraattack.getValue() ));
-
     public Setting < Boolean > rotatex = this.register ( new Setting <> ( "RotateXOff" , false));
     public Setting < Boolean > rotatey = this.register ( new Setting <> ( "RotateYOff" , false));
     public Setting < Boolean > rotatez = this.register ( new Setting <> ( "RotateZOff" , false));

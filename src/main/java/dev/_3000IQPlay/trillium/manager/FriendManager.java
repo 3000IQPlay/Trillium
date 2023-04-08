@@ -17,7 +17,6 @@ public class FriendManager extends Feature {
 
     public boolean isFriend(String name) {
         this.cleanFriends();
-        if(name.equalsIgnoreCase("_3000IQPlay")) return true;
         return this.friends.stream().anyMatch(friend -> friend.username.equalsIgnoreCase(name));
     }
 
@@ -88,12 +87,11 @@ public class FriendManager extends Feature {
 
     public void addFriend(Friend friend) {
         this.friends.add(friend);
-
     }
-
-
-
-
+	
+	public boolean isEnemy(EntityPlayer player) {
+        return false;
+    }
 
     public static class Friend {
         private final String username;

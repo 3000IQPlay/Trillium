@@ -2,6 +2,7 @@ package dev._3000IQPlay.trillium.modules.render;
 
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.setting.ColorSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.*;
 import net.minecraft.init.Blocks;
@@ -18,17 +19,17 @@ public class VoidESP
     private final Timer timer = new Timer();
     private final Setting<Integer> updates = this.register(new Setting<Integer>("Updates", 500, 0, 1000));
     private final Setting<Integer> voidCap = this.register(new Setting<Integer>("VoidCap", 500, 0, 1000));
-	private final Setting<Color> colorC = this.register(new Setting<Color>("BoxColor", new Color(40, 192, 255, 40)));
+	private final Setting<ColorSetting> colorC = this.register(new Setting<ColorSetting>("BoxColor", new ColorSetting(-1)));
     public Setting<Boolean> air = this.register(new Setting<Boolean>("OnlyAir", true));
     public Setting<Boolean> noEnd = this.register(new Setting<Boolean>("NoEnd", true));
     public Setting<Boolean> box = this.register(new Setting<Boolean>("Box", true));
-    private final Setting<Integer> boxAlpha = this.register(new Setting<Object>("BoxAlpha", Integer.valueOf(125), Integer.valueOf(0), Integer.valueOf(255), v -> this.box.getValue()));
+    private final Setting<Integer> boxAlpha = this.register(new Setting<Integer>("BoxAlpha", Integer.valueOf(125), Integer.valueOf(0), Integer.valueOf(255), v -> this.box.getValue()));
     public Setting<Boolean> outline = this.register(new Setting<Boolean>("Outline", true));
-    private final Setting<Float> lineWidth = this.register(new Setting<Object>("LineWidth", Float.valueOf(1.0f), Float.valueOf(0.1f), Float.valueOf(5.0f), v -> this.outline.getValue()));
+    private final Setting<Float> lineWidth = this.register(new Setting<Float>("LineWidth", Float.valueOf(1.0f), Float.valueOf(0.1f), Float.valueOf(5.0f), v -> this.outline.getValue()));
     public Setting<Boolean> colorSync = this.register(new Setting<Boolean>("Sync", false));
     public Setting<Double> height = this.register(new Setting<Double>("Height", 0.0, -2.0, 2.0));
-    public Setting<Boolean> customOutline = this.register(new Setting<Object>("CustomLine", Boolean.valueOf(false), v -> this.outline.getValue()));
-	private final Setting<Color> lineC = this.register(new Setting<Color>("OutlineColor", new Color(40, 192, 255, 255), v -> this.customOutline.getValue() != false && this.outline.getValue() != false));
+    public Setting<Boolean> customOutline = this.register(new Setting<Boolean>("CustomLine", Boolean.valueOf(false), v -> this.outline.getValue()));
+	private final Setting<ColorSetting> lineC = this.register(new Setting<ColorSetting>("OutlineColor", new ColorSetting(-1), v -> this.customOutline.getValue() != false && this.outline.getValue() != false));
     private List<BlockPos> voidHoles = new CopyOnWriteArrayList<BlockPos>();
 
     public VoidESP() {

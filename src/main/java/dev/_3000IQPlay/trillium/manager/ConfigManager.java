@@ -146,14 +146,6 @@ public class ConfigManager implements Util {
                 }
                 continue;
             }
-            if (feature instanceof EnemyManager) {
-                try {
-                    Trillium.enemyManager.addEnemy(new EnemyManager.Enemy(element.getAsString(), UUID.fromString(settingName)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                continue;
-            }
             for (Setting setting : feature.getSettings()) {
                 if (settingName.equals(setting.getName())) {
                     try {
@@ -180,7 +172,6 @@ public class ConfigManager implements Util {
             this.config = "Trillium/config/";
         }
         Trillium.friendManager.onLoad();
-        Trillium.enemyManager.onLoad();
         MacroManager.onLoad();
         for (Feature feature : this.features) {
             try {
@@ -212,7 +203,6 @@ public class ConfigManager implements Util {
         if (!path.exists())
             path.mkdir();
         Trillium.friendManager.saveFriends();
-        Trillium.enemyManager.saveEnemies();
         Trillium.macromanager.saveMacro();
         for (Feature feature : this.features) {
                 try {
@@ -288,7 +278,6 @@ public class ConfigManager implements Util {
     public void init() {
         this.features.addAll(Trillium.moduleManager.modules);
         this.features.add(Trillium.friendManager);
-        this.features.add(Trillium.enemyManager);
         String name = loadCurrentConfig();
         loadConfig(name,true);
     }

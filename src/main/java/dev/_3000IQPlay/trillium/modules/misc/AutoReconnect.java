@@ -21,7 +21,7 @@ public class AutoReconnect extends Module
         super("AutoReconnect",  "Automatically reconnects you when you get kicked",  Category.MISC,  true,  false,  false);
         this.setInstance();
     }
-    public Setting<Integer> delay = this.register ( new Setting <> ( "delay", 34, 0, 90 ) );
+    public Setting<Integer> delay = this.register ( new Setting <> ( "Delay", 34, 0, 90 ) );
 
     public static AutoReconnect getInstance() {
         if (AutoReconnect.INSTANCE == null) {

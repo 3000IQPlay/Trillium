@@ -190,7 +190,6 @@ public class ModuleManager
 		this.modules.add(new UnfocusedCPU());
 		this.modules.add(new Flatten());
 		this.modules.add(new TNTTime());
-		this.modules.add(new AutoKit());
 		this.modules.add(new AutoXP());
     }
 

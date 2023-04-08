@@ -40,7 +40,6 @@ public class Trillium {
     public static FriendManager friendManager;
 	public static MovementManager movementManager;
     public static ModuleManager moduleManager;
-    public static EnemyManager enemyManager;
     public static NetworkHandler networkHandler;
 	public static InventoryManager inventoryManager;
     public static MacroManager macromanager;
@@ -129,7 +128,6 @@ public class Trillium {
         commandManager = new CommandManager();
         friendManager = new FriendManager();
         moduleManager = new ModuleManager();
-        enemyManager = new EnemyManager();
         eventManager = new EventManager();
         macromanager = new MacroManager();
 		inventoryManager = new InventoryManager();
@@ -172,7 +170,6 @@ public class Trillium {
         speedManager = null;
 		movementManager = null;
         fontRenderer = null;
-        enemyManager = null;
         macromanager = null;
 	    inventoryManager = null;
 		positionManager = null;

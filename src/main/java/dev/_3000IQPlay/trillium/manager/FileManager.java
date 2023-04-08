@@ -14,12 +14,9 @@ public class FileManager
     private final Path base = this.getMkDirectory(this.getRoot(), "Trillium");
     private final Path config = this.getMkDirectory(this.base, "config");
     private final Path avatars = this.getMkDirectory(this.base, "FriendsAvatars");
-    private final Path skins = this.getMkDirectory(this.base, "skins");
-    private final Path niggs = this.getMkDirectory(this.base, "customimg");
 
 
     public FileManager() {
-        this.getMkDirectory(this.base, "pvp");
         for (Module.Category category : Trillium.moduleManager.getCategories()) {
             this.getMkDirectory(this.config, category.getName());
         }
@@ -61,7 +58,4 @@ public class FileManager
     public Path getConfig() {
         return this.getBasePath().resolve("config");
     }
-
-
 }
-

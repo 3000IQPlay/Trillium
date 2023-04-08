@@ -16,23 +16,23 @@ import net.minecraft.item.*;
 
 
 public class StorageEsp extends Module {
-    private Setting<mode> Mode = register(new Setting("Shulker Mode", mode.Rainbow));
+    private Setting<mode> Mode = this.register(new Setting<>("Shulker Mode", mode.Rainbow));
 	private final Setting<ColorSetting> chestColor = this.register(new Setting<>("ChestColor", new ColorSetting(0x8800FF00)));
     private final Setting<ColorSetting> shulkColor = this.register(new Setting<>("ShulkColor", new ColorSetting(0x8800FF00)));
     private final Setting<ColorSetting> echestColor = this.register(new Setting<>("EchestColor", new ColorSetting(0x8800FF00)));
-    private final Setting<Float> range = (Setting<Float>)this.register(new Setting("Range", 50.0f, 1.0f, 300.0f));
-    private final Setting<Boolean> chest = (Setting<Boolean>)this.register(new Setting("Chest", true));
-    private final Setting<Boolean> dispenser = (Setting<Boolean>)this.register(new Setting("Dispenser", false));
-    private final Setting<Boolean> shulker = (Setting<Boolean>)this.register(new Setting("Shulker", true));
-    private final Setting<Boolean> echest = (Setting<Boolean>)this.register(new Setting("Ender Chest", true));
-    private final Setting<Boolean> furnace = (Setting<Boolean>)this.register(new Setting("Furnace", false));
-    private final Setting<Boolean> hopper = (Setting<Boolean>)this.register(new Setting("Hopper", false));
-    private final Setting<Boolean> cart = (Setting<Boolean>)this.register(new Setting("Minecart", false));
-    private final Setting<Boolean> frame = (Setting<Boolean>)this.register(new Setting("Item Frame", false));
-    private final Setting<Boolean> box = (Setting<Boolean>)this.register(new Setting("Box", false));
-    private final Setting<Integer> boxAlpha = (Setting<Integer>)this.register(new Setting("BoxAlpha", 125, 0, 255,  v -> this.box.getValue()));
-    private final Setting<Boolean> outline  = (Setting<Boolean>)this.register(new Setting("Outline", true));
-    private final Setting<Float> lineWidth  = (Setting<Float>)this.register(new Setting("LineWidth", 1.0f, 0.1f, 5.0f,  v -> this.outline.getValue()));
+    private final Setting<Float> range = this.register(new Setting<>("Range", 50.0f, 1.0f, 300.0f));
+    private final Setting<Boolean> chest = this.register(new Setting<>("Chest", true));
+    private final Setting<Boolean> dispenser = this.register(new Setting<>("Dispenser", false));
+    private final Setting<Boolean> shulker = this.register(new Setting<>("Shulker", true));
+    private final Setting<Boolean> echest = this.register(new Setting<>("Ender Chest", true));
+    private final Setting<Boolean> furnace = this.register(new Setting<>("Furnace", false));
+    private final Setting<Boolean> hopper = this.register(new Setting<>("Hopper", false));
+    private final Setting<Boolean> cart = this.register(new Setting<>("Minecart", false));
+    private final Setting<Boolean> frame = this.register(new Setting<>("Item Frame", false));
+    private final Setting<Boolean> box = this.register(new Setting<>("Box", false));
+    private final Setting<Integer> boxAlpha = this.register(new Setting<>("BoxAlpha", 125, 0, 255,  v -> this.box.getValue()));
+    private final Setting<Boolean> outline  = this.register(new Setting<>("Outline", true));
+    private final Setting<Float> lineWidth  = this.register(new Setting<>("LineWidth", 1.0f, 0.1f, 5.0f,  v -> this.outline.getValue()));
 
 
     public StorageEsp() {

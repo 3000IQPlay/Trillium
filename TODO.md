@@ -1,16 +1,18 @@
 **Trillium b1.7.8 Changes**
 + New GUI
 + Added AutoXP (Done)
-+ Added AutoKit (Done)
 + Added Flatten (Done)
++ Added FastUse (Done)
 + Added TNTTime (Done)
 + Added ClickGUI Scale Option
 + Added FadeOut Animation for BackTrack
++ Advenced KillAura Render (Done)
 
 + Added StringElement (Done)
 + Added MainMenu (Done)
 
-* Rewrote FastPlace = FastUse (Done)
+% Fixed NoMCShutdown Issue (Done)
+
 * Rewrote DamageParticles (Done)
 * Rewrote MiddleClick (Done)
 * Rewrote Surround (Done)
@@ -20,4 +22,5 @@
 * Rewrote Scaffold
 * Fixed ClickGUI Animations
 
+- Removed FastPlace (Done)
 - Removed RamOptimizer (Done)

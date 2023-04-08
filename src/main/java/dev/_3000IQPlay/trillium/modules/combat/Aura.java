@@ -152,6 +152,8 @@ public class Aura extends Module {
     /*-------------   Visual  -------------*/
     public final Setting<Boolean> RTXVisual = this.register(new Setting<>("RTXVisual", false, v -> this.page.getValue() == Page.Visuals));
     public final Setting<Boolean> targetesp = this.register(new Setting<>("TargetCircle", true, v -> this.page.getValue() == Page.Visuals));//(visual);
+	public final Setting<Float> circleSpeed = this.register(new Setting("CircleSpeed", 0.15f, 0.1f, 1.0f, v -> this.page.getValue() == Page.Visuals && this.targetesp.getValue()));
+	public final Setting<Float> circleHeight = this.register(new Setting("CircleHeight", 0.15f, 0.1f, 1.0f, v -> this.page.getValue() == Page.Visuals && this.targetesp.getValue()));
     /*-------------------------------------*/
 
 
@@ -260,7 +262,7 @@ public class Aura extends Module {
         }
         if (targetesp.getValue()) {
             prevCircleStep = circleStep;
-            circleStep += 0.15;
+            circleStep += circleSpeed.getValue();
         }
         if(target != null) {
             if(snap.getValue()){
@@ -280,14 +282,13 @@ public class Aura extends Module {
         return Math.abs(1 + Math.sin(input)) / 2;
     }
 
-
     @SubscribeEvent
     public void onRender3D(Render3DEvent e){
         if (targetesp.getValue()) {
             EntityLivingBase entity = Aura.target;
             if (entity != null) {
                 double cs = prevCircleStep + (circleStep - prevCircleStep) * mc.getRenderPartialTicks();
-                double prevSinAnim = absSinAnimation(cs - 0.15);
+                double prevSinAnim = absSinAnimation(cs - circleHeight.getValue());
                 double sinAnim = absSinAnimation(cs);
                 double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * mc.getRenderPartialTicks() - mc.getRenderManager().renderPosX;
                 double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * mc.getRenderPartialTicks() - mc.getRenderManager().renderPosY + prevSinAnim * 1.4f;

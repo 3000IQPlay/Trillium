@@ -12,7 +12,7 @@ public class AutoRespawn extends Module {
         super("AutoRespawn", "Automatically respawns when you die", Category.PLAYER, true, false, false);
         this.timer = new Timer();
     }
-    public Setting<Boolean> deathcoords = this.register ( new Setting <> ( "deathcoords", true ) );
+    public Setting<Boolean> deathcoords = this.register ( new Setting <> ( "Death Coords", true ) );
     public Setting<Boolean> autokit = this.register ( new Setting <> ( "Auto Kit", false ) );
     public Setting<String> kit = this.register(new Setting<String>("kit name", "kitname", v -> autokit.getValue()));
     public Setting<Boolean> autohome = this.register ( new Setting <> ( "Auto Home", false ) );
