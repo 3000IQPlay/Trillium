@@ -1,6 +1,7 @@
 **Trillium b1.7.8 Changes**
 + New GUI
 + Added AutoXP (Done)
++ Added AntiDesync (Done)
 + Added Flatten (Done)
 + Added FastUse (Done)
 + Added TNTTime (Done)
@@ -11,7 +12,7 @@
 + Added StringElement (Done)
 + Added MainMenu (Done)
 
-% Fixed NoMCShutdown Issue (Done)
+% Fixed MCShutdown Issue (Done)
 
 * Rewrote DamageParticles (Done)
 * Rewrote MiddleClick (Done)

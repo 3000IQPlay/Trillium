@@ -27,19 +27,12 @@ public class SliderElement extends AbstractElement {
 		this.max = ((Number) setting.getMax()).floatValue();
 	}
 
-
-
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-
-
-
 		double currentPos = (((Number)setting.getValue()).floatValue() - min)
 				/ (max - min);
 		stranimation = stranimation + (((Number) setting.getValue()).floatValue() * 100 / 100 - stranimation) / 2.0D;
 		animation = RenderUtil.scrollAnimate(animation, (float) currentPos, .5f);
-
-
 
 		super.render(mouseX, mouseY, delta);
 

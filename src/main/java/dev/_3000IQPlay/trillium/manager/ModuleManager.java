@@ -191,6 +191,7 @@ public class ModuleManager
 		this.modules.add(new Flatten());
 		this.modules.add(new TNTTime());
 		this.modules.add(new AutoXP());
+		this.modules.add(new AntiDesync());
     }
 
     public Module getModuleByName(String name) {
