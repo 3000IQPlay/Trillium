@@ -36,7 +36,7 @@ public class HolePush extends Module {
 	public final Setting<Boolean> extraPackets = this.register(new Setting<>("Extra Packet", true));
     public final Setting<Boolean> mineRedstone = this.register(new Setting<>("Mine Redstone", false));
     public final Setting<MineMode> mineMode = this.register(new Setting<>("Mine", MineMode.Packet));
-    public final Setting<Boolean> consistent = this.register(new Setting<>("Consistent", false, v -> !this.consistent.getValue()));
+    public final Setting<Boolean> consistent = this.register(new Setting<>("Consistent", false));
     public final Setting<Boolean> silentSwitch = this.register(new Setting<>("Silent Switch", true));
     public Side side = null;
     public EntityPlayer entityPlayer = null;
@@ -141,14 +141,16 @@ public class HolePush extends Module {
             return;
         }
         if (isPistonTriggered(pistonPos) && mineRedstone.getValue() && !mined) {
-            if (!mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_PICKAXE))
-                return;
             switch(mineMode.getValue()) {
                 case Packet:
 				    int currentItemP = mc.player.inventory.currentItem;
 				    int slotP = InventoryUtil.getItemHotbar(Items.DIAMOND_PICKAXE);
-				    if (mc.player.inventory.currentItem != slotP && slotP != -1 && silentSwitch.getValue()) {
-				        mc.player.connection.sendPacket(new CPacketHeldItemChange(slotP));
+				    if (silentSwitch.getValue()) {
+						if (mc.player.inventory.currentItem != slotP && slotP != -1) {
+				            mc.player.connection.sendPacket(new CPacketHeldItemChange(slotP));
+						}
+					} else {
+						if (!mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_PICKAXE)) return;
 					}
                     mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, placedRedstonePos, EnumFacing.UP));
                     mc.player.swingArm(EnumHand.MAIN_HAND);
@@ -168,9 +170,13 @@ public class HolePush extends Module {
                 case Vanilla:
                     int currentItem = mc.player.inventory.currentItem;
                     int slot = InventoryUtil.getItemHotbar(Items.DIAMOND_PICKAXE);
-                    if (mc.player.inventory.currentItem != slot && slot != -1 && silentSwitch.getValue()) {
-                        mc.player.connection.sendPacket(new CPacketHeldItemChange(slot));
-                    }
+                    if (silentSwitch.getValue()) {
+						if (mc.player.inventory.currentItem != slot && slot != -1) {
+                            mc.player.connection.sendPacket(new CPacketHeldItemChange(slot));
+					    }
+                    } else {
+						if (!mc.player.getHeldItemMainhand().getItem().equals(Items.DIAMOND_PICKAXE)) return;
+					}
                     mc.playerController.onPlayerDamageBlock(placedRedstonePos, mc.objectMouseOver.sideHit);
                     mc.player.swingArm(EnumHand.MAIN_HAND);
                     if (silentSwitch.getValue() && slot != -1) {
