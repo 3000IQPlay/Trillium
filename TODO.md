@@ -19,6 +19,7 @@
 * Rewrote every HUD Element (Done)
 * Rewrote DamageParticles (Done)
 * Rewrote MiddleClick (Done)
+* Rewrote BoatKiller (Done)
 * Rewrote Surround (Done)
 * Rewrote AutoChunkDupe (Done)
 * Rewrote Trajectories (Done)
