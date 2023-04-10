@@ -3,53 +3,45 @@ package dev._3000IQPlay.trillium.gui.hud;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
-import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.gui.hud.HudElement;
 import dev._3000IQPlay.trillium.setting.ColorSetting;
-import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.util.AstolfoAnimation;
+import dev._3000IQPlay.trillium.util.DynamicAnimation;
 import dev._3000IQPlay.trillium.util.DrawHelper;
-import dev._3000IQPlay.trillium.util.*;
+import dev._3000IQPlay.trillium.util.RenderUtil;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class Indicators extends Module {
-    public Indicators() {
-        super("WexIndicators", "Indicator", Category.HUD, true, false, false);
-    }
-
-
-    private static List<Indicator> indicators = new java.util.ArrayList();
+public class Indicators extends HudElement {
     public static AstolfoAnimation astolfo = new AstolfoAnimation();
-
-    public Setting<Boolean> Memoryy = register(new Setting<>("Memory", true));
-    public Setting<Boolean> TPS = register(new Setting<>("TPS", true));
-
-    public Setting<Boolean> blur = register(new Setting<>("Blur", true));
+    private static final List<Indicator> indicators = new java.util.ArrayList();
     private final Setting<ColorSetting> cc = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
     private final Setting<ColorSetting> cs = this.register(new Setting<>("RectColor", new ColorSetting(0x8800FF00)));
-
-    private final Setting<PositionSetting> pos = this.register(new Setting<>("Position", new PositionSetting(0.5f,0.5f)));
-
+    public Setting<Boolean> Memoryy = register(new Setting<>("Memory", true));
+    public Setting<Boolean> TPS = register(new Setting<>("TPS", true));
+    public Setting<Boolean> blur = register(new Setting<>("Blur", true));
     public Setting<Float> grange = register(new Setting("GlowRange", 3.6f, 0.0f, 10.0f));
     public Setting<Float> gmult = register(new Setting("GlowMultiplier", 3.6f, 0.0f, 10.0f));
     public Setting<Float> range = register(new Setting("RangeBetween", 46.0f, 46.0f, 100.0f));
+    boolean once = false;
+    private final Setting<mode2> colorType = register(new Setting("Mode", mode2.Astolfo));
 
-
-
-    private Setting<mode2> colorType = register(new Setting("Mode", mode2.Astolfo));
-    public enum mode2 {
-        Static, StateBased, Astolfo;
+    public Indicators() {
+        super("WexIndicators", "Displays some basic info in cool way", 150, 50);
     }
 
-    boolean once = false;
-
+    public static float[] getRG(double input) {
+        return new float[]{255 - 255 * (float) input, 255 * (float) input, 100 * (float) input};
+    }
 
     protected void once() {
         indicators.add(new Indicator() {
@@ -92,56 +84,15 @@ public class Indicators extends Module {
     }
 
     @SubscribeEvent
-    public void onRender2D(Render2DEvent e){
-        draw();
+    public void onRender2D(Render2DEvent e) {
+        super.onRender2D(e);
+        draw(e.scaledResolution);
     }
 
-
-    int dragX, dragY = 0;
-    boolean mousestate = false;
-
-    public int normaliseX(){
-        return (int) ((Mouse.getX()/2f));
-    }
-    public int normaliseY(){
-        ScaledResolution sr = new ScaledResolution(mc);
-        return (((-Mouse.getY() + sr.getScaledHeight()) + sr.getScaledHeight())/2);
-    }
-
-    public boolean isHovering(){
-        return normaliseX() > posX && normaliseX()< posX + 150 && normaliseY() > posY &&  normaliseY() < posY + 50;
-    }
-
-    float posX,posY = 0;
 
     @Override
     public void onUpdate() {
-
-        ScaledResolution sr = new ScaledResolution(mc);
-        posX = sr.getScaledWidth() * pos.getValue().getX();
-        posY  = sr.getScaledHeight() * pos.getValue().getY();
-        if(mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof HudEditorGui){
-            if(isHovering()){
-                if(Mouse.isButtonDown(0) && mousestate){
-                    pos.getValue().setX( (float) (normaliseX() - dragX) /  sr.getScaledWidth());
-                    pos.getValue().setY( (float) (normaliseY() - dragY) / sr.getScaledHeight());
-                }
-            }
-        }
-
-        if(Mouse.isButtonDown(0) && isHovering()){
-            if(!mousestate){
-                dragX = (int) (normaliseX() - (pos.getValue().getX() * sr.getScaledWidth()));
-                dragY = (int) (normaliseY() - (pos.getValue().getY() * sr.getScaledHeight()));
-            }
-            mousestate = true;
-        } else {
-            mousestate = false;
-        }
-
-
-
-        if(!once){
+        if (!once) {
             once();
             once = true;
             return;
@@ -150,10 +101,9 @@ public class Indicators extends Module {
         indicators.forEach(indicator -> indicator.update());
     }
 
-    public void draw() {
-        ScaledResolution sr = new ScaledResolution(mc);
+    public void draw(ScaledResolution sr) {
         GL11.glPushMatrix();
-        GL11.glTranslated(pos.getValue().x * sr.getScaledWidth(), pos.getValue().y * sr.getScaledHeight(), 0);
+        GL11.glTranslated(getX() * sr.getScaledWidth(), getY() * sr.getScaledHeight(), 0);
 
         List<Indicator> enabledIndicators = new ArrayList();
         for (Indicator indicator : indicators) {
@@ -166,11 +116,11 @@ public class Indicators extends Module {
                 GL11.glPushMatrix();
                 GL11.glTranslated(range.getValue() * i, 0, 0);
                 Indicator ind = enabledIndicators.get(i);
-             //   renderShadow(0, 0, 40, 40, ColorShell.rgba(25, 25, 25, 180), 3);
-                if(!blur.getValue()) {
-                    RenderUtil.drawSmoothRect(0, 0, 44, 44, ColorShell.rgba(25, 25, 25, 180));
+                //   renderShadow(0, 0, 40, 40, ColorShell.rgba(25, 25, 25, 180), 3);
+                if (!blur.getValue()) {
+                    RenderUtil.drawSmoothRect(0, 0, 44, 44, new Color(25, 25, 25, 180).getRGB());
                 } else {
-                    DrawHelper.drawRectWithGlow(0, 0, 44, 44,grange.getValue(),gmult.getValue(),cs.getValue().getColorObject());
+                    DrawHelper.drawRectWithGlow(0, 0, 44, 44, grange.getValue(), gmult.getValue(), cs.getValue().getColorObject());
                 }
 
 
@@ -227,19 +177,19 @@ public class Indicators extends Module {
         if (!oldState)
             GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-      //  GL11.glShadeModel(GL11.GL_FLAT);
+        //  GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glColor4f(1, 1, 1, 1);
-        if(!Objects.equals(name, "TPS")) {
-            FontRender.drawCentString6((int) (offset * 100) + "%", 0.3f, -0.8f, ColorShell.rgba(200, 200, 200, 255));
-            FontRender.drawCentString6(name, 0, -20f, ColorShell.rgba(200, 200, 200, 255));
+        if (!Objects.equals(name, "TPS")) {
+            FontRender.drawCentString6((int) (offset * 100) + "%", 0.3f, -0.8f, new Color(200, 200, 200, 255).getRGB());
+            FontRender.drawCentString6(name, 0, -20f, new Color(200, 200, 200, 255).getRGB());
         } else {
-            FontRender.drawCentString6(String.valueOf((int) (offset * 20)), 0f, -0.8f, ColorShell.rgba(200, 200, 200, 255));
-            FontRender.drawCentString6(name, 0f, -20f, ColorShell.rgba(200, 200, 200, 255));
+            FontRender.drawCentString6(String.valueOf((int) (offset * 20)), 0f, -0.8f, new Color(200, 200, 200, 255).getRGB());
+            FontRender.drawCentString6(name, 0f, -20f, new Color(200, 200, 200, 255).getRGB());
         }
     }
 
-    public static float[] getRG(double input) {
-        return new float[] { 255 - 255 * (float) input, 255 * (float) input, 100 * (float) input };
+    public enum mode2 {
+        Static, StateBased, Astolfo
     }
 
     public static abstract class Indicator {

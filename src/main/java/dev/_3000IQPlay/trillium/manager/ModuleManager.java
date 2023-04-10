@@ -68,7 +68,7 @@ public class ModuleManager
         this.modules.add(new TpsSync());
         this.modules.add(new ItemShaders());
         this.modules.add(new StashFinder());
-        this.modules.add(new PearlESP());
+        this.modules.add(new ProjectilesESP());
         this.modules.add(new EntityESP());
         this.modules.add(new AutoFish());
         this.modules.add(new CrystalChams());
@@ -82,7 +82,6 @@ public class ModuleManager
         this.modules.add(new Models());
         this.modules.add(new Jesus());
         this.modules.add(new EChestFarmer());
-        this.modules.add(new SeedOverlay());
         this.modules.add(new MiddleClick());
         this.modules.add(new Anchor());
         this.modules.add(new NotificationManager());
@@ -114,7 +113,7 @@ public class ModuleManager
         this.modules.add(new ChestStealer());
         this.modules.add(new FastUse());
         this.modules.add(new AutoArmor());
-        this.modules.add(new PacketCounter());
+        this.modules.add(new PacketStats());
         this.modules.add(new OffHand());
         this.modules.add(new Speed());
         this.modules.add(new Burrow());
@@ -192,6 +191,7 @@ public class ModuleManager
 		this.modules.add(new TNTTime());
 		this.modules.add(new AutoXP());
 		this.modules.add(new AntiDesync());
+		this.modules.add(new HolePush());
     }
 
     public Module getModuleByName(String name) {

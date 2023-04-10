@@ -369,6 +369,7 @@ public class InventoryUtil
 
         return result;
     }
+	
     public static ItemStack get(int slot)
     {
         if (slot == -2)

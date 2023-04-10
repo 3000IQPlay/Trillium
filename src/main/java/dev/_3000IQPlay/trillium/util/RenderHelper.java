@@ -1,6 +1,8 @@
 package dev._3000IQPlay.trillium.util;
 
 import com.jhlabs.image.GaussianFilter;
+import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.gui.hud.RadarRewrite;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,12 +14,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
 
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import static dev._3000IQPlay.trillium.gui.hud.RadarRewrite.astolfo;
+import static dev._3000IQPlay.trillium.util.RenderUtil.TwoColoreffect;
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderHelper{
@@ -305,10 +307,7 @@ public class RenderHelper{
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-
     }
-
-
 
     public static void drawElipse( float x, float y,float rx, float ry, float start, float end, float radius, Color color,int stage1) {
         float sin;
@@ -373,7 +372,81 @@ public class RenderHelper{
             }
         }
     }
+	
+	public static void drawElipse(float x, float y, float rx, float ry, float start, float end, float radius, Color color, int stage1, RadarRewrite.mode2 cmode) {
+        float sin;
+        float cos;
+        float i;
+        GlStateManager.color(0, 0, 0, 0);
+        float endOffset;
+        if (start > end) {
+            endOffset = end;
+            end = start;
+            start = endOffset;
+        }
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glLineWidth(2);
+        glBegin(GL11.GL_LINE_STRIP);
+        for (i = start; i <= end; i += 2) {
 
+                double stage = (i - start) / 360;
+                Color clr = null;
+
+                if(cmode == RadarRewrite.mode2.Astolfo) {
+                   clr = new Color(astolfo.getColor(stage));
+                }else if(cmode == RadarRewrite.mode2.Rainbow){
+                    clr = color;
+                }  else if(cmode == RadarRewrite.mode2.Custom){
+                    clr = color;
+                } else {
+                    clr = TwoColoreffect(color, Trillium.moduleManager.getModuleByClass(RadarRewrite.class).cColor2.getValue().getColorObject(), Math.abs(System.currentTimeMillis() / 10) / 100.0 + i * ((20f - Trillium.moduleManager.getModuleByClass(RadarRewrite.class).colorOffset1.getValue()) / 200) );
+                }
+
+            int clr2 = clr.getRGB();
+            int red = ((clr2 >> 16) & 255);
+            int green = ((clr2 >> 8) & 255);
+            int blue = ((clr2 & 255));
+
+            GL11.glColor4f(red / 255f, green / 255f, blue / 255f, 1);
+
+
+
+            cos = (float) Math.cos(i * Math.PI / 180) * (radius / ry);
+            sin = (float) Math.sin(i * Math.PI / 180) * (radius / rx);
+            glVertex2f((x + cos), (y + sin));
+        }
+        glEnd();
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        if (stage1 != -1) {
+            cos = (float) Math.cos((start - 15) * Math.PI / 180) * (radius / ry);
+            sin = (float) Math.sin((start - 15) * Math.PI / 180) * (radius / rx);
+
+            switch (stage1) {
+                case 0: {
+                    FontRender.drawCentString3("W", (x + cos), (y + sin), -1);
+                    break;
+                }
+                case 1: {
+                    FontRender.drawCentString3("N", (x + cos), (y + sin), -1);
+                    break;
+                }
+                case 2: {
+                    FontRender.drawCentString3("E", (x + cos), (y + sin), -1);
+
+                    break;
+                }
+                case 3: {
+                    FontRender.drawCentString3("S", (x + cos), (y + sin), -1);
+                    break;
+                }
+            }
+        }
+    }
 
     public static void drawCircle(float x, float y, float radius, boolean filled, Color color) {
         drawCircle(x, y, 0, 360, radius, filled, color);
@@ -392,8 +465,20 @@ public class RenderHelper{
             drawElipse(x, y, x2, y2, 285 + yaw, 345 + yaw, radius, color, -1);
         }
     }
-
-
+	
+	public static void drawEllipsCompas(int yaw, float x, float y, float x2, float y2, float radius, Color color, boolean Dir, RadarRewrite.mode2 mode) {
+        if (Dir) {
+            drawElipse(x, y, x2, y2, 15 + yaw, 75 + yaw, radius, color, 0,mode);
+            drawElipse(x, y, x2, y2, 105 + yaw, 165 + yaw, radius, color, 1,mode);
+            drawElipse(x, y, x2, y2, 195 + yaw, 255 + yaw, radius, color, 2,mode);
+            drawElipse(x, y, x2, y2, 285 + yaw, 345 + yaw, radius, color, 3,mode);
+        } else {
+            drawElipse(x, y, x2, y2, 15 + yaw, 75 + yaw, radius, color, -1,mode);
+            drawElipse(x, y, x2, y2, 105 + yaw, 165 + yaw, radius, color, -1,mode);
+            drawElipse(x, y, x2, y2, 195 + yaw, 255 + yaw, radius, color, -1,mode);
+            drawElipse(x, y, x2, y2, 285 + yaw, 345 + yaw, radius, color, -1,mode);
+        }
+    }
 
     public static void drawColorBox(AxisAlignedBB axisalignedbb, float red, float green, float blue, float alpha) {
 
@@ -461,6 +546,4 @@ public class RenderHelper{
         buffer.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
         ts.draw();
     }
-
-
 }

@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.util;
 
 import dev._3000IQPlay.trillium.event.events.EventPreMotion;
+import dev._3000IQPlay.trillium.util.InventoryUtil;
 import dev._3000IQPlay.trillium.util.RotationUtil;
 import dev._3000IQPlay.trillium.util.Util;
 import net.minecraft.block.*;
@@ -173,6 +174,14 @@ public class BlockUtils {
         }
         return 0.0f;
     }
+
+    public static void placeBlock(BlockPos pos, EnumHand hand, boolean rotate, boolean packet, boolean extraPacket, int slot) {
+        int currentItem = mc.player.inventory.currentItem;
+        InventoryUtil.switchTo(slot);
+        BlockUtils.placeBlock(pos, hand, rotate, packet, extraPacket, true);
+        mc.player.inventory.currentItem = currentItem;
+        mc.playerController.updateController();
+    }    
 	
 	public static void placeBlock(BlockPos pos, EnumFacing side, boolean packet) {
         BlockPos neighbour = pos.offset(side);

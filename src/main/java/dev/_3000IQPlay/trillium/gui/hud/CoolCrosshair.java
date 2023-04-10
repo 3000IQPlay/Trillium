@@ -24,16 +24,16 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class CoolCrosshair extends Module {
     public final Setting<ColorSetting> color = this.register(new Setting<>("Color", new ColorSetting(0x8800FF00)));
-    private final Setting<Boolean> smt = this.register(new Setting<>("Smooth", Boolean.FALSE));
-    public Setting<Float> car = this.register(new Setting<>("Otstup", 0.0f, 0.1f, 1.0f));
-    public Setting<Float> lwid = this.register(new Setting<>("OtstupTwo", 0.0f, 0.1f, 1.0f));
+    private final Setting<Boolean> smt = this.register(new Setting<>("smooth", Boolean.FALSE));
+    public Setting<Float> car = this.register(new Setting<>("otstup", 0.0f, 0.1f, 1.0f));
+    public Setting<Float> lwid = this.register(new Setting<>("otstup2", 0.0f, 0.1f, 1.0f));
     public Setting<Float> rounded2 = this.register(new Setting<>("Round2", 0.0f, 0.5f, 20.0f));
     int status = 0;
     int santi = 0;
     float animation = 0;
 
     public CoolCrosshair() {
-        super("CoolCrosshair", "Cool shit", Module.Category.HUD, true, false, false);
+        super("CoolCrosshair", "Renders cool crosshair", Module.Category.HUD, true, false, false);
     }
 
     public static void drawPartialCircle(float x, float y, float radius, int startAngle, int endAngle, float thickness, Color colour, boolean smooth) {
@@ -94,8 +94,6 @@ public class CoolCrosshair extends Module {
     @SubscribeEvent
     public void onRender2D(Render2DEvent event) {
         super.onRender2D(event);
-		
-		if (Trillium.moduleManager.getModuleByClass(BowKiller.class).isDisabled()) return;
 
         float x1 = (float) (event.scaledResolution.getScaledWidth_double() / 2F);
         float y1 = (float) (event.scaledResolution.getScaledHeight_double() / 2F);

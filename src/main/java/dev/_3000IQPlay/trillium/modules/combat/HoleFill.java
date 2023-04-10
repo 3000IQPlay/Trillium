@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class HoleFill extends Module {
     public HoleFill() {
-        super("HoleFill", "HoleFill", Category.COMBAT, true, false, false);
+        super("HoleFill", "HoleFill", Module.Category.COMBAT, true, false, false);
     }
 
     private  Setting<Mode> mode =register( new Setting<>("Mode", Mode.Web));
@@ -85,6 +85,7 @@ public class HoleFill extends Module {
         recentPlacements.clear();
     }
 
+    @Override
     public void onUpdate() {
         if (mc.player == null || mc.world == null) {
             disable();

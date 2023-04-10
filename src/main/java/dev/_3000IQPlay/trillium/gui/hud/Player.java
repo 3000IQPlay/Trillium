@@ -1,86 +1,27 @@
 package dev._3000IQPlay.trillium.gui.hud;
 
 import dev._3000IQPlay.trillium.event.events.Render2DEvent;
-import dev._3000IQPlay.trillium.modules.Module;
+import dev._3000IQPlay.trillium.gui.hud.HudElement;
 import dev._3000IQPlay.trillium.setting.PositionSetting;
 import dev._3000IQPlay.trillium.setting.Setting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Mouse;
 
-public class Player extends Module {
-    public Player() {
-        super("PlayerView", "Player", Category.HUD, true, false, false);
-    }
-
-
-
-
+public class Player extends HudElement {
     public Setting<Integer> scale = this.register(new Setting<Integer>("Scale", 50, 0, 200));
-
     public Setting<Boolean> yw = this.register(new Setting<Boolean>("Yaw", true));
     public Setting<Boolean> pch = this.register(new Setting<Boolean>("Pitch", true));
-    private final Setting<PositionSetting> pos = this.register(new Setting<>("Position", new PositionSetting(0.5f,0.5f)));
 
-
-    float x1 =0;
-    float y1= 0;
-
-    @SubscribeEvent
-    public void onRender2D(Render2DEvent e){
-        ScaledResolution sr = new ScaledResolution(mc);
-        y1 = sr.getScaledHeight() * pos.getValue().getY();
-        x1 = sr.getScaledWidth() * pos.getValue().getX();
-        drawPlayerOnScreen((int) x1, (int) y1, scale.getValue(), -30, 0, Minecraft.getMinecraft().player, yw.getValue(), pch.getValue());
-        if(mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof HudEditorGui){
-            if(isHovering()){
-                if(Mouse.isButtonDown(0) && mousestate){
-                    pos.getValue().setX( (float) (normaliseX() - dragX) /  sr.getScaledWidth());
-                    pos.getValue().setY( (float) (normaliseY() - dragY) / sr.getScaledHeight());
-                }
-
-            }
-        }
-
-        if(Mouse.isButtonDown(0) && isHovering()){
-            if(!mousestate){
-                dragX = (int) (normaliseX() - (pos.getValue().getX() * sr.getScaledWidth()));
-                dragY = (int) (normaliseY() - (pos.getValue().getY() * sr.getScaledHeight()));
-            }
-            mousestate = true;
-        } else {
-            mousestate = false;
-        }
-
-
-    }
-
-
-
-    int dragX, dragY = 0;
-    boolean mousestate = false;
-
-    public int normaliseX(){
-        return (int) ((Mouse.getX()/2f));
-    }
-    public int normaliseY(){
-        ScaledResolution sr = new ScaledResolution(mc);
-        return (((-Mouse.getY() + sr.getScaledHeight()) + sr.getScaledHeight())/2);
-    }
-
-    public boolean isHovering(){
-        return normaliseX() > x1 - scale.getValue() && normaliseX()< x1 + scale.getValue() && normaliseY() > y1 - scale.getValue() &&  normaliseY() < y1 + scale.getValue();
+    public Player() {
+        super("PlayerView", "Renders your self as 3D model", 100, 100);
     }
 
     public static void drawPlayerOnScreen(int x, int y, int scale, float mouseX, float mouseY, EntityPlayer player, boolean yaw, boolean pitch) {
-        //  ESP.hackyFix = true;
         GlStateManager.pushMatrix();
         GlStateManager.enableDepth();
         GlStateManager.color(1f, 1f, 1f);
@@ -132,6 +73,11 @@ public class Player extends Module {
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
         GlStateManager.disableDepth();
         GlStateManager.popMatrix();
-        // ESP.hackyFix = false;
+    }
+
+    @SubscribeEvent
+    public void onRender2D(Render2DEvent e) {
+        super.onRender2D(e);
+        drawPlayerOnScreen((int) getPosX(), (int) getPosY(), scale.getValue(), -30, 0, Minecraft.getMinecraft().player, yw.getValue(), pch.getValue());
     }
 }

@@ -107,7 +107,6 @@ public class BlockRenderUtil {
         GL11.glPopMatrix();
     }
 
-    /*
     public static void drawFade(AxisAlignedBB axisAlignedBB, int color, float lineWidth) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -136,7 +135,6 @@ public class BlockRenderUtil {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-     */
 
     public static void drawWireframe(AxisAlignedBB axisAlignedBB, int color, float lineWidth) {
         GL11.glPushMatrix();

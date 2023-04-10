@@ -11,12 +11,9 @@ public class LevitationControl  extends Module {
     public LevitationControl () {
         super("LevitCtrl", "Jeez what the fuck", Category.MOVEMENT, true, false, false);
     }
-
-
-
+	
     private final Setting<Integer> upAmplifier = this.register(new Setting<Integer>("UpAmplifier", 1, 1, 3));
     private final Setting<Integer> downAmplifier = this.register(new Setting<Integer>("DownAmplifier", 1, 1, 3));
-
 
     @Override
     public void onUpdate() {
@@ -31,11 +28,6 @@ public class LevitationControl  extends Module {
             } else {
                 mc.player.motionY = 0;
             }
-
         }
-
     }
-
 }
-
-
