@@ -1,6 +1,7 @@
 **Trillium b1.7.8 Changes**
 + New GUI
 + Added AutoXP (Done)
++ Added AutoFarm (Done)
 + Added AntiDesync (Done)
 + Added Flatten (Done)
 + Added HolePush (Done)
@@ -19,6 +20,7 @@
 * Rewrote every HUD Element (Done)
 * Rewrote DamageParticles (Done)
 * Rewrote MiddleClick (Done)
+* Rewrote AutoCraftDupe (Done)
 * Rewrote BoatKiller (Done)
 * Rewrote Surround (Done)
 * Rewrote AutoChunkDupe (Done)
