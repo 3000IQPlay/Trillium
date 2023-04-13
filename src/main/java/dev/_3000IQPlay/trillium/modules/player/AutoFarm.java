@@ -42,6 +42,7 @@ public class AutoFarm extends Module {
     private Setting<FarmModa> farmMode = this.register(new Setting<>("AutoFarm Mode", FarmModa.Harvest));
     public Setting<Float> delay = this.register(new Setting<>("Delay (Seconds)", 2.0f, 0.0f, 10.0f));
     public Setting<Float> radius = this.register(new Setting<>("Farm Radius", 4.0f, 1.0f, 7.0f));
+	public Setting<Boolean> rotate = this.register(new Setting<>("Rotate", false));
     public Setting<Boolean> autoEat = this.register(new Setting<>("Auto Eat", true));
     public Setting<Float> feed = this.register(new Setting<>("On Hunger", 15.0f, 1.0f, 20.0f, v -> this.autoEat.getValue()));
 	
@@ -187,11 +188,6 @@ public class AutoFarm extends Module {
 				Block block = mc.world.getBlockState(pos).getBlock();
 				BlockPos downPos = pos.down(1);
 				if (!(block instanceof BlockCrops) || (crop = (BlockCrops) block).canGrow(mc.world, pos, state, true) || !timerHelper.passedMs((double)delay.getValue() * 100.0) || pos == null) continue;
-		        if (this.rotate.getValue()) {
-			        float[] rots = RotationHelper.getNCPRotationsBT(new Vec3d((float) pos.getX() + 0.5f, (float) pos.getY() + 0.5f, (float) pos.getZ() + 0.5f));
-		            mc.player.rotationYawHead = (float) rots[0];
-	    	        SilentRotationUtil.setPlayerRotations((float) rots[1], (float) rots[0]);
-			    }
 				mc.playerController.onPlayerDamageBlock(pos, mc.player.getHorizontalFacing());
 				mc.player.swingArm(EnumHand.MAIN_HAND);
 				if (doesHaveSeeds()) {
@@ -210,11 +206,6 @@ public class AutoFarm extends Module {
 			Vec3d vec = new Vec3d(0.0, 0.0, 0.0);
 			if (timerHelper.passedMs((double)delay.getValue() * 100.0) && isOnCrops() && pos != null && doesHaveSeeds()) {
 				oldSlot = mc.player.inventory.currentItem;
-				if (this.rotate.getValue()) {
-			        float[] rots = RotationHelper.getNCPRotationsBT(new Vec3d((float) pos.getX() + 0.5f, (float) pos.getY() + 0.5f, (float) pos.getZ() + 0.5f));
-		            mc.player.rotationYawHead = (float) rots[0];
-	    	        SilentRotationUtil.setPlayerRotations((float) rots[1], (float) rots[0]);
-			    }
 				mc.player.connection.sendPacket(new CPacketHeldItemChange(getSlotWithSeeds()));
 				mc.playerController.processRightClickBlock(mc.player, mc.world, pos, EnumFacing.VALUES[0].getOpposite(), vec, EnumHand.MAIN_HAND);
 				mc.player.connection.sendPacket(new CPacketHeldItemChange(oldSlot));
