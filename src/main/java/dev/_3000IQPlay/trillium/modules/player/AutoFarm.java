@@ -42,7 +42,6 @@ public class AutoFarm extends Module {
     private Setting<FarmModa> farmMode = this.register(new Setting<>("AutoFarm Mode", FarmModa.Harvest));
     public Setting<Float> delay = this.register(new Setting<>("Delay (Seconds)", 2.0f, 0.0f, 10.0f));
     public Setting<Float> radius = this.register(new Setting<>("Farm Radius", 4.0f, 1.0f, 7.0f));
-	public Setting<Boolean> rotate = this.register(new Setting<>("Rotate", false));
     public Setting<Boolean> autoEat = this.register(new Setting<>("Auto Eat", true));
     public Setting<Float> feed = this.register(new Setting<>("On Hunger", 15.0f, 1.0f, 20.0f, v -> this.autoEat.getValue()));
 	
