@@ -35,7 +35,7 @@ public class JumpCircle extends Module {
     public Timer timer = new Timer();
     boolean check = false;
     public JumpCircle() {
-        super("JumpCircle", "Renders very cool circle when you jump", Module.Category.RENDER, true, false, false);
+        super("JumpCircle", "Renders a very cool circle when you jump", Module.Category.RENDER, true, false, false);
     }
 
     @Override
