@@ -17,7 +17,7 @@ import java.util.Objects;
 public class AntiTPhere extends Module {
 
     public AntiTPhere() {
-        super("AntiTPhere", "AntiTPhere", Category.PLAYER, true, false, false);
+        super("AntiTPHere", "AntiTPhere", Category.PLAYER, true, false, false);
     }
 	
     private Setting<Modes> mode = register(new Setting("Mode", Modes.Back));

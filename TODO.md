@@ -22,6 +22,7 @@
 * Rewrote MiddleClick (Done)
 * Rewrote AutoCraftDupe (Done)
 * Rewrote BoatKiller (Done)
+* Rewrote ItemESP (Done)
 * Rewrote Surround (Done)
 * Rewrote AutoChunkDupe (Done)
 * Rewrote Trajectories (Done)

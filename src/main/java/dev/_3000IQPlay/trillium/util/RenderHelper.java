@@ -4,6 +4,7 @@ import com.jhlabs.image.GaussianFilter;
 import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.gui.hud.RadarRewrite;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
+import dev._3000IQPlay.trillium.mixin.mixins.IRenderManager;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -19,7 +20,9 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import static dev._3000IQPlay.trillium.gui.hud.RadarRewrite.astolfo;
+import static dev._3000IQPlay.trillium.modules.render.ItemESP.astolfo2;
 import static dev._3000IQPlay.trillium.util.RenderUtil.TwoColoreffect;
+import static dev._3000IQPlay.trillium.util.Util.mc;
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderHelper{
@@ -131,6 +134,41 @@ public class RenderHelper{
         GlStateManager.color(red, green, blue, alpha);
     }
 	
+	public static void drawCircle3D(Entity entity, double radius, float partialTicks, int points, float width, int color, boolean astolfo) {
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glLineWidth(width);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        glBegin(GL11.GL_LINE_STRIP);
+        double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks - ((IRenderManager)Util.mc.getRenderManager()).getRenderPosX();
+        double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks - ((IRenderManager)Util.mc.getRenderManager()).getRenderPosY();
+        double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks - ((IRenderManager)Util.mc.getRenderManager()).getRenderPosZ();
+        if (!astolfo) {
+            setColor(color);
+            for (int i = 0; i <= points; i++) {
+                GL11.glVertex3d(x + radius * Math.cos(i * 6.28 / points), y, z + radius * Math.sin(i * 6.28 / points));
+            }
+        } else {
+            for (int i = 0; i <= points; i++) {
+                setColor(astolfo2.getColor(i));
+                GL11.glVertex3d(x + radius * Math.cos(i * 6.28 / points), y, z + radius * Math.sin(i * 6.28 / points));
+            }
+        }
+        glEnd();
+        GL11.glDepthMask(true);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
+    }
+	
 	public static void drawCone(float radius, float height, int segments, boolean flag) {
         int i;
         GL11.glPushMatrix();
@@ -190,8 +228,35 @@ public class RenderHelper{
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glPopMatrix();
     }
-
-
+	
+	public static void drawEntityBox(Entity entity, Color color, Color color2, boolean fullBox, float alpha) {
+        GlStateManager.pushMatrix();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
+        GlStateManager.glLineWidth(2);
+        GlStateManager.disableTexture2D();
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GlStateManager.depthMask(false);
+        double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * mc.getRenderPartialTicks() - ((IRenderManager)Util.mc.getRenderManager()).getRenderPosX();
+        double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * mc.getRenderPartialTicks() - ((IRenderManager)Util.mc.getRenderManager()).getRenderPosY();
+        double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * mc.getRenderPartialTicks() - ((IRenderManager)Util.mc.getRenderManager()).getRenderPosZ();
+        AxisAlignedBB axisAlignedBB = entity.getEntityBoundingBox();
+        AxisAlignedBB axisAlignedBB2 = new AxisAlignedBB(axisAlignedBB.minX - entity.posX + x - 0.05, axisAlignedBB.minY - entity.posY + y, axisAlignedBB.minZ - entity.posZ + z - 0.05, axisAlignedBB.maxX - entity.posX + x + 0.05, axisAlignedBB.maxY - entity.posY + y + 0.15, axisAlignedBB.maxZ - entity.posZ + z + 0.05);
+        GlStateManager.glLineWidth(2.0F);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, alpha);
+        if (fullBox) {
+            drawColorBox(axisAlignedBB2, color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, alpha);
+            GlStateManager.color(color2.getRed() / 255F, color2.getGreen() / 255F, color2.getBlue() / 255F, alpha);
+        }
+        drawSelectionBoundingBox(axisAlignedBB2);
+        GlStateManager.glLineWidth(2);
+        GlStateManager.enableTexture2D();
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GlStateManager.depthMask(true);
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+    }
 
     public static void drawEntityBox(Entity entity, Color color, boolean fullBox, float alpha) {
         GlStateManager.pushMatrix();
