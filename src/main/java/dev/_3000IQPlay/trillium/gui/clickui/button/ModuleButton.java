@@ -218,10 +218,10 @@ public class ModuleButton {
 		if (binding) {
 			if (keyCode == Keyboard.KEY_ESCAPE || keyCode == Keyboard.KEY_SPACE || keyCode == Keyboard.KEY_DELETE) {
 				module.setBind(Keyboard.KEY_NONE);
-				Command.sendMessage("Removed bind from " + ChatFormatting.LIGHT_PURPLE + module.getName());
+				Command.sendMessage("Removed bind from " + ChatFormatting.AQUA + module.getName());
 			} else {
 				module.setBind(keyCode);
-				Command.sendMessage(ChatFormatting.LIGHT_PURPLE + module.getName() + ChatFormatting.WHITE + " bind changed to" + ChatFormatting.GREEN + Keyboard.getKeyName(module.getBind().getKey()));
+				Command.sendMessage(ChatFormatting.AQUA + module.getName() + ChatFormatting.WHITE + " bind changed to " + ChatFormatting.AQUA + Keyboard.getKeyName(module.getBind().getKey()));
 			}
 			binding = false;
 		}
@@ -296,5 +296,4 @@ public class ModuleButton {
 	public void setOffsetY(double offsetY) {
 		this.offsetY = offsetY;
 	}
-
 }
