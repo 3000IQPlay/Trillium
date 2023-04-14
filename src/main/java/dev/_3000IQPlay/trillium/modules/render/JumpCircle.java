@@ -26,7 +26,7 @@ public class JumpCircle extends Module {
     public Setting<cmode> CMode = register(new Setting<>("ColorMode", cmode.Astolfo));
     public Setting<Float> range2 = register(new Setting<>("Radius", 1F, 0.1F, 3.0F));
     public Setting<Float> range = register(new Setting<>("Radius2", 3.0F, 0.1F, 3.0F));
-    public Setting<Integer> lifetime = this.register(new Setting<>("live", 1000, 1, 10000));
+    public Setting<Integer> lifetime = this.register(new Setting<>("Live", 1000, 1, 10000));
     public Setting<mode> Mode = register(new Setting<>("Mode", mode.Jump));
     public final Setting<ColorSetting> color = this.register(new Setting<>("Color", new ColorSetting(3649978)));
     public final Setting<ColorSetting> color2 = this.register(new Setting<>("Color2", new ColorSetting(3646789)));
@@ -34,9 +34,8 @@ public class JumpCircle extends Module {
 
     public Timer timer = new Timer();
     boolean check = false;
-	
     public JumpCircle() {
-        super("JumpCircle", "Renders a circle when you jump", Module.Category.RENDER, true, false, false);
+        super("JumpCircle", "Renders very cool circle when you jump", Module.Category.RENDER, true, false, false);
     }
 
     @Override
@@ -139,9 +138,6 @@ public class JumpCircle extends Module {
         Collections.reverse(circles);
         GlStateManager.popMatrix();
         GL11.glShadeModel(GL11.GL_FLAT);
-
-        //if(depth)
-        //      GlStateManager.enableDepth();
     }
 
     public int getColor(int stage){

@@ -24,6 +24,7 @@
 * Rewrote BoatKiller (Done)
 * Rewrote ItemESP (Done)
 * Rewrote Surround (Done)
+* Rewrote JumpCircle (Done)
 * Rewrote AutoChunkDupe (Done)
 * Rewrote Trajectories (Done)
 * Rewrote TargetHud
