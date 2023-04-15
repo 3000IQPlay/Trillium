@@ -17,7 +17,9 @@
 
 % Fixed MCShutdown Issue (Done)
 
-* Rewrote every HUD Element (Done)
+* Advenced Security (Done)
+* Rewrote EVERY HUD Element (Done)
+* Rewrote Speedmine (Done)
 * Rewrote DamageParticles (Done)
 * Rewrote MiddleClick (Done)
 * Rewrote AutoCraftDupe (Done)
