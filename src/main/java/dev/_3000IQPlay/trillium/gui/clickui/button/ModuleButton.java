@@ -4,21 +4,14 @@ import dev._3000IQPlay.trillium.command.Command;
 import dev._3000IQPlay.trillium.gui.clickui.ColorUtil;
 import dev._3000IQPlay.trillium.util.Drawable;
 import dev._3000IQPlay.trillium.gui.clickui.base.AbstractElement;
-import dev._3000IQPlay.trillium.gui.clickui.elements.CheckBoxElement;
-import dev._3000IQPlay.trillium.gui.clickui.elements.ColorPickerElement;
-import dev._3000IQPlay.trillium.gui.clickui.elements.ComboBoxElement;
-import dev._3000IQPlay.trillium.gui.clickui.elements.SliderElement;
-import dev._3000IQPlay.trillium.gui.clickui.elements.StringElement;
+import dev._3000IQPlay.trillium.gui.clickui.elements.*;
 import dev._3000IQPlay.trillium.gui.fonttwo.fontstuff.FontRender;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.client.ClickGui;
 import dev._3000IQPlay.trillium.notification.Animation;
 import dev._3000IQPlay.trillium.notification.DecelerateAnimation;
 import dev._3000IQPlay.trillium.notification.Direction;
-import dev._3000IQPlay.trillium.setting.ColorSetting;
-import dev._3000IQPlay.trillium.setting.Parent;
-import dev._3000IQPlay.trillium.setting.PositionSetting;
-import dev._3000IQPlay.trillium.setting.Setting;
+import dev._3000IQPlay.trillium.setting.*;
 import org.lwjgl.input.Keyboard;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -60,6 +53,8 @@ public class ModuleButton {
 				elements.add(new ComboBoxElement(setting));
 			} else if ((setting.getValue() instanceof String || setting.getValue() instanceof Character) && !setting.getName().equalsIgnoreCase("displayName")) {
                 elements.add(new StringElement(setting));
+			} else if (setting.getValue() instanceof SubBind) {
+                elements.add(new SubBindElement(setting));
 			}
 		}
 	}
