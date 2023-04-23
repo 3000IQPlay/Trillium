@@ -25,7 +25,7 @@ public class Step
     private Setting<Mode> mode = this.register (new Setting<>("Mode", Mode.Normal));
     public Setting<Float> height = register(new Setting("Height", 2.0F, 1F, 2.5F));
     public Setting<Boolean> entityStep = this.register(new Setting<>("EntityStep", false));
-    public Setting<Boolean> useTimer = this.register(new Setting<>("Timer", true));
+	public Setting<Float> timerr = register(new Setting("Timer", 1.0F, 0.1F, 2.5F));
     public Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
     public Setting<Integer> stepDelay = register(new Setting("StepDelay", 200, 0, 1000));
 
@@ -60,6 +60,11 @@ public class Step
 
     @Override
     public void onUpdate() {
+		if (this.mode.getValue() == Mode.Jump) {
+			if (mc.player.onGround && mc.player.collidedHorizontally) {
+                mc.player.jump();
+			}
+		}
         if (mc.player.capabilities.isFlying || Trillium.moduleManager.getModuleByClass(FreeCam.class).isOn()) {
             mc.player.stepHeight = 0.6F;
             return;
@@ -72,7 +77,6 @@ public class Step
             Step.mc.timer.tickLength = 50.0f;
             timer = false;
         }
-
         if (mc.player.onGround && stepTimer.passedMs(stepDelay.getValue())) {
             if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
                 entityRiding = mc.player.getRidingEntity();
@@ -100,17 +104,15 @@ public class Step
 
     @SubscribeEvent
     public void onStep(StepEvent event) {
-        if (mode.getValue().equals(Mode.Normal)) {
+        if (this.mode.getValue() == Mode.Normal) {
             double stepHeight = event.getAxisAlignedBB().minY - mc.player.posY;
             if (stepHeight <= 0 || stepHeight > height.getValue()) {
                 return;
             }
             double[] offsets = getOffset(stepHeight);
             if (offsets != null && offsets.length > 1) {
-                if (useTimer.getValue()) {
-					Step.mc.timer.tickLength = 50.0f / (1.0f / offsets.length);
-                    timer = true;
-                }
+			    Step.mc.timer.tickLength = 50.0f / this.timerr.getValue();
+                timer = true;
                 for (double offset : offsets) {
                     mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + offset, mc.player.posZ, false));
                 }
@@ -157,6 +159,7 @@ public class Step
 	
 	public static enum Mode {
         Normal,
+		Jump,
         Vanilla;
     }
 }
