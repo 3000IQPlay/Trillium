@@ -59,22 +59,6 @@ public class Step
             }
         }
     }
-	
-	@SubscribeEvent
-	public void onPreMotion(EventPreMotion event) {
-		if (this.mode.getValue() == Mode.Vulcan) {
-			if (mc.player.onGround && mc.player.motionY > 0.0f && !mc.player.isInWater()) {
-				int ticksSinceJump = mc.player.getEntityData().getInteger("TicksSinceJump");
-				if (ticksSinceJump > 11) {
-					mc.player.stepHeight = 1;
-				} else {
-					mc.player.stepHeight = 0.6F;
-				}
-			} else {
-				mc.player.stepHeight = 0.6F;
-            }
-		}
-	}
 
     @Override
     public void onUpdate() {
@@ -95,6 +79,9 @@ public class Step
             Step.mc.timer.tickLength = 50.0f;
             timer = false;
         }
+		if (this.mode.getValue() == Mode.Vulcan) {
+		    mc.player.stepHeight = 1;	
+		}
 		if (this.mode.getValue() == Mode.NCP && this.mode.getValue() == Mode.Vanilla) {
 			if (mc.player.onGround && stepTimer.passedMs(stepDelay.getValue())) {
 				if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
