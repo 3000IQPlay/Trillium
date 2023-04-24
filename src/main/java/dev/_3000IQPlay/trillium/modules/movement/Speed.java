@@ -40,21 +40,17 @@ public class Speed
     public Setting<Boolean> jumpBoost = this.register (new Setting<>("JumpBoostApplifier", false, v -> this.mode.getValue() == SpeedNewModes.Default));
 	public Setting<Boolean> uav = this.register( new Setting<>("UseAllVelocity", false, v -> this.mode.getValue() == SpeedNewModes.Default));
 	
-	private final Setting<Float> yPortAirSpeed = this.register(new Setting<Float>("YPortAirSpeed", 0.35f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
-	private final Setting<Float> yPortGroundSpeed = this.register(new Setting<Float>("YPortGroundSpeed", 0.35f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
-	private final Setting<Float> yPortJumpMotionY = this.register(new Setting<Float>("YPortJumpMotionY", 0.42f, 0.0f, 4.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
-	private final Setting<Float> yPortFallSpeed = this.register(new Setting<Float>("FallSpeed", 1.0f, 0.0f, 4.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
-	private final Setting<Boolean> yPortTimerSpeed = this.register(new Setting<Boolean>("Timer", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
-	private final Setting<Float> yPortTimerSpeedVal = this.register(new Setting<Float>("TimerSpeed", 1.8f, 0.1f, 5.0f, t -> this.yPortTimerSpeed.getValue() && this.mode.getValue().equals((Object)SpeedNewModes.YPort)));
-	
 	private final Setting<Float> cpvpccSpeed = this.register(new Setting<Float>("Speed", 0.435f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.NCP)));
 	private final Setting<Float> ccTimer = this.register(new Setting<Float>("Timer", 1.0f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.NCP)));
 	
+	private final Setting<Boolean> accelerate = this.register(new Setting<Boolean>("Accelerate", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.usMode.getValue() == UpSpeed.Custom || this.dsMode.getValue() == DownSpeed.Custom));
+	private final Setting<Float> acceleration = this.register(new Setting<Float>("Acceleration", 0.0f, 0.0f, 10.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.accelerate.getValue() && this.usMode.getValue() == UpSpeed.Custom || this.dsMode.getValue() == DownSpeed.Custom));
+	private final Setting<Float> deceleration = this.register(new Setting<Float>("Deceleration", 0.0f, 0.0f, 10.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.accelerate.getValue() && this.usMode.getValue() == UpSpeed.Custom || this.dsMode.getValue() == DownSpeed.Custom));
 	private final Setting<UpSpeed> usMode = this.register(new Setting<UpSpeed>("UpSpeedType", UpSpeed.Custom, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
-    private final Setting<Float> upAirSpeed = this.register(new Setting<Float>("UpAirSpeed", 0.272f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.usMode.getValue() == UpSpeed.Custom));
+    private final Setting<Float> upAirSpeed = this.register(new Setting<Float>("UpAirSpeed", 0.272f, 0.0f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.usMode.getValue() == UpSpeed.Custom));
 	private final Setting<DownSpeed> dsMode = this.register(new Setting<DownSpeed>("DownSpeedType", DownSpeed.Custom, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
-	private final Setting<Float> downAirSpeed = this.register(new Setting<Float>("DownAirSpeed", 0.272f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.dsMode.getValue() == DownSpeed.Custom));
-	private final Setting<Float> onGroundSpeed = this.register(new Setting<Float>("GroundSpeed", 0.272f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
+	private final Setting<Float> downAirSpeed = this.register(new Setting<Float>("DownAirSpeed", 0.272f, 0.0f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.dsMode.getValue() == DownSpeed.Custom));
+	private final Setting<Float> onGroundSpeed = this.register(new Setting<Float>("GroundSpeed", 0.272f, 0.0f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
 	private final Setting<Boolean> autoJump = this.register(new Setting<Boolean>("AutoJump", true, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
     private final Setting<Float> jumpMotionY = this.register(new Setting<Float>("JumpMotionY", 0.42f, 0.0f, 4.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
 	private final Setting<Float> groundTimer = this.register(new Setting<Float>("GroundTimer", 1.0f, 0.1f, 3.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
@@ -251,10 +247,12 @@ public class Speed
 		    if (this.strafeBoost.getValue() && isBoosting){
                 return;
             }
+		}
+		if (this.mode.getValue() == SpeedNewModes.Default || this.mode.getValue() == SpeedNewModes.Custom) {
 			double d2 = mc.player.posX - mc.player.prevPosX;
             double d3 = mc.player.posZ - mc.player.prevPosZ;
             double d4 = d2 * d2 + d3 * d3;
-            distance = Math.sqrt(d4);
+			distance = Math.sqrt(d4);
 		}
     }
 
@@ -272,7 +270,11 @@ public class Speed
             case Custom: {
                 if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
                     if (Speed.mc.player.onGround) {
-                        EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+						if (this.accelerate.getValue()) {
+                            EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue() + (getBaseMoveSpeed() * this.acceleration.getValue().floatValue()), (Entity)Speed.mc.player);
+						} else {
+							EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+						}
 						Speed.mc.timer.tickLength = 50.0f / this.groundTimer.getValue().floatValue();
                         if (this.autoJump.getValue().booleanValue()) {
                             Speed.mc.player.motionY = this.jumpMotionY.getValue().floatValue();
@@ -282,7 +284,11 @@ public class Speed
 					if (Speed.mc.player.motionY > 0) {
 						Speed.mc.timer.tickLength = 50.0f / this.upTimerValue.getValue();
 						if (this.usMode.getValue() == UpSpeed.Custom) {
-						    EntityUtil.moveEntityStrafe(this.upAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+							if (this.accelerate.getValue()) {
+								EntityUtil.moveEntityStrafe(this.upAirSpeed.getValue().floatValue() + (distance - 0.66f * (distance - getBaseMoveSpeed())), (Entity)Speed.mc.player);
+							} else {
+						        EntityUtil.moveEntityStrafe(this.upAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+							}
                             break;
 						} else {
 							EntityUtil.moveEntityStrafe(Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ), (Entity)Speed.mc.player);
@@ -295,7 +301,11 @@ public class Speed
 							Speed.mc.player.motionY =- this.downMotionValue.getValue().floatValue();
 					    }
 						if (this.dsMode.getValue() == DownSpeed.Custom) {
-						    EntityUtil.moveEntityStrafe(this.downAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+							if (this.accelerate.getValue()) {
+						        EntityUtil.moveEntityStrafe(this.downAirSpeed.getValue().floatValue() + (distance - distance / (this.deceleration.getValue().floatValue() * 100)), (Entity)Speed.mc.player);
+							} else {
+								EntityUtil.moveEntityStrafe(this.downAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+							}
                             break;
 						} else {
 							EntityUtil.moveEntityStrafe(Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ), (Entity)Speed.mc.player);
@@ -307,23 +317,6 @@ public class Speed
                     Speed.mc.player.motionX = Speed.mc.player.motionZ = 0.0;
                     break;
 				}
-            }
-			case YPort: {
-                if (!MovementUtil.isMoving((EntityLivingBase)Speed.mc.player) || Speed.mc.player.collidedHorizontally) {
-                    return;
-                }
-				if (this.yPortTimerSpeed.getValue().booleanValue()) {
-					Speed.mc.timer.tickLength = 50.0f / this.yPortTimerSpeedVal.getValue().floatValue();
-				} else {
-					Speed.mc.timer.tickLength = 50.0f / 1.0f;
-				}
-				if (Speed.mc.player.onGround) {
-                    Speed.mc.player.motionY = this.yPortJumpMotionY.getValue().floatValue();
-                    EntityUtil.moveEntityStrafe(this.yPortGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
-                } else {
-                    Speed.mc.player.motionY =- this.yPortFallSpeed.getValue().floatValue();
-					EntityUtil.moveEntityStrafe(this.yPortAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
-                }
             }
 			case NCP: {
 			    if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
@@ -356,7 +349,11 @@ public class Speed
             case Custom: {
                 if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
                     if (Speed.mc.player.onGround) {
-                        EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+						if (this.accelerate.getValue()) {
+                            EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue() + (getBaseMoveSpeed() * this.acceleration.getValue().floatValue()), (Entity)Speed.mc.player);
+						} else {
+							EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+						}
 						Speed.mc.timer.tickLength = 50.0f / this.groundTimer.getValue().floatValue();
                         if (this.autoJump.getValue().booleanValue()) {
                             Speed.mc.player.motionY = this.jumpMotionY.getValue().floatValue();
@@ -366,7 +363,11 @@ public class Speed
 					if (Speed.mc.player.motionY > 0) {
 						Speed.mc.timer.tickLength = 50.0f / this.upTimerValue.getValue();
 						if (this.usMode.getValue() == UpSpeed.Custom) {
-						    EntityUtil.moveEntityStrafe(this.upAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+							if (this.accelerate.getValue()) {
+								EntityUtil.moveEntityStrafe(this.upAirSpeed.getValue().floatValue() + (distance - 0.66f * (distance - getBaseMoveSpeed())), (Entity)Speed.mc.player);
+							} else {
+						        EntityUtil.moveEntityStrafe(this.upAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+							}
                             break;
 						} else {
 							EntityUtil.moveEntityStrafe(Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ), (Entity)Speed.mc.player);
@@ -379,7 +380,11 @@ public class Speed
 							Speed.mc.player.motionY =- this.downMotionValue.getValue().floatValue();
 					    }
 						if (this.dsMode.getValue() == DownSpeed.Custom) {
-						    EntityUtil.moveEntityStrafe(this.downAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+							if (this.accelerate.getValue()) {
+						        EntityUtil.moveEntityStrafe(this.downAirSpeed.getValue().floatValue() + (distance - distance / (this.deceleration.getValue().floatValue() * 100)), (Entity)Speed.mc.player);
+							} else {
+								EntityUtil.moveEntityStrafe(this.downAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
+							}
                             break;
 						} else {
 							EntityUtil.moveEntityStrafe(Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ), (Entity)Speed.mc.player);
@@ -387,27 +392,10 @@ public class Speed
 						}
 			        }
                 }
-                if (this.resetXZ.getValue().booleanValue()) {
+				if (this.resetXZ.getValue().booleanValue()) {
                     Speed.mc.player.motionX = Speed.mc.player.motionZ = 0.0;
                     break;
 				}
-            }
-			case YPort: {
-                if (!MovementUtil.isMoving((EntityLivingBase)Speed.mc.player) || Speed.mc.player.collidedHorizontally) {
-                    return;
-                }
-				if (this.yPortTimerSpeed.getValue().booleanValue()) {
-					Speed.mc.timer.tickLength = 50.0f / this.yPortTimerSpeedVal.getValue().floatValue();
-				} else {
-					Speed.mc.timer.tickLength = 50.0f / 1.0f;
-				}
-				if (Speed.mc.player.onGround) {
-                    Speed.mc.player.motionY = this.yPortJumpMotionY.getValue().floatValue();
-                    EntityUtil.moveEntityStrafe(this.yPortGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
-                } else {
-                    Speed.mc.player.motionY =- this.yPortFallSpeed.getValue().floatValue();
-					EntityUtil.moveEntityStrafe(this.yPortAirSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
-                }
             }
 			case NCP: {
 			    if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
@@ -483,7 +471,6 @@ public class Speed
 	public static enum SpeedNewModes {
 		Default,
         Custom,
-		NCP,
-		YPort;
+		NCP;
     }
 }

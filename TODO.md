@@ -25,6 +25,7 @@
 * Rewrote BoatKiller (Done)
 * Rewrote Step (Done)
 * Rewrote Speedmine (Done)
+* Rewrote Speed (Done)
 * Rewrote ItemESP (Done)
 * Rewrote Surround (Done)
 * Rewrote JumpCircle (Done)

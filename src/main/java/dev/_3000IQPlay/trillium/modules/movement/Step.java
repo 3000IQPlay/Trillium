@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
 import dev._3000IQPlay.trillium.Trillium;
+import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.StepEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.modules.player.FreeCam;
@@ -17,17 +18,18 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
 * @author Doogie13, linustouchtips, aesthetical
 * @since 12/27/2021
+* Advenced by _3000IQPlay#8278
 */
 
 public class Step
         extends Module {
 	private static Step instance;
-    private Setting<Mode> mode = this.register (new Setting<>("Mode", Mode.Normal));
-    public Setting<Float> height = register(new Setting("Height", 2.0F, 1F, 2.5F));
-    public Setting<Boolean> entityStep = this.register(new Setting<>("EntityStep", false));
-	public Setting<Float> timerr = register(new Setting("Timer", 1.0F, 0.1F, 2.5F));
-    public Setting<Boolean> strict = this.register(new Setting<>("Strict", false));
-    public Setting<Integer> stepDelay = register(new Setting("StepDelay", 200, 0, 1000));
+    private Setting<Mode> mode = this.register (new Setting<>("Mode", Mode.NCP));
+    public Setting<Float> height = register(new Setting("Height", 2.0F, 1F, 2.5F, v -> this.mode.getValue() == Mode.Vanilla || this.mode.getValue() == Mode.NCP));
+    public Setting<Boolean> entityStep = this.register(new Setting<>("EntityStep", false, v -> this.mode.getValue() == Mode.Vanilla || this.mode.getValue() == Mode.NCP));
+	public Setting<Float> timerr = register(new Setting("Timer", 1.0F, 0.1F, 2.5F, v -> this.mode.getValue() == Mode.NCP));
+    public Setting<Boolean> strict = this.register(new Setting<>("Strict", false, v -> this.mode.getValue() == Mode.NCP));
+    public Setting<Integer> stepDelay = register(new Setting("StepDelay", 200, 0, 1000, v -> this.mode.getValue() == Mode.NCP));
 
     private boolean timer;
     private Entity entityRiding;
@@ -57,6 +59,22 @@ public class Step
             }
         }
     }
+	
+	@SubscribeEvent
+	public void onPreMotion(EventPreMotion event) {
+		if (this.mode.getValue() == Mode.Vulcan) {
+			if (mc.player.onGround && mc.player.motionY > 0.0f && !mc.player.isInWater()) {
+				int ticksSinceJump = mc.player.getEntityData().getInteger("TicksSinceJump");
+				if (ticksSinceJump > 11) {
+					mc.player.stepHeight = 1;
+				} else {
+					mc.player.stepHeight = 0.6F;
+				}
+			} else {
+				mc.player.stepHeight = 0.6F;
+            }
+		}
+	}
 
     @Override
     public void onUpdate() {
@@ -77,34 +95,36 @@ public class Step
             Step.mc.timer.tickLength = 50.0f;
             timer = false;
         }
-        if (mc.player.onGround && stepTimer.passedMs(stepDelay.getValue())) {
-            if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
-                entityRiding = mc.player.getRidingEntity();
-                if (entityStep.getValue()) {
-                    mc.player.getRidingEntity().stepHeight = height.getValue().floatValue();
-                }
-            } else {
-                mc.player.stepHeight = height.getValue().floatValue();
-            }
-        } else {
-            if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
-                entityRiding = mc.player.getRidingEntity();
-                if (entityRiding != null) {
-                    if (entityRiding instanceof EntityHorse || entityRiding instanceof EntityLlama || entityRiding instanceof EntityMule || entityRiding instanceof EntityPig && entityRiding.isBeingRidden() && ((EntityPig) entityRiding).canBeSteered()) {
-                        entityRiding.stepHeight = 1;
-                    } else {
-                        entityRiding.stepHeight = 0.5F;
-                    }
-                }
-            } else {
-                mc.player.stepHeight = 0.6F;
-            }
-        }
+		if (this.mode.getValue() == Mode.NCP && this.mode.getValue() == Mode.Vanilla) {
+			if (mc.player.onGround && stepTimer.passedMs(stepDelay.getValue())) {
+				if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
+					entityRiding = mc.player.getRidingEntity();
+					if (entityStep.getValue()) {
+						mc.player.getRidingEntity().stepHeight = height.getValue().floatValue();
+					}
+				} else {
+					mc.player.stepHeight = height.getValue().floatValue();
+				}
+			} else {
+				if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
+					entityRiding = mc.player.getRidingEntity();
+					if (entityRiding != null) {
+						if (entityRiding instanceof EntityHorse || entityRiding instanceof EntityLlama || entityRiding instanceof EntityMule || entityRiding instanceof EntityPig && entityRiding.isBeingRidden() && ((EntityPig) entityRiding).canBeSteered()) {
+							entityRiding.stepHeight = 1;
+						} else {
+							entityRiding.stepHeight = 0.5F;
+						}
+					}
+				} else {
+					mc.player.stepHeight = 0.6F;
+				}
+			}
+		}
     }
 
     @SubscribeEvent
     public void onStep(StepEvent event) {
-        if (this.mode.getValue() == Mode.Normal) {
+        if (this.mode.getValue() == Mode.NCP) {
             double stepHeight = event.getAxisAlignedBB().minY - mc.player.posY;
             if (stepHeight <= 0 || stepHeight > height.getValue()) {
                 return;
@@ -119,6 +139,12 @@ public class Step
             }
             stepTimer.reset();
         }
+		if (this.mode.getValue() == Mode.Vulcan) {
+			if (event.getHeight() > 0.6) {
+				mc.timer.tickLength = 50;
+				mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.5, mc.player.posZ, true));
+			}
+		}
     }
 
     public double[] getOffset(double height) {
@@ -158,8 +184,9 @@ public class Step
     }
 	
 	public static enum Mode {
-        Normal,
+		Vanilla,
 		Jump,
-        Vanilla;
+		Vulcan,
+        NCP;
     }
 }
