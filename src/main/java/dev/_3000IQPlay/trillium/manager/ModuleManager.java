@@ -193,6 +193,7 @@ public class ModuleManager
 		this.modules.add(new AntiDesync());
 		this.modules.add(new HolePush());
 		this.modules.add(new AutoFarm());
+		this.modules.add(new AutoClicker());
     }
 
     public Module getModuleByName(String name) {

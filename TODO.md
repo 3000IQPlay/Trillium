@@ -1,5 +1,6 @@
 **Trillium b1.7.8 Changes**
 + New GUI
++ Added AutoClicker (Done)
 + Added AutoXP (Done)
 + Added AutoFarm (Done)
 + Added AntiDesync (Done)

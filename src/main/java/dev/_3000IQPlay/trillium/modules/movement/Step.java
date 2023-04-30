@@ -82,7 +82,7 @@ public class Step
 		if (this.mode.getValue() == Mode.Vulcan) {
 		    mc.player.stepHeight = 1;	
 		}
-		if (this.mode.getValue() == Mode.NCP && this.mode.getValue() == Mode.Vanilla) {
+		if (this.mode.getValue() == Mode.NCP || this.mode.getValue() == Mode.Vanilla) {
 			if (mc.player.onGround && stepTimer.passedMs(stepDelay.getValue())) {
 				if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
 					entityRiding = mc.player.getRidingEntity();
