@@ -40,27 +40,31 @@ public class MainMenu extends GuiScreen {
 		ScaledResolution sr = new ScaledResolution(this.mc);
         this.width = sr.getScaledWidth();
         this.height = sr.getScaledHeight();
-		this.buttonList.add(new TGuiButton(1, sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 - 65, 106, 30, true, true, 7.0f, false, "Singleplayer"));
-	    this.buttonList.add(new TGuiButton(2, sr.getScaledWidth() / 2 + 4, sr.getScaledHeight() / 2 - 65, 106, 30, true, true, 7.0f, false, "Multiplayer"));
-		this.buttonList.add(new TGuiButton(0, sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 - 24, 220, 30, true, true, 7.0f, false, "Settings"));
-		this.buttonList.add(new TGuiButton(3, sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 17, 220, 30, true, true, 7.0f, false, "Exit"));
+		if (MainSettings.getInstance().mainMenu.getValue().booleanValue()) {
+		    this.buttonList.add(new TGuiButton(1, sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 - 65, 106, 30, true, true, 7.0f, false, "Singleplayer"));
+	        this.buttonList.add(new TGuiButton(2, sr.getScaledWidth() / 2 + 4, sr.getScaledHeight() / 2 - 65, 106, 30, true, true, 7.0f, false, "Multiplayer"));
+		    this.buttonList.add(new TGuiButton(0, sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 - 24, 220, 30, true, true, 7.0f, false, "Settings"));
+		    this.buttonList.add(new TGuiButton(3, sr.getScaledWidth() / 2 - 110, sr.getScaledHeight() / 2 + 17, 220, 30, true, true, 7.0f, false, "Exit"));
+		}
     }
 	
 	@Override
     protected void actionPerformed(final GuiButton button) {
-        if (button.id == 0) {
-            this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
-        }
-        if (button.id == 1) {
-            this.mc.displayGuiScreen(new GuiWorldSelection(this));
-        }
-        if (button.id == 2) {
-            this.mc.displayGuiScreen(new GuiMultiplayer(this));
-        }
-        if (button.id == 3) {
-            Trillium.unload(false);
-            this.mc.shutdown();
-        }
+		if (MainSettings.getInstance().mainMenu.getValue().booleanValue()) {
+			if (button.id == 0) {
+				this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
+			}
+			if (button.id == 1) {
+				this.mc.displayGuiScreen(new GuiWorldSelection(this));
+			}
+			if (button.id == 2) {
+				this.mc.displayGuiScreen(new GuiMultiplayer(this));
+			}
+			if (button.id == 3) {
+				Trillium.unload(false);
+				this.mc.shutdown();
+			}
+		}
     }
 	
 	@Override

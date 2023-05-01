@@ -1,6 +1,7 @@
 **Trillium b1.7.8 Changes**
 + New GUI
 + Added AutoClicker (Done)
++ Added AutoCrystalStrict
 + Added AutoXP (Done)
 + Added AutoFarm (Done)
 + Added AntiDesync (Done)
@@ -20,6 +21,7 @@
 
 * Advenced Security (Done)
 * Rewrote EVERY HUD Element (Done)
+* Rewrote AuthGUI (Done)
 * Rewrote DamageParticles (Done)
 * Rewrote MiddleClick (Done)
 * Rewrote AutoCraftDupe (Done)
