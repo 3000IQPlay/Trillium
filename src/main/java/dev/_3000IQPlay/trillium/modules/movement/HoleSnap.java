@@ -61,7 +61,7 @@ public class HoleSnap
                 this.disable();
                 return;
             }
-            HoleSnap.mc.timer.tickLength = 50.0f / this.timerfactor.getValue().floatValue();
+            Trillium.TIMER = this.timerfactor.getValue().floatValue();
             this.holes = HoleSnap.getTargetHoleVec3D(this.range2.getValue().floatValue());
             if (this.holes == null) {
                 Command.sendMessage("Unable to find hole, disabling HoleSnap");

@@ -21,6 +21,7 @@
 
 * Advenced Security (Done)
 * Rewrote EVERY HUD Element (Done)
+* Rewrote TickTimer System (Done)
 * Rewrote AuthGUI (Done)
 * Rewrote DamageParticles (Done)
 * Rewrote MiddleClick (Done)

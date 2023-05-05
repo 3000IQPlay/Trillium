@@ -92,10 +92,6 @@ public class ServerManager
         this.serverBrand = brand;
     }
 
-
-
-
-
     public int getPing() {
         if (ServerManager.fullNullCheck()) {
             return 0;
@@ -107,4 +103,3 @@ public class ServerManager
         }
     }
 }
-

@@ -78,7 +78,7 @@ public class ElytraFly2b2tNew extends Module {
             if (!isFlying) {
                 takeoff(event);
             } else {
-                ElytraFly2b2tNew.mc.timer.tickLength = 50.0f / 1.0f;
+                Trillium.TIMER = 1.0f;
                 mc.player.setSprinting(false);
                 controlMode(event);
             }
@@ -120,7 +120,7 @@ public class ElytraFly2b2tNew extends Module {
 
     private void reset2(boolean cancelflu) {
         isFlying = false;
-        ElytraFly2b2tNew.mc.timer.tickLength = 50.0f / 1.0f;
+        Trillium.TIMER = 1.0f;
         mc.player.capabilities.setFlySpeed(0.05f);
         if (cancelflu) mc.player.capabilities.isFlying = false;
     }
@@ -137,7 +137,7 @@ public class ElytraFly2b2tNew extends Module {
 
         if (mc.player.motionY < 0) {
             if (closeToGround) {
-                ElytraFly2b2tNew.mc.timer.tickLength = 50.0f / 0.5f;
+                Trillium.TIMER = 0.5f;
                 return;
             }
 
@@ -146,7 +146,7 @@ public class ElytraFly2b2tNew extends Module {
                 mc.player.setVelocity(0.0, -0.02, 0.0);
             }
 
-            if (timerControl.getValue() && !mc.isSingleplayer()) ElytraFly2b2tNew.mc.timer.tickLength = 50.0f / 0.125f;
+            if (timerControl.getValue() && !mc.isSingleplayer()) Trillium.TIMER = 0.125f;
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
             hoverTarget = (float) (mc.player.posY + 0.2);
         }

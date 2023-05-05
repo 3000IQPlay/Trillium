@@ -1,5 +1,6 @@
 package dev._3000IQPlay.trillium.modules.movement;
 
+import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.*;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
@@ -89,7 +90,7 @@ public class Jesus
             double x = mc.player.posX;
             double y = mc.player.posY;
             double z = mc.player.posZ;
-            mc.timer.tickLength = 50.0f;
+            Trillium.TIMER = 1.0f;
             if (
                     mc.world.getBlockState(new BlockPos(x, y, z)).getBlock() == Blocks.WATER ||
                             mc.world.getBlockState(new BlockPos(x + 0.3, y, z)).getBlock() == Blocks.WATER ||
@@ -139,7 +140,7 @@ public class Jesus
             MovementUtil.forward((float) MovementUtil.getSpeed());
             if (!mc.gameSettings.keyBindJump.isKeyDown() && (mc.player.isInWater() || mc.player.isInLava())) {
                 mc.player.motionY = 0.12;
-                mc.timer.tickLength = 50.0f / 1.5f;
+                Trillium.TIMER = 1.5f;
                 if (mc.player.isInWater() && mc.world.getBlockState(new BlockPos(x, y + 0.9, z)).getBlock() == Blocks.WATER && mc.world.getBlockState(new BlockPos(x, y + 1, z)).getBlock() == Blocks.AIR && !(mc.world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() == Blocks.WATER)) {
                     mc.player.posY += 0.1;
                     mc.player.motionY = 0.42;

@@ -39,7 +39,7 @@ public class FastFall
 	
     @Override
     public void onDisable() {
-        Speed.mc.timer.tickLength = 50.0f / 1.0f;
+        Trillium.TIMER = 1.0f;
         useTimer = false;
     }
 	
@@ -59,7 +59,7 @@ public class FastFall
                 || mc.player.isOnLadder()
                 || !lagTimer.passedMs(1000)
                 || fullNullCheck()) {
-            FastFall.mc.timer.tickLength = 50.0f / 1.0f;
+            Trillium.TIMER = 1.0f;
             return;
         }
         if (mc.player.isInWeb) return;
@@ -79,7 +79,7 @@ public class FastFall
         if (this.mode.getValue() == Mode.Timer) {
             if (!mc.player.onGround) {
                 if (mc.player.motionY < 0 && useTimer) {
-                    FastFall.mc.timer.tickLength = 50.0f / this.timerVal.getValue().floatValue();
+                    Trillium.TIMER = this.timerVal.getValue().floatValue();
                     return;
                 } else {
                     useTimer = false;
@@ -89,7 +89,7 @@ public class FastFall
                 useTimer = true;
             }
         }
-        FastFall.mc.timer.tickLength = 50.0f / 1.0f;
+        Trillium.TIMER = 1.0f;
     }
 	
 	private boolean shouldReturn() {

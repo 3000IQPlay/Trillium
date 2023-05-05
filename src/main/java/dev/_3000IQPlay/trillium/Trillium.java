@@ -36,6 +36,7 @@ public class Trillium {
 	public static final String MODNAME = "Trillium";
     public static final String MODVER = "b1.8.5";
     public static boolean isOpenAuthGui;
+	public static float TIMER = 1.0f;
     public static CommandManager commandManager;
     public static FriendManager friendManager;
 	public static MovementManager movementManager;

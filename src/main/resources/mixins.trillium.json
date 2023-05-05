@@ -55,6 +55,7 @@
     "MixinRenderPlayer",
     "MixinServerListEntryNormal",
     "MixinSPacketSpawnObject",
+	"MixinTimer",
     "MixinWorld"
   ],
   "client": [

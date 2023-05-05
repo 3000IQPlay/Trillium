@@ -1,5 +1,6 @@
 package dev._3000IQPlay.trillium.modules.misc;
 
+import dev._3000IQPlay.trillium.Trillium;
 import dev._3000IQPlay.trillium.event.events.PacketEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
@@ -32,9 +33,9 @@ public class RemoveXPDesync
             if (this.index < this.attempts.getValue()) {
                 mc.player.setPosition(mc.player.posX, mc.player.posY - this.force.getValue(), mc.player.posZ);
                 this.index++;
-				mc.timer.tickLength = 50.0f / this.timer.getValue();
+				Trillium.TIMER = this.timer.getValue();
             } else {
-                mc.timer.tickLength = 50.0f / 1.0f;
+                Trillium.TIMER = 1.0f;
                 this.index = 0;
                 this.started = false;
             }

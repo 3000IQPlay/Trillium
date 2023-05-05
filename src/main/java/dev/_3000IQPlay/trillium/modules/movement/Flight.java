@@ -114,7 +114,7 @@ public class Flight
 		    Flight.mc.player.onGround = true;
 		}
 		if (this.flyMode.getValue() == FlyMode.Vanilla) {
-			Flight.mc.timer.tickLength = 50.0f / 1.0f;
+			Trillium.TIMER = 1.0f;
 			if (this.keepAlive.getValue().booleanValue()) {
                 Flight.mc.player.connection.sendPacket((Packet)new CPacketKeepAlive());
             }
@@ -138,7 +138,7 @@ public class Flight
 			Flight.getInstance().handleVanillaKickBypass();
 		}
 		if (this.flyMode.getValue() == FlyMode.Jetpack) {
-			Flight.mc.timer.tickLength = 50.0f / 1.0f;
+			Trillium.TIMER = 1.0f;
 			if (Flight.mc.gameSettings.keyBindJump.isKeyDown()) {
                 Flight.mc.player.motionY += 0.15;
                 Flight.mc.player.motionX *= 1.1;
@@ -152,11 +152,11 @@ public class Flight
                 Flight.mc.player.connection.sendPacket((Packet)new CPacketPlayer.Position(Flight.mc.player.posX, Flight.mc.player.posY + 3.42, Flight.mc.player.posZ, false));
                 Flight.mc.player.connection.sendPacket((Packet)new CPacketPlayer.Position(Flight.mc.player.posX, Flight.mc.player.posY, Flight.mc.player.posZ, false));
                 Flight.mc.player.connection.sendPacket((Packet)new CPacketPlayer.Position(Flight.mc.player.posX, Flight.mc.player.posY, Flight.mc.player.posZ, true));
-                Flight.mc.timer.tickLength = 50.0f / 0.15f;
+                Trillium.TIMER = 0.15f;
                 Flight.mc.player.jump();
                 Flight.mc.player.onGround = true;
             } else if (this.ticks == 2) {
-                Flight.mc.timer.tickLength = 50.0f / 1.0f;
+                Trillium.TIMER = 1.0f;
             }
             if (Flight.mc.player.onGround) {
                 Flight.mc.player.jump();
@@ -266,7 +266,7 @@ public class Flight
 	
 	@Override
 	public void onDisable() {
-		Flight.mc.timer.tickLength = 50.0f / 1.0f;
+		Trillium.TIMER = 1.0f;
 		Flight.mc.player.capabilities.isFlying = false;
 		Flight.mc.player.noClip = false;
 		super.onDisable();

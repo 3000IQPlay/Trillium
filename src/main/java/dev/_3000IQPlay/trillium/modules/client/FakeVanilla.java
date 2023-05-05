@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 public class FakeVanilla
         extends Module {
     public FakeVanilla() {
-        super("FakeVanilla", "Inzane module", Module.Category.CLIENT, true, false, false);
+        super("FakeVanilla", "Spoofs your payload", Module.Category.CLIENT, true, false, false);
     }
 
     @SubscribeEvent
