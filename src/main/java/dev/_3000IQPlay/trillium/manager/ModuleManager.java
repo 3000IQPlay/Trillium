@@ -194,6 +194,7 @@ public class ModuleManager
 		this.modules.add(new HolePush());
 		this.modules.add(new AutoFarm());
 		this.modules.add(new AutoClicker());
+		this.modules.add(new Timer());
     }
 
     public Module getModuleByName(String name) {

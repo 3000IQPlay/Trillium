@@ -9,6 +9,7 @@
 + Added HolePush (Done)
 + Added FastUse (Done)
 + Added ProjectilesESP (Done)
++ Added Timer (Done)
 + Added TNTTime (Done)
 + Added ClickGUI Scale Option
 + Added FadeOut Animation for BackTrack

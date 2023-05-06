@@ -79,9 +79,6 @@ public class Step
             Step.mc.timer.tickLength = 50.0f;
             timer = false;
         }
-		if (this.mode.getValue() == Mode.Vulcan) {
-		    mc.player.stepHeight = 1;	
-		}
 		if (this.mode.getValue() == Mode.NCP || this.mode.getValue() == Mode.Vanilla) {
 			if (mc.player.onGround && stepTimer.passedMs(stepDelay.getValue())) {
 				if (mc.player.isRiding() && mc.player.getRidingEntity() != null) {
@@ -126,12 +123,6 @@ public class Step
             }
             stepTimer.reset();
         }
-		if (this.mode.getValue() == Mode.Vulcan) {
-			if (event.getHeight() > 0.6) {
-				mc.timer.tickLength = 50;
-				mc.player.connection.sendPacket(new CPacketPlayer.Position(mc.player.posX, mc.player.posY + 0.5, mc.player.posZ, true));
-			}
-		}
     }
 
     public double[] getOffset(double height) {
@@ -173,7 +164,6 @@ public class Step
 	public static enum Mode {
 		Vanilla,
 		Jump,
-		Vulcan,
         NCP;
     }
 }
