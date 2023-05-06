@@ -28,6 +28,7 @@
 * Rewrote MiddleClick (Done)
 * Rewrote AutoCraftDupe (Done)
 * Rewrote BoatKiller (Done)
+* Rewrote ChestStealer (Done)
 * Rewrote Step (Done)
 * Rewrote Speedmine (Done)
 * Rewrote Speed (Done)

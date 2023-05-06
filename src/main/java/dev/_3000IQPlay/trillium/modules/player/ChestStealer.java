@@ -10,31 +10,47 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.Item;
 
 public class ChestStealer extends Module {
-    public ChestStealer() {
+	public Setting<Integer> minDelay = this.register(new Setting<>("Min-Delay", 100, 0, 1000));
+	public Setting<Integer> mixDelay = this.register(new Setting<>("Max-Delay", 100, 0, 1000));
+	public Setting<Boolean> autoClose = this.register(new Setting<>("AutoClose", true));
+	public Setting<CT> closeType = this.register(new Setting<>("CloseType", CT.CloseScreen, v -> this.autoClose.getValue()));
+	Timer timer = new Timer();
+	
+	public ChestStealer() {
         super("ChestStealer", "Steals loot from chests", Module.Category.PLAYER, true, false, false);
     }
-
-
-    Timer timer = new Timer();
-    public Setting<Integer> delayed = this.register ( new Setting <> ( "Delay", 100, 0, 1000 ) );
-
-
+	
     @Override
     public void onUpdate() {
         if (Util.mc.player.openContainer != null) {
             if (Util.mc.player.openContainer instanceof ContainerChest) {
+				int minD = (int) this.minDelay.getValue();
+                int maxD = (int) this.mixDelay.getValue();
                 ContainerChest container = (ContainerChest)Util.mc.player.openContainer;
                 for (int i = 0; i < container.inventorySlots.size(); ++i) {
-                    if (container.getLowerChestInventory().getStackInSlot(i).getItem() != Item.getItemById(0) && timer.passedMs(delayed.getValue())) {
+                    if (container.getLowerChestInventory().getStackInSlot(i).getItem() != Item.getItemById(0) && timer.passedMs(ChestStealer.randomDelay(minD, maxD))) {
                         mc.playerController.windowClick(container.windowId, i, 0, ClickType.QUICK_MOVE, Util.mc.player);
                         this.timer.reset();
                         continue;
                     }
                     if (!this.empty(container)) continue;
-                    Util.mc.player.closeScreen();
+					if (this.autoClose.getValue()) {
+					    if (this.closeType.getValue() == CT.CloseScreen) {
+							Util.mc.player.closeScreen();
+						} else {
+							// This could possibly allow you to dupe on some servers
+							Util.mc.displayGuiScreen(null);
+						}	
+					} else {
+						return;
+					}
                 }
             }
         }
+    }
+	
+	public static long randomDelay(final int minDelay, final int maxDelay) {
+        return (int) Math.floor(Math.random() * (maxDelay - minDelay + 1) + minDelay);
     }
 
     public boolean empty(Container container) {
@@ -46,4 +62,9 @@ public class ChestStealer extends Module {
         }
         return voll;
     }
+	
+	public static enum CT {
+		CloseScreen,
+		NullScreen;
+	}
 }
