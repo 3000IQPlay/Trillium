@@ -5,6 +5,7 @@
 + Added AutoXP (Done)
 + Added AutoFarm (Done)
 + Added AntiDesync (Done)
++ Added BoatBypass (Done)
 + Added Flatten (Done)
 + Added HolePush (Done)
 + Added FastUse (Done)
