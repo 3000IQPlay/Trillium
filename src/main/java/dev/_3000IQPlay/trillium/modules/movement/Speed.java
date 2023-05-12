@@ -35,14 +35,11 @@ public class Speed
     private final Setting<SpeedNewModes> mode = this.register(new Setting<SpeedNewModes>("Mode", SpeedNewModes.Custom));
 	
 	
-	public Setting<Integer> bticks  = this.register(new Setting<>("BoostTicks", 10, 1, 40, v -> this.mode.getValue() == SpeedNewModes.Default));
-    public Setting<Boolean> strafeBoost = this.register(new Setting<>("StrafeBoost", false, v -> this.mode.getValue() == SpeedNewModes.Default));
-    public Setting<Float> reduction  = this.register(new Setting<>("Reduction ", 2f, 1f, 10f, v -> this.mode.getValue() == SpeedNewModes.Default));
-    public Setting<Boolean> jumpBoost = this.register (new Setting<>("JumpBoostApplifier", false, v -> this.mode.getValue() == SpeedNewModes.Default));
-	public Setting<Boolean> uav = this.register( new Setting<>("UseAllVelocity", false, v -> this.mode.getValue() == SpeedNewModes.Default));
-	
-	private final Setting<Float> cpvpccSpeed = this.register(new Setting<Float>("Speed", 0.435f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.NCP)));
-	private final Setting<Float> ccTimer = this.register(new Setting<Float>("Timer", 1.0f, 0.2f, 5.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.NCP)));
+	public Setting<Integer> bticks  = this.register(new Setting<>("BoostTicks", 10, 1, 40, v -> this.mode.getValue() == SpeedNewModes.NCP));
+    public Setting<Boolean> strafeBoost = this.register(new Setting<>("StrafeBoost", false, v -> this.mode.getValue() == SpeedNewModes.NCP));
+    public Setting<Float> reduction  = this.register(new Setting<>("Reduction ", 2f, 1f, 10f, v -> this.mode.getValue() == SpeedNewModes.NCP));
+    public Setting<Boolean> jumpBoost = this.register (new Setting<>("JumpBoostApplifier", false, v -> this.mode.getValue() == SpeedNewModes.NCP));
+	public Setting<Boolean> uav = this.register( new Setting<>("UseAllVelocity", false, v -> this.mode.getValue() == SpeedNewModes.NCP));
 	
 	private final Setting<Boolean> accelerate = this.register(new Setting<Boolean>("Accelerate", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.usMode.getValue() == UpSpeed.Custom || this.dsMode.getValue() == DownSpeed.Custom));
 	private final Setting<Float> acceleration = this.register(new Setting<Float>("Acceleration", 0.0f, 0.0f, 10.0f, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom) && this.accelerate.getValue() && this.usMode.getValue() == UpSpeed.Custom || this.dsMode.getValue() == DownSpeed.Custom));
@@ -62,7 +59,7 @@ public class Speed
 	private final Setting<Boolean> sprintPacket = this.register(new Setting<Boolean>("SprintPacket", true));
     private final Setting<Boolean> resetXZ = this.register(new Setting<Boolean>("ResetXZ", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
     private final Setting<Boolean> resetY = this.register(new Setting<Boolean>("ResetY", false, t -> this.mode.getValue().equals((Object)SpeedNewModes.Custom)));
-	public double defaultBaseSpeed = getBaseMoveSpeed();
+	public double NCPBaseSpeed = getBaseMoveSpeed();
     public double distance;
     public int Field2015 = 4;
     public int speedStage;
@@ -88,7 +85,7 @@ public class Speed
 	
 	@SubscribeEvent( priority = EventPriority.HIGHEST)
     public void onPacketReceive(PacketEvent.Receive event) {
-		if (this.mode.getValue() == SpeedNewModes.Default) {
+		if (this.mode.getValue() == SpeedNewModes.NCP) {
         if (event.getPacket() instanceof SPacketEntityVelocity) {
             if(((SPacketEntityVelocity) event.getPacket()).getEntityID() == mc.player.getEntityId()) {
                 SPacketEntityVelocity pack = event.getPacket();
@@ -167,7 +164,7 @@ public class Speed
 	    if (event.getStage() == 1) return;
         if (Speed.fullNullCheck()) return;
 	    switch (this.mode.getValue()) {
-	        case Default: {
+	        case NCP: {
                 double d;
                 if (event.getStage() != 0) return;
                 if (event.isCanceled()) {
@@ -214,7 +211,7 @@ public class Speed
                 }
                 speedStage = 0;
                 if (this.Field2015 == 1 && (mc.player.moveForward != 0.0f || mc.player.moveStrafing != 0.0f)) {
-                    defaultBaseSpeed = 1.35 * getBaseMoveSpeed() - 0.01;
+                    NCPBaseSpeed = 1.35 * getBaseMoveSpeed() - 0.01;
                 } else if (this.Field2015 == 2 && mc.player.collidedVertically) {
                     d = 0.4;
                     double d2 = d;
@@ -222,20 +219,20 @@ public class Speed
                     double d3 = d;
                     event.set_y(d3 + isJumpBoost());
                     flip = !flip;
-                    defaultBaseSpeed *= flip ? 1.6835 : 1.395;
+                    NCPBaseSpeed *= flip ? 1.6835 : 1.395;
                 } else if (this.Field2015 == 3) {
                     d = 0.66 * (distance - getBaseMoveSpeed());
-                    defaultBaseSpeed = distance - d;
+                    NCPBaseSpeed = distance - d;
                 } else {
                     List<AxisAlignedBB> list = mc.world.getCollisionBoxes(mc.player, mc.player.getEntityBoundingBox().offset(0.0, mc.player.motionY, 0.0));
                     if ((list.size() > 0 || mc.player.collidedVertically) && this.Field2015 > 0) {
                         this.Field2015 = 1;
                     }
-                    defaultBaseSpeed = distance - distance / 159.0;
+                    NCPBaseSpeed = distance - distance / 159.0;
                 }
                 event.setCanceled(true);
-                defaultBaseSpeed = Math.max(defaultBaseSpeed, getBaseMoveSpeed());
-                Method744(event, defaultBaseSpeed);
+                NCPBaseSpeed = Math.max(NCPBaseSpeed, getBaseMoveSpeed());
+                Method744(event, NCPBaseSpeed);
                 ++this.Field2015;
                 break;
             }
@@ -244,12 +241,12 @@ public class Speed
 	
 	@SubscribeEvent
     public void onUpdateWalkingPlayerPre(EventPreMotion event) {
-		if (this.mode.getValue() == SpeedNewModes.Default) {
+		if (this.mode.getValue() == SpeedNewModes.NCP) {
 		    if (this.strafeBoost.getValue() && isBoosting){
                 return;
             }
 		}
-		if (this.mode.getValue() == SpeedNewModes.Default || this.mode.getValue() == SpeedNewModes.Custom) {
+		if (this.mode.getValue() == SpeedNewModes.NCP || this.mode.getValue() == SpeedNewModes.Custom) {
 			double d2 = mc.player.posX - mc.player.prevPosX;
             double d3 = mc.player.posZ - mc.player.prevPosZ;
             double d4 = d2 * d2 + d3 * d3;
@@ -319,23 +316,6 @@ public class Speed
                     break;
 				}
             }
-			case NCP: {
-			    if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
-                    if (Speed.mc.player.onGround) {
-                        Speed.mc.player.jump();
-					    Trillium.TIMER = this.ccTimer.getValue().floatValue();
-						EntityUtil.moveEntityStrafe(this.cpvpccSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
-						break;
-                    } else {
-						Trillium.TIMER = 1.0f;
-					}
-                    EntityUtil.moveEntityStrafe(Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ), (Entity)Speed.mc.player);
-					break;
-                } else {
-                    Speed.mc.player.motionX = 0.0;
-                    Speed.mc.player.motionZ = 0.0;
-				}
-            }
         }
     }
 
@@ -398,23 +378,6 @@ public class Speed
                     break;
 				}
             }
-			case NCP: {
-			    if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
-                    if (Speed.mc.player.onGround) {
-                        Speed.mc.player.jump();
-					    Trillium.TIMER = this.ccTimer.getValue().floatValue();
-						EntityUtil.moveEntityStrafe(this.cpvpccSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
-						break;
-                    } else {
-						Trillium.TIMER = 1.0f;
-					}
-                    EntityUtil.moveEntityStrafe(Math.sqrt(Speed.mc.player.motionX * Speed.mc.player.motionX + Speed.mc.player.motionZ * Speed.mc.player.motionZ), (Entity)Speed.mc.player);
-					break;
-                } else {
-                    Speed.mc.player.motionX = 0.0;
-                    Speed.mc.player.motionZ = 0.0;
-				}
-            }
         }
     }
 	
@@ -446,7 +409,7 @@ public class Speed
 	@Override
     public void onDisable() {
         Trillium.TIMER = 1.0f;
-		this.defaultBaseSpeed = getBaseMoveSpeed();
+		this.NCPBaseSpeed = getBaseMoveSpeed();
         this.Field2015 = 4;
         this.distance = 0.0;
         this.speedStage = 0;
@@ -470,8 +433,7 @@ public class Speed
     }
 	
 	public static enum SpeedNewModes {
-		Default,
-        Custom,
-		NCP;
+		NCP,
+        Custom;
     }
 }
