@@ -5,7 +5,6 @@ import dev._3000IQPlay.trillium.event.events.EventPreMotion;
 import dev._3000IQPlay.trillium.event.events.Render3DEvent;
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
-import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,69 +14,50 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Mouse;
 
-public class AimAssist extends Module{
+public class AimAssist extends Module {
+
+    public static EntityLivingBase target;
+    public static int deltaX, deltaY;
+    public Setting<Boolean> players = register(new Setting<>("Players", true));
+    public Setting<Float> strength = this.register(new Setting<>("Strength", 40.0f, 1.0f, 50.0f));
+    public Setting<Float> range = this.register(new Setting<>("Range", 6.0f, 0.1f, 10.0f));
+    public Setting<Boolean> dead = register(new Setting<>("Dead", false));
+    public Setting<Boolean> invisibles = register(new Setting<>("Invisibles", false));
+    public Setting<Boolean> teams = register(new Setting<>("Teams", true));
+    public Setting<Boolean> nonPlayers = register(new Setting<>("NonPlayerslayers", true));
+    public Setting<Boolean> vertical = register(new Setting<>("Vertical", true));
+    public Setting<Boolean> onlyClick = register(new Setting<>("Clicking", true));
+    public Setting<Float> fov = register(new Setting("FOV", 180.0f, 5.0f, 180.0f));
+    private final Setting<sortEn> sort = register(new Setting("TargetMode", sortEn.Distance));
 
     public AimAssist() {
-        super("AimAssist", "AimAssist", Category.COMBAT, true, false, false);
+        super("AimAssist", "Assists you in aiming at player", Module.Category.COMBAT, true, false, false);
     }
-
-
-    private Setting<sortEn> sort = register(new Setting("TargetMode", sortEn.Distance));
-
-    public enum sortEn {
-        Distance, HigherArmor, BlockingStatus,LowestArmor, Health,Angle,HurtTime;
-    }
-    private Setting<clickModeEn> part = register(new Setting("part", clickModeEn.Random));
-
-    public enum clickModeEn {
-        Chest, Head, Leggings, Boots, Random;
-    }
-
-    public Setting<Boolean> players = register(new Setting<>("Players",  true));
-    public static EntityLivingBase target;
-
-    public Setting<Float> strength = this.register ( new Setting <> ( "Strength", 40.0f, 1.0f, 50.0f ) );
-    public Setting<Float> range = this.register ( new Setting <> ( "Range", 6.0f, 0.1f, 10.0f ) );
-
-    public Setting<Boolean> clicker = register(new Setting<>("AutoClicker",  false));
-
-
-    public Setting<Boolean> dead = register(new Setting<>("Dead",  false));
-    public Setting<Boolean> invisibles = register(new Setting<>("Invisibles",  false));
-    public Setting<Boolean> teams = register(new Setting<>("Teams",  true));
-    public Setting<Boolean> nonPlayers = register(new Setting<>("NonPlayerslayers",  true));
-    public Setting<Boolean> vertical = register(new Setting<>("Vertical",  true));
-    public Setting<Boolean> onlyClick = register(new Setting<>("Clicking",  true));
-
-    public Setting<Float> fov = register(new Setting("FOV", 180.0f, 5.0f, 180.0f));
 
     public static boolean canSeeEntityAtFov(Entity entityLiving, float scope) {
         double diffZ = entityLiving.posZ - mc.player.posZ;
         double diffX = entityLiving.posX - mc.player.posX;
-        float yaw = (float)(Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0);
+        float yaw = (float) (Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0);
         double difference = angleDifference(yaw, mc.player.rotationYaw);
-        return difference <= (double)scope;
+        return difference <= (double) scope;
     }
 
     public static double angleDifference(double a, double b) {
-        float yaw360 = (float)(Math.abs(a - b) % 360.0);
+        float yaw360 = (float) (Math.abs(a - b) % 360.0);
         if (yaw360 > 180.0f) {
             yaw360 = 360.0f - yaw360;
         }
         return yaw360;
     }
 
-    public static int deltaX, deltaY;
-
     @SubscribeEvent
     public void onPreMotion(EventPreMotion event) {
 
         target = getClosest(range.getValue());
 
-        final float s = (float) (strength.getMax() - strength.getValue()) + 1;
+        final float s = (strength.getMax() - strength.getValue()) + 1;
 
         if (target == null || !mc.player.canEntityBeSeen(target)) {
             deltaX = deltaY = 0;
@@ -100,12 +80,10 @@ public class AimAssist extends Module{
         if (vertical.getValue()) deltaY = Math.round(niggaPitch / gcd);
         else deltaY = 0;
     }
-    private final Timer leftTimer = new Timer();
-    private double leftDelay = 0;
+
     @SubscribeEvent
     public void onRender3D(Render3DEvent event) {
-        if(target != null){
-        } else {
+        if (target == null) {
             return;
         }
 
@@ -158,7 +136,7 @@ public class AimAssist extends Module{
             return false;
         }
 
-        if(!canSeeEntityAtFov(player,fov.getValue() *2)){
+        if (!canSeeEntityAtFov(player, fov.getValue() * 2)) {
             return false;
         }
 
@@ -179,7 +157,7 @@ public class AimAssist extends Module{
         if (player.ticksExisted < 2)
             return false;
 
-        if(Trillium.friendManager.isFriend(player.getName()))
+        if (Trillium.friendManager.isFriend(player.getName()))
             return false;
 
         return mc.player != player;
@@ -206,10 +184,6 @@ public class AimAssist extends Module{
         return new float[]{yaw, pitch};
     }
 
-    public double randomBetween(final double min, final double max) {
-        return ((Math.random() * ((RandomUtils.nextDouble(max, max + 1)) - RandomUtils.nextDouble(min, min + 1)) + 1) + min);
-    }
-
     public float[] getFixedRotation(final float[] rotations, final float[] lastRotations) {
         final Minecraft mc = Minecraft.getMinecraft();
 
@@ -232,5 +206,10 @@ public class AimAssist extends Module{
         final float fixedPitch = lastPitch + fixedDeltaPitch;
 
         return new float[]{fixedYaw, fixedPitch};
+    }
+
+
+    public enum sortEn {
+        Distance, HigherArmor, BlockingStatus, LowestArmor, Health, Angle, HurtTime
     }
 }

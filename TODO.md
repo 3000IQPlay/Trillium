@@ -25,6 +25,7 @@
 * Rewrote EVERY HUD Element (Done)
 * Rewrote TickTimer System (Done)
 * Rewrote AuthGUI (Done)
+* Rewrote AimAssist (Done)
 * Rewrote DamageParticles (Done)
 * Rewrote MiddleClick (Done)
 * Rewrote AutoCraftDupe (Done)
