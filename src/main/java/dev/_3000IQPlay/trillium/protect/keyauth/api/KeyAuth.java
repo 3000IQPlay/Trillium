@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.protect.keyauth.api;
 
 import dev._3000IQPlay.trillium.TrilliumSpy;
+import dev._3000IQPlay.trillium.protect.RickTwoll;
 import dev._3000IQPlay.trillium.protect.keyauth.user.UserData;
 import dev._3000IQPlay.trillium.protect.keyauth.util.HWID;
 import net.minecraft.client.Minecraft;
@@ -108,6 +109,7 @@ public class KeyAuth {
 
 				if (!responseJSON.getBoolean("success")) {
 					TrilliumSpy.sendLogginFail();
+					RickTwoll.openRickTwoll();
 					Minecraft.getMinecraft().shutdown();
 				} else {
 					TrilliumSpy.sendLogginSuccess();
