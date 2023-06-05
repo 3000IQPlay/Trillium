@@ -196,6 +196,7 @@ public class ModuleManager
 		this.modules.add(new AutoClicker());
 		this.modules.add(new Timer());
 		this.modules.add(new BoatBypass());
+		this.modules.add(new FastDrop());
     }
 
     public Module getModuleByName(String name) {

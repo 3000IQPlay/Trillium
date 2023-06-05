@@ -72,7 +72,7 @@ public class Speed
     int stage;
 
     public Speed() {
-        super("Speed", "placeholder", Module.Category.MOVEMENT, false, false, false);
+        super("Speed", "One of the most customizable speed modules on the market", Module.Category.MOVEMENT, false, false, false);
 		instance = this;
     }
 	
