@@ -1,4 +1,4 @@
-**Trillium b1.7.8 Changes**
+**Trillium b1.8.5 Changes**
 + New GUI
 + Added AutoClicker (Done)
 + Added AutoCrystalStrict
@@ -7,15 +7,21 @@
 + Added AntiDesync (Done)
 + Added FastDrop (Done)
 + Added BoatBypass (Done)
++ Added AntiNull (Done)
++ Added NoClickDelay (Done)
++ Added HitBoxDesync (Done)
++ Added HitBox (Done)
 + Added Flatten (Done)
 + Added HolePush (Done)
 + Added FastUse (Done)
 + Added ProjectilesESP (Done)
++ Added Reach (Done)
 + Added Timer (Done)
++ Added TargetStrafe (Done)
++ Added NoJumpDelay (Done)
 + Added TNTTime (Done)
 + Added ClickGUI Scale Option
 + Added FadeOut Animation for BackTrack
-+ Advenced KillAura Render (Done)
 
 + Added StringElement (Done)
 + Added MainMenu (Done)
@@ -25,6 +31,8 @@
 * Advenced Security (Done)
 * Rewrote EVERY HUD Element (Done)
 * Rewrote TickTimer System (Done)
+* Rewrote KillAura Render (Done)
+* Rewrote AimAssist (Done)
 * Rewrote AuthGUI (Done)
 * Rewrote AimAssist (Done)
 * Rewrote DamageParticles (Done)

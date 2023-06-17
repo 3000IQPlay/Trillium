@@ -269,7 +269,7 @@ public class Speed
                 if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
                     if (Speed.mc.player.onGround) {
 						if (this.accelerate.getValue()) {
-                            EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue() + (getBaseMoveSpeed() * this.acceleration.getValue().floatValue()), (Entity)Speed.mc.player);
+                            EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue() + (getBaseMoveSpeed() * this.acceleration.getValue().floatValue() / 10), (Entity)Speed.mc.player);
 						} else {
 							EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
 						}
@@ -331,7 +331,7 @@ public class Speed
                 if (MovementUtil.isMoving((EntityLivingBase)Speed.mc.player)) {
                     if (Speed.mc.player.onGround) {
 						if (this.accelerate.getValue()) {
-                            EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue() + (getBaseMoveSpeed() * this.acceleration.getValue().floatValue()), (Entity)Speed.mc.player);
+                            EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue() + (getBaseMoveSpeed() * this.acceleration.getValue().floatValue() / 10), (Entity)Speed.mc.player);
 						} else {
 							EntityUtil.moveEntityStrafe(this.onGroundSpeed.getValue().floatValue(), (Entity)Speed.mc.player);
 						}

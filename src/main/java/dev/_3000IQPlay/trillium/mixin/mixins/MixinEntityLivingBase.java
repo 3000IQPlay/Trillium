@@ -1,6 +1,7 @@
 package dev._3000IQPlay.trillium.mixin.mixins;
 
 import dev._3000IQPlay.trillium.event.events.*;
+import dev._3000IQPlay.trillium.modules.movement.NoJumpDelay;
 import dev._3000IQPlay.trillium.modules.render.Animations;
 import dev._3000IQPlay.trillium.util.phobos.IEntityLivingBase;
 import net.minecraft.entity.Entity;
@@ -60,6 +61,16 @@ public abstract class MixinEntityLivingBase
     protected float noInterpSwingAmount;
     protected float noInterpSwing;
     protected float lowestDura = Float.MAX_VALUE;
+	
+	@Shadow
+    private int jumpTicks;
+
+    @Inject(method={"onLivingUpdate"}, at={@At(value="HEAD")})
+    private void headLiving(CallbackInfo callbackInfo) {
+        if (NoJumpDelay.getInstance().isOn()) {
+            this.jumpTicks = 0;
+        }
+    }
 
     @Override
     public void setLowestDura(float lowest) {

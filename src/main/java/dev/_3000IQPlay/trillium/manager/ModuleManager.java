@@ -197,6 +197,13 @@ public class ModuleManager
 		this.modules.add(new Timer());
 		this.modules.add(new BoatBypass());
 		this.modules.add(new FastDrop());
+		this.modules.add(new AntiNullPointer());
+		this.modules.add(new NoJumpDelay());
+		this.modules.add(new TargetStrafe());
+		this.modules.add(new NoClickDelay());
+		this.modules.add(new Reach());
+		this.modules.add(new HitBox());
+		this.modules.add(new HitBoxDesync());
     }
 
     public Module getModuleByName(String name) {
