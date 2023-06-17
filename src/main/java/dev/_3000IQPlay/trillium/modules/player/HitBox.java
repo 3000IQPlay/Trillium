@@ -22,6 +22,7 @@ public class HitBox extends Module {
     
     @SubscribeEvent
     public void onClientTick(final TickEvent.ClientTickEvent event) {
+		if (mc.player == null || mc.world == null) return;
         for (final EntityPlayer player : HitBox.getPlayersList()) {
             if (!this.check((EntityLivingBase)player)) {
                 continue;
