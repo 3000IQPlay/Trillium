@@ -20,8 +20,9 @@ import java.util.Random;
 
 public class Reach extends Module {
     private final Random rand = new Random();
-    public final Setting<Float> MinReach = this.register(new Setting<>("Reach", 3.5f, -2.0f, 6.0f));
-    public final Setting<Boolean> RandomReach = this.register(new Setting<>("RandomReach", true));
+    public final Setting<Float> MinReach = this.register(new Setting<>("MinReach", 3.0f, -2.0f, 6.0f));
+    public final Setting<Float> MaxReach = this.register(new Setting<>("MaxReach", 3.35f, -2.0f, 6.0f));
+	public final Setting<Float> reachChance = this.register(new Setting<>("ReachChance", 75.0f, 0.0f, 100.0f));
     public final Setting<Boolean> weaponOnly = this.register(new Setting<>("WeaponOnly", false));
     public final Setting<Boolean> movingOnly = this.register(new Setting<>("MovingOnly", false));
     public final Setting<Boolean> sprintOnly = this.register(new Setting<>("SprintOnly", false));
@@ -48,29 +49,22 @@ public class Reach extends Module {
             if (this.sprintOnly.getValue() && !mc.player.isSprinting()) {
                 return;
             }
+			if (this.reachChance.getValue() < 100.0f && this.rand.nextDouble() > this.reachChance.getValue() / 100.0f) {
+                return;
+            }
             if (!this.hitThroughBlocks.getValue() && mc.objectMouseOver != null) {
                 final BlockPos blocksReach = mc.objectMouseOver.getBlockPos();
                 if (blocksReach != null && mc.world.getBlockState(blocksReach).getBlock() != Blocks.AIR) {
                     return;
                 }
             }
-            if (false) {
-                double reachValues = 3.0 + this.rand.nextDouble() * ((double) this.MinReach.getValue() - 3.0);
-                final Object[] target = doReach(reachValues, 0.0, 0.0f);
-                if (target == null) {
-                    return;
-                }
-                mc.objectMouseOver = new RayTraceResult((Entity) target[0], (Vec3d) target[1]);
-                mc.pointedEntity = (Entity) target[0];
-            } else {
-                double Reach = (double) this.MinReach.getValue();
-                final Object[] reachs = doReach(Reach, 0.0, 0.0f);
-                if (reachs == null) {
-                    return;
-                }
-                mc.objectMouseOver = new RayTraceResult((Entity) reachs[0], (Vec3d) reachs[1]);
-                mc.pointedEntity = (Entity) reachs[0];
+            double reachValues = this.MinReach.getValue() + this.rand.nextDouble() * (this.MaxReach.getValue() - this.MinReach.getValue());
+            final Object[] target = doReach(reachValues, 0.0, 0.0f);
+            if (target == null) {
+                return;
             }
+            mc.objectMouseOver = new RayTraceResult((Entity) target[0], (Vec3d) target[1]);
+            mc.pointedEntity = (Entity) target[0];
         }
     }
 
