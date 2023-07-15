@@ -72,8 +72,6 @@ public class ModuleManager
         this.modules.add(new EntityESP());
         this.modules.add(new AutoFish());
         this.modules.add(new CrystalChams());
-		this.modules.add(new MountBypass());
-        this.modules.add(new PearlBypass());
         this.modules.add(new FreeCam());
         this.modules.add(new PacketFly());
         this.modules.add(new AutoTrap());
@@ -195,7 +193,7 @@ public class ModuleManager
 		this.modules.add(new AutoFarm());
 		this.modules.add(new AutoClicker());
 		this.modules.add(new Timer());
-		this.modules.add(new BoatBypass());
+		this.modules.add(new Bypass());
 		this.modules.add(new FastDrop());
 		this.modules.add(new AntiNullPointer());
 		this.modules.add(new NoJumpDelay());
@@ -204,6 +202,8 @@ public class ModuleManager
 		this.modules.add(new Reach());
 		this.modules.add(new HitBox());
 		this.modules.add(new HitBoxDesync());
+		this.modules.add(new F3Spoofer());
+		this.modules.add(new Crasher());
     }
 
     public Module getModuleByName(String name) {

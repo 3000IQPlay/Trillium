@@ -1,15 +1,14 @@
 package dev._3000IQPlay.trillium.modules.misc;
 
-
 import dev._3000IQPlay.trillium.modules.Module;
 import dev._3000IQPlay.trillium.setting.Setting;
 import dev._3000IQPlay.trillium.util.MathUtil;
+import dev._3000IQPlay.trillium.util.Timer;
 import net.minecraftforge.client.event.*;
 import net.minecraft.client.gui.*;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.event.world.*;
 import net.minecraft.client.multiplayer.*;
-import dev._3000IQPlay.trillium.util.Timer;
 
 
 public class AutoReconnect extends Module
@@ -18,7 +17,7 @@ public class AutoReconnect extends Module
     private static AutoReconnect INSTANCE;
 
     public AutoReconnect() {
-        super("AutoReconnect",  "Automatically reconnects you when you get kicked",  Category.MISC,  true,  false,  false);
+        super("AutoReconnect", "Automatically reconnects you when you get kicked", Category.MISC, true, false, false);
         this.setInstance();
     }
     public Setting<Integer> delay = this.register ( new Setting <> ( "Delay", 34, 0, 90 ) );

@@ -146,7 +146,7 @@ public class ModuleButton {
 			}
 		}
 
-		if(!ClickGui.getInstance().showBinds.getValue() ){
+		if (!ClickGui.getInstance().showBinds.getValue() ){
 			if (module.getSettings().size() > 4)
 				FontRender.drawCentString6(isOpen() ? "-" : "+", (float) x + (float) width - 8f, (float) y + 6, -1);
 		} else {

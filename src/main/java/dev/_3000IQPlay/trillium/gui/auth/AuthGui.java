@@ -103,7 +103,7 @@ public class AuthGui extends GuiScreen {
                 statusTime = 50;
                 break;
 			/*case 1:
-                String url = "https://discord.gg/84J4mhnS35";
+                String url = "https://discord.gg/A9XhxPDzex";
                 try {
                     Desktop.getDesktop().browse(new URI(url));
                 } catch (URISyntaxException e) {
