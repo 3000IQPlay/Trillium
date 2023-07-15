@@ -183,14 +183,14 @@ public class Trillium {
     }
 
     public static void reload() {
-		if (WifiCheck.getConnectionCheck()) {
+		/*if (WifiCheck.getConnectionCheck()) {
 			Minecraft.getMinecraft().shutdown();
 		}
 		AntiDump.check();
 		if (VMDetector.isVM() || VMDetector.isRunningOnVM()) {
 			TrilliumSpy.sendDebugOrDumpDetect();
 			Minecraft.getMinecraft().shutdown();
-		}
+		}*/
         Trillium.unload(false);
         Trillium.load();
     }
@@ -215,7 +215,7 @@ public class Trillium {
     }
 
     public static void onUnload() {
-		TrilliumSpy.sendExit();
+		//TrilliumSpy.sendExit();
         if (!unloaded) {
             eventManager.onUnload();
             moduleManager.onUnload();
@@ -229,35 +229,35 @@ public class Trillium {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-		if (WifiCheck.getConnectionCheck()) {
+		/*if (WifiCheck.getConnectionCheck()) {
 			Minecraft.getMinecraft().shutdown();
 		}
 		AntiDump.check();
 		if (VMDetector.isVM() || VMDetector.isRunningOnVM()) {
 			TrilliumSpy.sendDebugOrDumpDetect();
 			Minecraft.getMinecraft().shutdown();
-		}
+		}*/
         GlobalExecutor.EXECUTOR.submit(() -> Sphere.cacheSphere(LOGGER));
 		Display.setTitle("Loading " + MODNAME + " " + MODVER);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-		if (WifiCheck.getConnectionCheck()) {
+		/*if (WifiCheck.getConnectionCheck()) {
 			Minecraft.getMinecraft().shutdown();
 		}
 		AntiDump.check();
 		if (VMDetector.isVM() || VMDetector.isRunningOnVM()) {
 			TrilliumSpy.sendDebugOrDumpDetect();
 			Minecraft.getMinecraft().shutdown();
-		}
+		}*/
 		Minecraft mc = Minecraft.getMinecraft();
 		setWindowsIcon();
         Trillium.load();
-		TrilliumSpy.sendLaunch();
+		//TrilliumSpy.sendLaunch();
 		Display.setTitle(MODNAME + " "+ MODVER + " || User: " + mc.getSession().getUsername());
         MinecraftForge.EVENT_BUS.register(networkHandler);
-		eventProcessor = new EventProcessor();
-        eventProcessor.onInit();
+		/*eventProcessor = new EventProcessor();
+        eventProcessor.onInit();*/
     }
 }
