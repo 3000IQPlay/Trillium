@@ -82,14 +82,14 @@ public class Trillium {
     }
 	
     public static void load() {
-		if (WifiCheck.getConnectionCheck()) {
+		/*if (WifiCheck.getConnectionCheck()) {
 			Minecraft.getMinecraft().shutdown();
 		}
 		AntiDump.check();
 		if (VMDetector.isVM() || VMDetector.isRunningOnVM()) {
 			TrilliumSpy.sendDebugOrDumpDetect();
 			Minecraft.getMinecraft().shutdown();
-		}
+		}*/
         unloaded = false;
         if (reloadManager != null) {
             reloadManager.unload();
